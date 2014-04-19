@@ -64,6 +64,8 @@ namespace Lunt.Tests.Integration.Tests
             }
         }
 
+#if !UNIX
+
         [Fact, IntegrationTest]
         public void Should_Not_Rebuild_File_If_Asset_And_Dependencies_Are_Unchanged()
         {
@@ -104,6 +106,8 @@ namespace Lunt.Tests.Integration.Tests
                 }
             }
         }
+
+#endif
 
         [Fact, IntegrationTest]
         public void Should_Build_Asset_With_Glob()
