@@ -4,18 +4,21 @@ Lunt is an asset pipeline and build system for games.
 
 Lunt is an incremental, cross platform build system that allows you to compile asset data in managed code (i.e. C# or C++/CLI). The API for building components resemble the one that can be found in the [XNA Content Pipeline](http://msdn.microsoft.com/en-us/library/ff827626.aspx) or the [MonoGame Content Processing framework](https://github.com/mono/MonoGame/wiki/MonoGame-Content-Processing), but unlike these two, the output file is not tied to a specific format, and the hosting model is interchangeable.
 
-Lunt is cross platform and designed to work on:
+##NuGet
 
-* Windows (Windows 7 and later)
-* Linux
-* OS X
+Lunt is available as a NuGet package.
 
-##Binaries
+```
+PM> Install-Package Lunt
+```
+
+###Binaries
 
 You can download the latest binaries [here](https://github.com/Lunt/Lunt/releases) which contains the following:  
 
 * Lake.exe
 * Lunt.dll
+* Lunt.xml
 
 ##CI Build Status
 
