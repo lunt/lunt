@@ -1,2 +1,2 @@
-### New in 0.0.1 (Released 2013/10/30)
+### New in 0.0.1 (Released 2014/05/06)
 * First release of Lunt.

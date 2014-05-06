@@ -1,10 +1,10 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+VisualStudioVersion = 12.0.30110.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lunt.Core", "Lunt.Core\Lunt.Core.csproj", "{293FE90F-D910-4A74-9DF9-C8AAAFAB2D5A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lunt", "Lunt\Lunt.csproj", "{293FE90F-D910-4A74-9DF9-C8AAAFAB2D5A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lunt", "Lunt\Lunt.csproj", "{E1E30FCD-A1ED-4BA8-BC1E-754B89083F93}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lake", "Lake\Lake.csproj", "{E1E30FCD-A1ED-4BA8-BC1E-754B89083F93}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lunt.Tests", "Lunt.Tests\Lunt.Tests.csproj", "{8163E0DB-C18A-474F-9299-B1AFF7F7B56E}"
 EndProject
@@ -17,13 +17,21 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Meta", "Meta", "{90E86C19-A2BC-436C-8ED9-E2AEFCB5E0AD}"
 	ProjectSection(SolutionItems) = preProject
 		..\LICENSE = ..\LICENSE
-		..\Lunt.Core.nuspec = ..\Lunt.Core.nuspec
+		..\Lunt.nuspec = ..\Lunt.nuspec
 		..\README.md = ..\README.md
 		..\ReleaseNotes.md = ..\ReleaseNotes.md
 		SolutionInfo.cs = SolutionInfo.cs
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lunt.Tests.Integration", "Lunt.Tests.Integration\Lunt.Tests.Integration.csproj", "{EEDDBE17-9353-4FAE-830B-46B81E5EAEC6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lake.Tests.Integration", "Lake.Tests.Integration\Lake.Tests.Integration.csproj", "{EEDDBE17-9353-4FAE-830B-46B81E5EAEC6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lunt.Testing", "Lunt.Testing\Lunt.Testing.csproj", "{CD513089-BB61-48B2-8810-EE78EFF0D57E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lake.Tests", "Lake.Tests\Lake.Tests.csproj", "{DF54C07E-7BEE-459B-B398-9527F8AC7F02}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utilities", "Utilities", "{445BEE9B-F041-4BD9-B2C0-60A27DA49E0C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{364238C4-A269-4C5F-9B6D-15D04EB1D6FF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,8 +55,22 @@ Global
 		{EEDDBE17-9353-4FAE-830B-46B81E5EAEC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EEDDBE17-9353-4FAE-830B-46B81E5EAEC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EEDDBE17-9353-4FAE-830B-46B81E5EAEC6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD513089-BB61-48B2-8810-EE78EFF0D57E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD513089-BB61-48B2-8810-EE78EFF0D57E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD513089-BB61-48B2-8810-EE78EFF0D57E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD513089-BB61-48B2-8810-EE78EFF0D57E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF54C07E-7BEE-459B-B398-9527F8AC7F02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF54C07E-7BEE-459B-B398-9527F8AC7F02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF54C07E-7BEE-459B-B398-9527F8AC7F02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF54C07E-7BEE-459B-B398-9527F8AC7F02}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CD513089-BB61-48B2-8810-EE78EFF0D57E} = {445BEE9B-F041-4BD9-B2C0-60A27DA49E0C}
+		{DF54C07E-7BEE-459B-B398-9527F8AC7F02} = {364238C4-A269-4C5F-9B6D-15D04EB1D6FF}
+		{EEDDBE17-9353-4FAE-830B-46B81E5EAEC6} = {364238C4-A269-4C5F-9B6D-15D04EB1D6FF}
+		{8163E0DB-C18A-474F-9299-B1AFF7F7B56E} = {364238C4-A269-4C5F-9B6D-15D04EB1D6FF}
 	EndGlobalSection
 EndGlobal

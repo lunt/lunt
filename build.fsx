@@ -19,7 +19,7 @@ let version = releaseNotes.AssemblyVersion
 let semVersion = releaseNotes.AssemblyVersion + (if buildLabel <> "" then ("-" + buildLabel) else "")
 
 // Define directories.
-let buildDir = "./src/Lunt/bin" @@ buildMode
+let buildDir = "./src/Lake/bin" @@ buildMode
 let buildResultDir = "./build" @@ "v" + semVersion + "/"
 let testResultsDir = buildResultDir @@ "test-results"
 let nugetRoot = buildResultDir @@ "nuget/"
@@ -68,12 +68,6 @@ Target "Set-Versions" (fun _ ->
     )
 )
 
-Target "Restore-Packages" (fun _ ->
-    Block "Restoring NuGet packages" (fun _ ->
-        RestorePackages()
-    )
-)
-
 Target "Build" (fun _ ->
     Block "Building Lunt" (fun _ ->
         MSBuild null "Build" ["Configuration", buildMode] ["./src/Lunt.sln"]
@@ -107,9 +101,9 @@ Target "Run-Integration-Tests" (fun _ ->
 
 Target "Copy-Files" (fun _ ->
     Block "Copying files" (fun _ ->
-        CopyFile binDir (buildDir + "/Lunt.exe")
-        CopyFile binDir (buildDir + "/Lunt.Core.dll")
-        CopyFile binDir (buildDir + "/Lunt.Core.xml")  
+        CopyFile binDir (buildDir + "/Lake.exe")
+        CopyFile binDir (buildDir + "/Lunt.dll")
+        CopyFile binDir (buildDir + "/Lunt.xml")  
         CopyFiles binDir ["LICENSE"; "README.md"; "ReleaseNotes.md"]
     )
 )
@@ -126,25 +120,25 @@ Target "Package-Files" (fun _ ->
 
 Target "Create-NuGet-Package" (fun _ ->
     Block "Creating NuGet package" (fun _ ->
-        let coreRootDir = nugetRoot @@ "Lunt.Core"
+        let coreRootDir = nugetRoot @@ "Lunt"
         let coreLibDir = coreRootDir @@ "lib/net45/"
         CleanDirs [coreRootDir; coreLibDir]
 
-        CopyFile coreLibDir (binDir @@ "Lunt.Core.dll")
-        CopyFile coreLibDir (binDir @@ "Lunt.Core.xml")
+        CopyFile coreLibDir (binDir @@ "Lunt.dll")
+        CopyFile coreLibDir (binDir @@ "Lunt.xml")
         CopyFile coreRootDir (binDir @@ "LICENSE")
         CopyFile coreRootDir (binDir @@ "README.md")
         CopyFile coreRootDir (binDir @@ "ReleaseNotes.md")
 
         NuGet (fun p -> 
             {p with
-                Project = "Lunt.Core"                           
+                Project = "Lunt"                           
                 OutputPath = nugetRoot
                 WorkingDir = coreRootDir
                 Version = releaseNotes.AssemblyVersion
                 ReleaseNotes = toLines releaseNotes.Notes
                 AccessKey = getBuildParamOrDefault "nugetkey" ""
-                Publish = hasBuildParam "nugetkey" }) "./Lunt.Core.nuspec"
+                Publish = hasBuildParam "nugetkey" }) "./Lunt.nuspec"
     )
 )
 
@@ -156,7 +150,6 @@ Target "Help" (fun _ ->
     printfn "  * Clean"
     printfn "  * Update-TeamCity-Build-Number"
     printfn "  * Set-Versions"
-    printfn "  * Restore-Packages"
     printfn "  * Build"
     printfn "  * Run-Unit-Tests"
     printfn "  * Run-Integration-Tests"
@@ -172,7 +165,6 @@ Target "All" DoNothing
 "Clean"
    =?> ("Update-TeamCity-Build-Number", hasBuildParam "teamCity") 
    ==> "Set-Versions"
-   ==> "Restore-Packages"
    ==> "Build"
    ==> "Run-Unit-Tests"
    ==> "Run-Integration-Tests"

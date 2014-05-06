@@ -14,8 +14,8 @@ Lunt is cross platform and designed to work on:
 
 You can download the latest binaries [here](https://github.com/Lunt/Lunt/releases) which contains the following:  
 
-* Lunt.exe
-* Lunt.Core.dll
+* Lake.exe
+* Lunt.dll
 
 ##CI Build Status
 

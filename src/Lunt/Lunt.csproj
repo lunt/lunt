@@ -4,31 +4,33 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{E1E30FCD-A1ED-4BA8-BC1E-754B89083F93}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{293FE90F-D910-4A74-9DF9-C8AAAFAB2D5A}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Lunt</RootNamespace>
     <AssemblyName>Lunt</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <ProductVersion>12.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>
-    </DocumentationFile>
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+    <CodeAnalysisRuleSet>BasicCorrectnessRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
+    <DocumentationFile>bin\Debug\Lunt.xml</DocumentationFile>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -36,6 +38,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <DocumentationFile>bin\Release\Lunt.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -47,33 +50,95 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Arguments\ArgumentDescription.cs" />
-    <Compile Include="Arguments\ArgumentParser.cs" />
-    <Compile Include="Arguments\IArgumentParser.cs" />
-    <Compile Include="Commands\BuildCommand.cs" />
-    <Compile Include="Commands\CommandFactory.cs" />
-    <Compile Include="Commands\ICommandFactory.cs" />
-    <Compile Include="Commands\ShowVersionCommand.cs" />
-    <Compile Include="Commands\ICommand.cs" />
-    <Compile Include="Commands\ShowHelpCommand.cs" />
-    <Compile Include="Diagnostics\ConsoleBuildLog.cs" />
-    <Compile Include="Diagnostics\IConsoleBuildLog.cs" />
-    <Compile Include="LuntApplication.cs" />
-    <Compile Include="LuntOptions.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="Abstractions\IBuildConfigurationReader.cs" />
+    <Compile Include="Abstractions\IBuildEngine.cs" />
+    <Compile Include="Abstractions\IBuildEnvironment.cs" />
+    <Compile Include="Abstractions\IBuildManifestProvider.cs" />
+    <Compile Include="Abstractions\IConsoleWriter.cs" />
+    <Compile Include="Abstractions\IPipelineComponentCollection.cs" />
+    <Compile Include="Abstractions\IPipelineComponent.cs" />
+    <Compile Include="Abstractions\ILuntImporter.cs" />
+    <Compile Include="Abstractions\ILuntProcessor.cs" />
+    <Compile Include="Abstractions\ILuntWriter.cs" />
+    <Compile Include="Asset.cs" />
+    <Compile Include="AssetDependency.cs" />
+    <Compile Include="AssetMetadata.cs" />
+    <Compile Include="AssetExtractor.cs" />
+    <Compile Include="AssetDefinition.cs" />
+    <Compile Include="BuildConfiguration.cs" />
+    <Compile Include="BuildConfigurationValidator.cs" />
+    <Compile Include="AssetBuildResult.cs" />
+    <Compile Include="AssetBuildStatus.cs" />
+    <Compile Include="BuildConfigurationXmlReader.cs" />
+    <Compile Include="BuildEnvironment.cs" />
+    <Compile Include="BuildManifestProvider.cs" />
+    <Compile Include="ConsoleWriter.cs" />
+    <Compile Include="Descriptors\ComponentDescriptor.cs" />
+    <Compile Include="Descriptors\DescriptorRegistry.cs" />
+    <Compile Include="Descriptors\DescriptorFactory.cs" />
+    <Compile Include="Descriptors\ImporterDescriptor.cs" />
+    <Compile Include="Descriptors\ProcessorDescriptor.cs" />
+    <Compile Include="Descriptors\WriterDescriptor.cs" />
+    <Compile Include="BuildManifest.cs" />
+    <Compile Include="BuildManifestItem.cs" />
+    <Compile Include="AssetBuilder.cs" />
+    <Compile Include="Diagnostics\IBuildLog.cs" />
+    <Compile Include="Diagnostics\LogExtensions.cs" />
+    <Compile Include="Diagnostics\LogLevel.cs" />
+    <Compile Include="Diagnostics\Verbosity.cs" />
+    <Compile Include="Diagnostics\VerbosityTypeConverter.cs" />
+    <Compile Include="Extensions\BinaryWriterExtensions.cs" />
+    <Compile Include="Extensions\TypeExtensions.cs" />
+    <Compile Include="IO\Converters\DirectoryPathTypeConverter.cs" />
+    <Compile Include="IO\Converters\FilePathTypeConverter.cs" />
+    <Compile Include="IO\Directory.cs" />
+    <Compile Include="IO\File.cs" />
+    <Compile Include="IO\FileSystem.cs" />
+    <Compile Include="IO\Globber.cs" />
+    <Compile Include="IO\Globbing\Node.cs" />
+    <Compile Include="IO\Globbing\Nodes\IdentifierNode.cs" />
+    <Compile Include="IO\Globbing\Nodes\RootNode.cs" />
+    <Compile Include="IO\Globbing\Nodes\Roots\RelativeRoot.cs" />
+    <Compile Include="IO\Globbing\Nodes\Roots\UnixRoot.cs" />
+    <Compile Include="IO\Globbing\Nodes\Roots\WindowsRoot.cs" />
+    <Compile Include="IO\Globbing\Nodes\SegmentNode.cs" />
+    <Compile Include="IO\Globbing\Nodes\WildcardNode.cs" />
+    <Compile Include="IO\Globbing\Nodes\WildcardSegmentNode.cs" />
+    <Compile Include="IO\Globbing\Parser.cs" />
+    <Compile Include="IO\Globbing\Scanner.cs" />
+    <Compile Include="IO\Globbing\Token.cs" />
+    <Compile Include="IO\Globbing\TokenKind.cs" />
+    <Compile Include="IO\HashComputer.cs" />
+    <Compile Include="IO\IDirectory.cs" />
+    <Compile Include="IO\IFile.cs" />
+    <Compile Include="IO\IFileSystem.cs" />
+    <Compile Include="IO\IHashComputer.cs" />
+    <Compile Include="IO\NoCloseBinaryWriter.cs" />
+    <Compile Include="IO\NoCloseBinaryReader.cs" />
+    <Compile Include="BuildEngine.cs" />
+    <Compile Include="IO\Path.cs" />
+    <Compile Include="IO\PathComparer.cs" />
+    <Compile Include="IO\PathNormalizer.cs" />
+    <Compile Include="IO\Paths\DirectoryPath.cs" />
+    <Compile Include="IO\Paths\FilePath.cs" />
+    <Compile Include="IO\SearchScope.cs" />
+    <Compile Include="LuntContext.cs" />
+    <Compile Include="LuntException.cs" />
+    <Compile Include="LuntImporter.cs" />
+    <Compile Include="LuntImporterAttribute.cs" />
+    <Compile Include="LuntProcessor.cs" />
+    <Compile Include="LuntWriter.cs" />
+    <Compile Include="PipelineComponentCollection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Runtime\AssemblyScanner.cs" />
+    <Compile Include="Runtime\IPipelineScanner.cs" />
+    <Compile Include="Runtime\PipelineAssemblyScanner.cs" />
+    <Compile Include="Runtime\PipelineDirectoryScanner.cs" />
     <Compile Include="..\SolutionInfo.cs">
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
-    <Compile Include="Runtime\IPipelineScannerFactory.cs" />
-    <Compile Include="Runtime\PipelineScannerFactory.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Lunt.Core\Lunt.Core.csproj">
-      <Project>{293fe90f-d910-4a74-9df9-c8aaafab2d5a}</Project>
-      <Name>Lunt.Core</Name>
-    </ProjectReference>
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
