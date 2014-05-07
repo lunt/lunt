@@ -16,8 +16,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{A7EC0470
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Meta", "Meta", "{90E86C19-A2BC-436C-8ED9-E2AEFCB5E0AD}"
 	ProjectSection(SolutionItems) = preProject
+		..\Lake.nuspec = ..\Lake.nuspec
 		..\LICENSE = ..\LICENSE
-		..\Lunt.Make.nuspec = ..\Lunt.Make.nuspec
 		..\Lunt.nuspec = ..\Lunt.nuspec
 		..\README.md = ..\README.md
 		..\ReleaseNotes.md = ..\ReleaseNotes.md
