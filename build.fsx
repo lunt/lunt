@@ -117,8 +117,7 @@ Target "Package-Files" (fun _ ->
     )
 )
 
-
-Target "Create-NuGet-Package" (fun _ ->
+Target "Create-Lunt-NuGet-Package" (fun _ ->
     Block "Creating NuGet package" (fun _ ->
         let coreRootDir = nugetRoot @@ "Lunt"
         let coreLibDir = coreRootDir @@ "lib/net45/"
@@ -142,6 +141,29 @@ Target "Create-NuGet-Package" (fun _ ->
     )
 )
 
+Target "Create-Lake-NuGet-Package" (fun _ ->
+    Block "Creating NuGet package" (fun _ ->
+        let coreRootDir = nugetRoot @@ "Lunt.Make"
+        CleanDirs [coreRootDir;]
+
+        CopyFile coreRootDir (binDir @@ "Lake.exe")
+        CopyFile coreRootDir (binDir @@ "Lunt.dll")
+        CopyFile coreRootDir (binDir @@ "LICENSE")
+        CopyFile coreRootDir (binDir @@ "README.md")
+        CopyFile coreRootDir (binDir @@ "ReleaseNotes.md")
+
+        NuGet (fun p -> 
+            {p with
+                Project = "Lunt.Make"                           
+                OutputPath = nugetRoot
+                WorkingDir = coreRootDir
+                Version = releaseNotes.AssemblyVersion
+                ReleaseNotes = toLines releaseNotes.Notes
+                AccessKey = getBuildParamOrDefault "nugetkey" ""
+                Publish = hasBuildParam "nugetkey" }) "./Lake.nuspec"
+    )
+)
+
 Target "Help" (fun _ ->
     printfn ""
     printfn "  Please specify the target by calling 'build <Target>'"
@@ -155,7 +177,8 @@ Target "Help" (fun _ ->
     printfn "  * Run-Integration-Tests"
     printfn "  * Copy-Files"
     printfn "  * Package-Files"
-    printfn "  * Create-NuGet-Package"
+    printfn "  * Create-Lunt-NuGet-Package"
+    printfn "  * Create-Lake-NuGet-Package"
     printfn "  * All (calls all previous)"
     printfn "")
 
@@ -170,7 +193,8 @@ Target "All" DoNothing
    ==> "Run-Integration-Tests"
    ==> "Copy-Files"
    ==> "Package-Files"
-   ==> "Create-NuGet-Package"
+   ==> "Create-Lunt-NuGet-Package"
+   ==> "Create-Lake-NuGet-Package"
    ==> "All"
 
 // Set the default target to the last node in the
