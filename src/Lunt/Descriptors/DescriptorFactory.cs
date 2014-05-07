@@ -8,17 +8,17 @@ namespace Lunt.Descriptors
 {
     internal static class DescriptorFactory
     {
-        public static ImporterDescriptor[] CreateImporterDescriptors(IPipelineComponentCollection components)
+        public static ImporterDescriptor[] CreateImporterDescriptors(IEnumerable<IPipelineComponent> components)
         {
             var importers = new HashSet<ImporterDescriptor>();
             var importerTypes = new List<Type>();
             var registeredExtensions = new HashSet<string>();
 
-            foreach (var importer in components.OfType<ILuntImporter>())
+            foreach (var importer in components.OfType<IImporter>())
             {
                 var importerType = importer.GetType();
 
-                var attribute = importerType.GetAttribute<LuntImporterAttribute>();
+                var attribute = importerType.GetAttribute<ImporterAttribute>();
                 if (attribute == null)
                 {
                     const string format = "The importer {0} has not been decorated with an importer attribute.";
@@ -52,7 +52,7 @@ namespace Lunt.Descriptors
                 // Got a default processor?
                 if (attribute.DefaultProcessor != null)
                 {
-                    if (!typeof (ILuntProcessor).IsAssignableFrom(attribute.DefaultProcessor))
+                    if (!typeof (IProcessor).IsAssignableFrom(attribute.DefaultProcessor))
                     {
                         const string format = "The default processor ({0}) referenced by {1} is not a processor.";
                         string message = string.Format(CultureInfo.InvariantCulture, format, attribute.DefaultProcessor.FullName, importerType.FullName);
@@ -78,12 +78,12 @@ namespace Lunt.Descriptors
             return importers.ToArray();
         }
 
-        public static ProcessorDescriptor[] CreateProcessorDescriptors(IPipelineComponentCollection components)
+        public static ProcessorDescriptor[] CreateProcessorDescriptors(IEnumerable<IPipelineComponent> components)
         {
             var processors = new List<ProcessorDescriptor>();
             var processorTypes = new HashSet<Type>();
 
-            foreach (var processor in components.OfType<ILuntProcessor>())
+            foreach (var processor in components.OfType<IProcessor>())
             {
                 var processorType = processor.GetType();
 
@@ -111,12 +111,12 @@ namespace Lunt.Descriptors
             return processors.ToArray();
         }
 
-        public static WriterDescriptor[] CreateWriterDescriptors(IPipelineComponentCollection components)
+        public static WriterDescriptor[] CreateWriterDescriptors(IEnumerable<IPipelineComponent> components)
         {
             var writers = new List<WriterDescriptor>();
             var writerTypes = new HashSet<Type>();
 
-            foreach (var writer in components.OfType<ILuntWriter>())
+            foreach (var writer in components.OfType<IWriter>())
             {
                 var writerType = writer.GetType();
 

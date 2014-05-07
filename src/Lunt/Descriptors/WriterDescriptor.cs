@@ -4,10 +4,10 @@ namespace Lunt.Descriptors
 {
     internal sealed class WriterDescriptor : ComponentDescriptor
     {
-        private readonly ILuntWriter _writer;
+        private readonly IWriter _writer;
         private readonly Type _targetType;
 
-        public ILuntWriter Writer
+        public IWriter Writer
         {
             get { return _writer; }
         }
@@ -17,7 +17,7 @@ namespace Lunt.Descriptors
             get { return _targetType; }
         }
 
-        public WriterDescriptor(ILuntWriter writer)
+        public WriterDescriptor(IWriter writer)
         {
             _writer = writer;
             _targetType = writer.GetTargetType();

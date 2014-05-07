@@ -7,7 +7,7 @@ using Xunit;
 
 namespace Lunt.Tests.Unit
 {
-    public class LuntContextTests
+    public class ContextTests
     {
         public class TheConstructor
         {
@@ -21,7 +21,7 @@ namespace Lunt.Tests.Unit
                 var asset = new Asset("simple.asset");
 
                 // When
-                var result = Record.Exception(() => new LuntContext(null, configuration, hasher, log, asset));
+                var result = Record.Exception(() => new Context(null, configuration, hasher, log, asset));
 
                 // Then
                 Assert.IsType<ArgumentNullException>(result);
@@ -38,7 +38,7 @@ namespace Lunt.Tests.Unit
                 var asset = new Asset("simple.asset");
 
                 // When
-                var result = Record.Exception(() => new LuntContext(fileSystem, configuration, null, log, asset));
+                var result = Record.Exception(() => new Context(fileSystem, configuration, null, log, asset));
 
                 // Then
                 Assert.IsType<ArgumentNullException>(result);
@@ -56,7 +56,7 @@ namespace Lunt.Tests.Unit
                 var asset = new Asset("simple.asset");
 
                 // When
-                var result = Record.Exception(() => new LuntContext(fileSystem, configuration, hasher, null, asset));
+                var result = Record.Exception(() => new Context(fileSystem, configuration, hasher, null, asset));
 
                 // Then
                 Assert.IsType<ArgumentNullException>(result);
@@ -73,7 +73,7 @@ namespace Lunt.Tests.Unit
                 var log = new Mock<IBuildLog>().Object;
 
                 // When
-                var result = Record.Exception(() => new LuntContext(fileSystem, configuration, hasher, log, null));
+                var result = Record.Exception(() => new Context(fileSystem, configuration, hasher, log, null));
 
                 // Then
                 Assert.IsType<ArgumentNullException>(result);
@@ -90,7 +90,7 @@ namespace Lunt.Tests.Unit
                 configuration.InputDirectory = "/input";
                 var log = new Mock<IBuildLog>().Object;
                 var asset = new Asset("simple.asset");
-                var context = new LuntContext(filesystem, configuration, hasher, log, asset);
+                var context = new Context(filesystem, configuration, hasher, log, asset);
 
                 // When
                 var result = context.InputDirectory;
@@ -109,7 +109,7 @@ namespace Lunt.Tests.Unit
                 configuration.InputDirectory = "/input";
                 var log = new Mock<IBuildLog>().Object;
                 var asset = new Asset("simple.asset");
-                var context = new LuntContext(filesystem, configuration, hasher, log, asset);
+                var context = new Context(filesystem, configuration, hasher, log, asset);
 
                 var file = new Mock<IFile>();
                 file.SetupGet(x => x.Exists).Returns(true);
@@ -137,7 +137,7 @@ namespace Lunt.Tests.Unit
                 configuration.InputDirectory = "/input/";
                 var log = new Mock<IBuildLog>().Object;
                 var asset = new Asset("simple.asset");
-                var context = new LuntContext(filesystem, configuration, hasher, log, asset);
+                var context = new Context(filesystem, configuration, hasher, log, asset);
 
                 var file = new Mock<IFile>();
                 file.SetupGet(x => x.Exists).Returns(true);
@@ -162,7 +162,7 @@ namespace Lunt.Tests.Unit
                 var configuration = new BuildConfiguration();
                 var log = new Mock<IBuildLog>().Object;
                 var asset = new Asset("simple.asset");
-                var context = new LuntContext(filesystem, configuration, hasher, log, asset);
+                var context = new Context(filesystem, configuration, hasher, log, asset);
 
                 // When
                 var result = Record.Exception(() => context.AddDependency(null));
@@ -182,7 +182,7 @@ namespace Lunt.Tests.Unit
                 var configuration = new BuildConfiguration();
                 var log = new Mock<IBuildLog>().Object;
                 var asset = new Asset("simple.asset");
-                var context = new LuntContext(filesystem, configuration, hasher, log, asset);
+                var context = new Context(filesystem, configuration, hasher, log, asset);
 
                 var file = new Mock<IFile>();
                 file.SetupGet(x => x.Path).Returns(new FilePath("other.asset"));
@@ -206,7 +206,7 @@ namespace Lunt.Tests.Unit
                 configuration.InputDirectory = "/input/";
                 var log = new Mock<IBuildLog>().Object;
                 var asset = new Asset("simple.asset");
-                var context = new LuntContext(filesystem, configuration, hasher, log, asset);
+                var context = new Context(filesystem, configuration, hasher, log, asset);
 
                 var file = new Mock<IFile>();
                 file.SetupGet(x => x.Exists).Returns(true);

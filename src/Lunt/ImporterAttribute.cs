@@ -7,7 +7,7 @@ namespace Lunt
     /// Provides properties that identify and provide metadata about the importer, such as supported file extensions and caching information.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-    public sealed class LuntImporterAttribute : Attribute
+    public sealed class ImporterAttribute : Attribute
     {
         private readonly string[] _fileExtensions;
 
@@ -28,30 +28,30 @@ namespace Lunt
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LuntImporterAttribute" /> class.
+        /// Initializes a new instance of the <see cref="ImporterAttribute" /> class.
         /// </summary>
         /// <param name="fileExtension">The file extension.</param>
-        public LuntImporterAttribute(string fileExtension)
+        public ImporterAttribute(string fileExtension)
         {
             _fileExtensions = new[] {fileExtension};
         }
 
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LuntImporterAttribute" /> class.
+        /// Initializes a new instance of the <see cref="ImporterAttribute" /> class.
         /// </summary>
         /// <param name="fileExtensions">The extensions.</param>
-        public LuntImporterAttribute(params string[] fileExtensions)
+        public ImporterAttribute(params string[] fileExtensions)
         {
             _fileExtensions = fileExtensions;
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LuntImporterAttribute" /> class.
+        /// Initializes a new instance of the <see cref="ImporterAttribute" /> class.
         /// </summary>
         /// <param name="fileExtensions">The extensions.</param>
         /// <param name="defaultProcessor">The default processor.</param>
-        public LuntImporterAttribute(string[] fileExtensions, Type defaultProcessor)
+        public ImporterAttribute(string[] fileExtensions, Type defaultProcessor)
         {
             _fileExtensions = fileExtensions;
             DefaultProcessor = defaultProcessor;

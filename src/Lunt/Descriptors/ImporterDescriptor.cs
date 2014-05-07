@@ -4,11 +4,11 @@ namespace Lunt.Descriptors
 {
     internal sealed class ImporterDescriptor : ComponentDescriptor
     {
-        private readonly ILuntImporter _importer;
+        private readonly IImporter _importer;
         private readonly string[] _extensions;
         private readonly Type _defaultProcessor;
 
-        public ILuntImporter Importer
+        public IImporter Importer
         {
             get { return _importer; }
         }
@@ -23,7 +23,7 @@ namespace Lunt.Descriptors
             get { return _defaultProcessor; }
         }
 
-        internal ImporterDescriptor(ILuntImporter importer, LuntImporterAttribute attribute)
+        internal ImporterDescriptor(IImporter importer, ImporterAttribute attribute)
         {
             _importer = importer;
             _extensions = attribute.FileExtensions;

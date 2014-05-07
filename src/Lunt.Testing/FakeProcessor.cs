@@ -6,13 +6,13 @@ using Castle.DynamicProxy;
 
 namespace Lunt.Testing
 {
-    public class FakeProcessor : ILuntProcessor
+    public class FakeProcessor : IProcessor
     {
-        private readonly Func<LuntContext, object, object> _func;
+        private readonly Func<Context, object, object> _func;
         private readonly Type _sourceType;
         private readonly Type _targetType;
 
-        public FakeProcessor(Func<LuntContext, object, object> func, Type sourceType, Type targetType)
+        public FakeProcessor(Func<Context, object, object> func, Type sourceType, Type targetType)
         {
             _func = func;
             _sourceType = sourceType;
@@ -29,22 +29,22 @@ namespace Lunt.Testing
             return _targetType;
         }
 
-        public object Process(LuntContext context, object source)
+        public object Process(Context context, object source)
         {
             return _func(context, source);
         }
     }
 
-    public class FakeProcessor<TSource, TTarget> : LuntProcessor<TSource, TTarget>
+    public class FakeProcessor<TSource, TTarget> : Processor<TSource, TTarget>
     {
-        private readonly Func<LuntContext, TSource, TTarget> _func;
+        private readonly Func<Context, TSource, TTarget> _func;
 
-        public FakeProcessor(Func<LuntContext, TSource, TTarget> func)
+        public FakeProcessor(Func<Context, TSource, TTarget> func)
         {
             _func = func;
         }
 
-        public static ILuntProcessor Mock(Func<LuntContext, TSource, TTarget> func, string name)
+        public static IProcessor Mock(Func<Context, TSource, TTarget> func, string name)
         {
             // Get attribute builder.
             Type[] ctorTypes = {typeof (string)};
@@ -59,11 +59,11 @@ namespace Lunt.Testing
 
             // Create the proxy generator and create the proxy.
             var proxyGenerator = new ProxyGenerator();
-            return (ILuntProcessor) proxyGenerator.CreateClassProxy(typeof (FakeProcessor<TSource, TTarget>),
+            return (IProcessor) proxyGenerator.CreateClassProxy(typeof (FakeProcessor<TSource, TTarget>),
                 proxyOptions, new object[] {func});
         }
 
-        public override TTarget Process(LuntContext context, TSource source)
+        public override TTarget Process(Context context, TSource source)
         {
             return _func(context, source);
         }

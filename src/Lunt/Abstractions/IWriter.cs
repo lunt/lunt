@@ -6,7 +6,7 @@ namespace Lunt
     /// <summary>
     /// Provides methods and properties for writing a specific managed type.
     /// </summary>
-    public interface ILuntWriter : IPipelineComponent
+    public interface IWriter : IPipelineComponent
     {
         /// <summary>
         /// Gets the type handled by the writer.
@@ -20,6 +20,6 @@ namespace Lunt
         /// <param name="context">The context.</param>
         /// <param name="target">The target.</param>
         /// <param name="value">The value to be written.</param>
-        void Write(LuntContext context, IFile target, object value);
+        void Write(Context context, IFile target, object value);
     }
 }

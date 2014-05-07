@@ -5,7 +5,7 @@ namespace Lunt.Tests.Unit.Diagnostics
 {
     public class LogExtensionsTests
     {
-        private class TestLogger : IBuildLog
+        private sealed class TestLogger : IBuildLog
         {
             private Verbosity _verbosity;
             private LogLevel _level;

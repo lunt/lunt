@@ -5,9 +5,9 @@ using Lunt;
 namespace Lake.Tests.Integration.Pipeline
 {
     [DisplayName("Text Reverser")]
-    public class TextReverser : LuntProcessor<string>
+    public class TextReverser : Processor<string>
     {
-        public override string Process(LuntContext context, string value)
+        public override string Process(Context context, string value)
         {
             char[] charArray = value.ToCharArray();
             Array.Reverse(charArray);

@@ -9,7 +9,7 @@ namespace Lunt.Tests.Unit.IO
     {
         #region Private Test Classes
 
-        private class ConcretePath : Path
+        private sealed class ConcretePath : Path
         {
             public ConcretePath(string path)
                 : base(path)

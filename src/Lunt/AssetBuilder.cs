@@ -23,7 +23,7 @@ namespace Lunt
         public AssetBuilder(IFileSystem fileSystem, IPipelineScanner scanner, IHashComputer hasher, IBuildLog log)
         {
             _fileSystem = fileSystem;
-            _registry = new DescriptorRegistry(new PipelineComponentCollection(scanner.Scan()));
+            _registry = new DescriptorRegistry(scanner.Scan());
             _hasher = hasher;
             _log = log;
         }
@@ -59,7 +59,7 @@ namespace Lunt
             obj = null;
 
             // Create the manifest for the asset.
-            var context = new LuntContext(_fileSystem, configuration, _hasher, _log, asset);
+            var context = new Context(_fileSystem, configuration, _hasher, _log, asset);
             var manifest = new BuildManifestItem(asset);
 
             // Makes ure the asset has a file extension.
@@ -95,7 +95,7 @@ namespace Lunt
         }
 
         private bool BuildAsset(Asset asset, BuildConfiguration configuration, BuildManifestItem manifest,
-            LuntContext context, IFile sourceFile, ref object obj, out AssetBuildResult result)
+            Context context, IFile sourceFile, ref object obj, out AssetBuildResult result)
         {
             if (!ImportAsset(asset, manifest, context, sourceFile, ref obj, out result))
             {
@@ -112,7 +112,7 @@ namespace Lunt
             return true;
         }
 
-        private bool ImportAsset(Asset asset, BuildManifestItem manifest, LuntContext context,
+        private bool ImportAsset(Asset asset, BuildManifestItem manifest, Context context,
             IFile sourceFile, ref object obj, out AssetBuildResult error)
         {
             // Get the importer from the registry.
@@ -138,7 +138,7 @@ namespace Lunt
         }
 
         private bool ProcessAsset(Asset asset, BuildManifestItem manifest,
-            LuntContext context, ref object obj, out AssetBuildResult error)
+            Context context, ref object obj, out AssetBuildResult error)
         {
             // Get the processor (if any) from the registry.
             var processorDescription = _registry.GetProcessor(asset);
@@ -189,7 +189,7 @@ namespace Lunt
         }
 
         private bool WriteAsset(Asset asset, BuildConfiguration configuration, BuildManifestItem manifest,
-            LuntContext context, object obj, out AssetBuildResult error)
+            Context context, object obj, out AssetBuildResult error)
         {
             // Get the writer from the registry.
             var writerDescription = _registry.GetWriter(obj.GetType());

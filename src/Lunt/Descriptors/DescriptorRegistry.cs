@@ -3,6 +3,8 @@ using System.Linq;
 
 namespace Lunt.Descriptors
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// The component registry contains all components that are used for building an asset.
     /// <remarks>
@@ -17,11 +19,12 @@ namespace Lunt.Descriptors
         private readonly ProcessorDescriptor[] _processors;
         private readonly WriterDescriptor[] _writers;
 
-        public DescriptorRegistry(IPipelineComponentCollection components)
+        public DescriptorRegistry(IEnumerable<IPipelineComponent> components)
         {
-            _importers = DescriptorFactory.CreateImporterDescriptors(components);
-            _processors = DescriptorFactory.CreateProcessorDescriptors(components);
-            _writers = DescriptorFactory.CreateWriterDescriptors(components);
+            var pipelineComponents = components as IPipelineComponent[] ?? components.ToArray();
+            _importers = DescriptorFactory.CreateImporterDescriptors(pipelineComponents);
+            _processors = DescriptorFactory.CreateProcessorDescriptors(pipelineComponents);
+            _writers = DescriptorFactory.CreateWriterDescriptors(pipelineComponents);
         }
 
         public ImporterDescriptor GetImporter(Asset asset)

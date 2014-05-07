@@ -7,7 +7,7 @@ namespace Lunt
     /// Provides a base class to use when developing custom writer components.
     /// </summary>
     /// <typeparam name="TTarget">The type of the target.</typeparam>
-    public abstract class LuntWriter<TTarget> : ILuntWriter
+    public abstract class Writer<TTarget> : IWriter
     {
         /// <summary>
         /// Compiles an object.
@@ -15,7 +15,7 @@ namespace Lunt
         /// <param name="context">The context.</param>
         /// <param name="target">The target.</param>
         /// <param name="value">The value.</param>
-        public abstract void Write(LuntContext context, IFile target, TTarget value);
+        public abstract void Write(Context context, IFile target, TTarget value);
 
         /// <summary>
         /// Gets the type handled by the writer.
@@ -26,7 +26,7 @@ namespace Lunt
             return typeof (TTarget);
         }
 
-        void ILuntWriter.Write(LuntContext context, IFile target, object value)
+        void IWriter.Write(Context context, IFile target, object value)
         {
             Write(context, target, (TTarget) value);
         }

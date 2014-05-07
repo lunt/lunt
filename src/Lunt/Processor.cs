@@ -6,7 +6,7 @@ namespace Lunt
     /// Provides a base class to use when developing custom processor components.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class LuntProcessor<T> : LuntProcessor<T, T>
+    public abstract class Processor<T> : Processor<T, T>
     {
     }
 
@@ -15,7 +15,7 @@ namespace Lunt
     /// </summary>
     /// <typeparam name="TSource">The type of the source.</typeparam>
     /// <typeparam name="TTarget">The type of the target.</typeparam>
-    public abstract class LuntProcessor<TSource, TTarget> : ILuntProcessor
+    public abstract class Processor<TSource, TTarget> : IProcessor
     {
         /// <summary>
         /// Processes the specified input data and returns the result.
@@ -23,7 +23,7 @@ namespace Lunt
         /// <param name="context">The context.</param>
         /// <param name="source">Existing content object being processed.</param>
         /// <returns>An object representing the processed input.</returns>
-        public abstract TTarget Process(LuntContext context, TSource source);
+        public abstract TTarget Process(Context context, TSource source);
 
         /// <summary>
         /// Gets the object type expected as the input parameter for processing.
@@ -47,7 +47,7 @@ namespace Lunt
             return typeof (TTarget);
         }
 
-        object ILuntProcessor.Process(LuntContext context, object source)
+        object IProcessor.Process(Context context, object source)
         {
             return Process(context, (TSource) source);
         }

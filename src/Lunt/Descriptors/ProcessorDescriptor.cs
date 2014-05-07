@@ -4,11 +4,11 @@ namespace Lunt.Descriptors
 {
     internal sealed class ProcessorDescriptor : ComponentDescriptor
     {
-        private readonly ILuntProcessor _processor;
+        private readonly IProcessor _processor;
         private readonly Type _sourceType;
         private readonly Type _targetType;
 
-        public ILuntProcessor Processor
+        public IProcessor Processor
         {
             get { return _processor; }
         }
@@ -23,7 +23,7 @@ namespace Lunt.Descriptors
             get { return _targetType; }
         }
 
-        public ProcessorDescriptor(ILuntProcessor processor)
+        public ProcessorDescriptor(IProcessor processor)
         {
             _processor = processor;
             _sourceType = processor.GetSourceType();

@@ -5,28 +5,28 @@ namespace Lunt.Testing
 {
     public class FakeComponentCollection : IPipelineComponentCollection
     {
-        private readonly List<ILuntImporter> _importers;
-        private readonly List<ILuntProcessor> _processors;
-        private readonly List<ILuntWriter> _writers;
+        private readonly List<IImporter> _importers;
+        private readonly List<IProcessor> _processors;
+        private readonly List<IWriter> _writers;
 
         public FakeComponentCollection()
         {
-            _importers = new List<ILuntImporter>();
-            _processors = new List<ILuntProcessor>();
-            _writers = new List<ILuntWriter>();
+            _importers = new List<IImporter>();
+            _processors = new List<IProcessor>();
+            _writers = new List<IWriter>();
         }
 
-        public List<ILuntImporter> Importers
+        public List<IImporter> Importers
         {
             get { return _importers; }
         }
 
-        public List<ILuntProcessor> Processors
+        public List<IProcessor> Processors
         {
             get { return _processors; }
         }
 
-        public List<ILuntWriter> Writers
+        public List<IWriter> Writers
         {
             get { return _writers; }
         }

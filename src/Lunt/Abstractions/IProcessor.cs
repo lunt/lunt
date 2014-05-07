@@ -5,7 +5,7 @@ namespace Lunt
     /// <summary>
     /// Provides methods and properties for processing or converting of a specific managed type.
     /// </summary>
-    public interface ILuntProcessor : IPipelineComponent
+    public interface IProcessor : IPipelineComponent
     {
         /// <summary>
         /// Gets the object type expected as the input parameter for processing.
@@ -25,6 +25,6 @@ namespace Lunt
         /// <param name="context">The context.</param>
         /// <param name="source">Existing content object being processed.</param>
         /// <returns>An object representing the processed input.</returns>
-        object Process(LuntContext context, object source);
+        object Process(Context context, object source);
     }
 }

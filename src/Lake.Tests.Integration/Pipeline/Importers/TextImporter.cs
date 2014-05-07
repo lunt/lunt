@@ -6,10 +6,10 @@ using Lunt.IO;
 namespace Lake.Tests.Integration.Pipeline
 {
     [DisplayName("Text Importer")]
-    [LuntImporter(".txt")]
-    public class TextImporter : LuntImporter<string>
+    [Importer(".txt")]
+    public class TextImporter : Importer<string>
     {
-        public override string Import(LuntContext context, IFile source)
+        public override string Import(Context context, IFile source)
         {
             using (var stream = source.Open(FileMode.Open, FileAccess.Read, FileShare.Read))
             using (var reader = new StreamReader(stream))

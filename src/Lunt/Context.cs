@@ -9,7 +9,7 @@ namespace Lunt
     /// <summary>
     /// Provides a context used by components during build.
     /// </summary>
-    public sealed class LuntContext
+    public sealed class Context
     {
         private readonly IFileSystem _fileSystem;
         private readonly BuildConfiguration _configuration;
@@ -56,14 +56,14 @@ namespace Lunt
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LuntContext" /> class.
+        /// Initializes a new instance of the <see cref="Context" /> class.
         /// </summary>
         /// <param name="fileSystem">The file system.</param>
         /// <param name="configuration">The build configuration.</param>
         /// <param name="hasher">The hash computer.</param>
         /// <param name="log">The log.</param>
         /// <param name="asset">The asset.</param>
-        public LuntContext(IFileSystem fileSystem, BuildConfiguration configuration, IHashComputer hasher, IBuildLog log, Asset asset)
+        public Context(IFileSystem fileSystem, BuildConfiguration configuration, IHashComputer hasher, IBuildLog log, Asset asset)
         {
             if (fileSystem == null)
             {

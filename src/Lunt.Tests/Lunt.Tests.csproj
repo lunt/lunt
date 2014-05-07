@@ -84,11 +84,11 @@
     <Compile Include="Unit\IO\Paths\DirectoryPathTests.cs" />
     <Compile Include="Unit\IO\Paths\FilePathTests.cs" />
     <Compile Include="Unit\IO\PathTests.cs" />
-    <Compile Include="Unit\LuntContextTests.cs" />
+    <Compile Include="Unit\ContextTests.cs" />
     <Compile Include="Unit\LuntExceptionTests.cs" />
-    <Compile Include="Unit\LuntImporterAttributeTests.cs" />
-    <Compile Include="Unit\LuntImporterTests.cs" />
-    <Compile Include="Unit\LuntWriterTests.cs" />
+    <Compile Include="Unit\ImporterAttributeTests.cs" />
+    <Compile Include="Unit\ImporterTests.cs" />
+    <Compile Include="Unit\WriterTests.cs" />
     <Compile Include="..\SolutionInfo.cs">
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>

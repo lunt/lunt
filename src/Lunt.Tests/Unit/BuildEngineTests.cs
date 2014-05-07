@@ -148,14 +148,14 @@ namespace Lunt.Tests.Unit
             {
                 // Given
                 var facade = new BuildEngineFactory();
-                facade.Components.Importers.Add(FakeImporter<int>.Mock((c, f) => 0, ".asset", defaultProcessor: typeof (LuntProcessor<>)));
+                facade.Components.Importers.Add(FakeImporter<int>.Mock((c, f) => 0, ".asset", defaultProcessor: typeof (Processor<>)));
 
                 // When
                 var result = Record.Exception(() => facade.CreateBuildEngine());
 
                 // Then
                 Assert.IsType<LuntException>(result);
-                Assert.Equal("The default processor (Lunt.LuntProcessor`1) referenced by " +
+                Assert.Equal("The default processor (Lunt.Processor`1) referenced by " +
                              "Castle.Proxies.FakeImporter`1Proxy is abstract.", result.Message);
             }
 
@@ -664,7 +664,7 @@ namespace Lunt.Tests.Unit
             [Fact]
             public void Importer_Should_Receive_Expected_Context()
             {
-                LuntContext interceptedContext = null;
+                Context interceptedContext = null;
 
                 // Given
                 var facade = new BuildEngineFactory();
@@ -692,7 +692,7 @@ namespace Lunt.Tests.Unit
             [Fact]
             public void Processor_Should_Receive_Expected_Context()
             {
-                LuntContext interceptedContext = null;
+                Context interceptedContext = null;
 
                 // Given
                 var facade = new BuildEngineFactory();
@@ -722,7 +722,7 @@ namespace Lunt.Tests.Unit
             [Fact]
             public void Writer_Should_Receive_Expected_Context()
             {
-                LuntContext interceptedContext = null;
+                Context interceptedContext = null;
 
                 // Given
                 var facade = new BuildEngineFactory();
