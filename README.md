@@ -13,10 +13,14 @@ Some reasons to use Lunt:
 
 ##NuGet
 
-Lunt is available as a NuGet package.
+Both Lunt and Lake (Lunt Make) are available as NuGet packages.
 
 ```
 PM> Install-Package Lunt
+```
+
+```
+PM> Install-Package Lunt.Make
 ```
 
 ###Binaries
