@@ -15,18 +15,13 @@ namespace Lake
         private readonly IArgumentParser _parser;
         private readonly ICommandFactory _factory;
 
-        public LakeApplication()
-            : this(null, null, null, null)
-        {
-        }
-
-        internal LakeApplication(IConsoleWriter console, IConsoleBuildLog log,
+        public LakeApplication(IConsoleWriter console, IConsoleBuildLog log,
             IArgumentParser parser, ICommandFactory factory)
         {
-            _console = console ?? new ConsoleWriter();
-            _log = log ?? new ConsoleBuildLog(_console);
-            _parser = parser ?? new ArgumentParser(_log);
-            _factory = factory ?? new CommandFactory(_log, _console);
+            _console = console;
+            _log = log;
+            _parser = parser;
+            _factory = factory;
         }
 
         public int Run(string[] args)
@@ -48,7 +43,7 @@ namespace Lake
 
                 // Create and execute the command.
                 var command = CreateCommand(options);
-                return command.Execute();
+                return command.Execute(options);
             }
             catch (Exception ex)
             {

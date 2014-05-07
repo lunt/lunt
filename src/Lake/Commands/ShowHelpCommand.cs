@@ -16,7 +16,7 @@ namespace Lake.Commands
             _console = console;
         }
 
-        public int Execute()
+        public int Execute(LakeOptions options)
         {
             _console.WriteLine("Usage: Lake.exe [-input=target] [-output=target] [-probing=target]");
             _console.WriteLine("                  [-verbosity=target] [-help] [-version]");

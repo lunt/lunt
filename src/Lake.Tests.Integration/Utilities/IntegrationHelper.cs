@@ -17,8 +17,10 @@ namespace Lake.Tests.Integration
             var console = new ConsoleWriter();
             var log = new TraceBuildLog();
             var parser = new ArgumentParser(log);
+            var fileSystem = new FileSystem();
+            var environment = new BuildEnvironment(fileSystem);
             var scannerFactory = new PipelineScannerFactory(log);
-            var factory = new CommandFactory(log, console, null, scannerFactory);
+            var factory = new CommandFactory(log, console, environment, scannerFactory);
             return new LakeApplication(console, log, parser, factory);
         }
 

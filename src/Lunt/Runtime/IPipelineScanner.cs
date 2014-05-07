@@ -10,7 +10,7 @@ namespace Lunt.Runtime
         /// <summary>
         /// Performs a scan for components.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The components that was found during scan.</returns>
         IEnumerable<IPipelineComponent> Scan();
     }
 }

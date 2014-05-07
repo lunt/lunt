@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("Lake")]
 [assembly: AssemblyDescription("")]
@@ -8,3 +9,5 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("Lake.Tests")]
 [assembly: InternalsVisibleTo("Lake.Tests.Integration")]
 [assembly: InternalsVisibleTo("Lunt.Tests.Framework")]
+
+[assembly: ComVisible(false)]

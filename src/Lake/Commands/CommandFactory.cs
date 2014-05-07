@@ -1,8 +1,6 @@
 ﻿using System;
-using Lake.Runtime;
 using Lunt;
 using Lunt.Diagnostics;
-using Lunt.IO;
 using Lunt.Runtime;
 
 namespace Lake.Commands
@@ -14,12 +12,7 @@ namespace Lake.Commands
         private readonly IBuildEnvironment _environment;
         private readonly IPipelineScannerFactory _factory;
 
-        public CommandFactory(IBuildLog log, IConsoleWriter writer)
-            : this(log, writer, null, null)
-        {
-        }
-
-        internal CommandFactory(IBuildLog log, IConsoleWriter console, 
+        public CommandFactory(IBuildLog log, IConsoleWriter console, 
             IBuildEnvironment environment, IPipelineScannerFactory factory)
         {
             if (log == null)
@@ -32,8 +25,8 @@ namespace Lake.Commands
             }
             _log = log;
             _console = console;
-            _environment = environment ?? new BuildEnvironment(new FileSystem());
-            _factory = factory ?? new PipelineScannerFactory(_environment, _log);
+            _environment = environment;
+            _factory = factory;
         }
 
         public ICommand CreateHelpCommand(LakeOptions options)
@@ -48,7 +41,7 @@ namespace Lake.Commands
 
         public ICommand CreateBuildCommand(LakeOptions options)
         {
-            return new BuildCommand(_log, _console, _factory, _environment, options);
+            return new BuildCommand(_log, _console, _factory, _environment);
         }
     }
 }

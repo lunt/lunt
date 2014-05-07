@@ -2,6 +2,6 @@
 {
     public interface ICommand
     {
-        int Execute();
+        int Execute(LakeOptions options);
     }
 }

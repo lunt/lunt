@@ -10,15 +10,15 @@ namespace Lunt
     /// <summary>
     /// Provides a mechanism for reading build configurations from XML.
     /// </summary>
-    public sealed class BuildConfigurationXmlReader : IBuildConfigurationReader
+    public sealed class BuildConfigurationReader : IBuildConfigurationReader
     {
         private readonly IFileSystem _fileSystem;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BuildConfigurationXmlReader"/> class.
+        /// Initializes a new instance of the <see cref="BuildConfigurationReader"/> class.
         /// </summary>
         /// <param name="fileSystem"></param>
-        public BuildConfigurationXmlReader(IFileSystem fileSystem)
+        public BuildConfigurationReader(IFileSystem fileSystem)
         {
             if (fileSystem == null)
             {

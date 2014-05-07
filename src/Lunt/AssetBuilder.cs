@@ -3,6 +3,7 @@ using System.Globalization;
 using Lunt.Descriptors;
 using Lunt.Diagnostics;
 using Lunt.IO;
+using Lunt.Runtime;
 
 namespace Lunt
 {
@@ -19,10 +20,10 @@ namespace Lunt
             get { return _hasher; }
         }
 
-        public AssetBuilder(IFileSystem fileSystem, IPipelineComponentCollection components, IHashComputer hasher, IBuildLog log)
+        public AssetBuilder(IFileSystem fileSystem, IPipelineScanner scanner, IHashComputer hasher, IBuildLog log)
         {
             _fileSystem = fileSystem;
-            _registry = new DescriptorRegistry(components);
+            _registry = new DescriptorRegistry(new PipelineComponentCollection(scanner.Scan()));
             _hasher = hasher;
             _log = log;
         }

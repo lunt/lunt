@@ -1,59 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Reflection;
 using Lunt.Diagnostics;
 
 namespace Lunt.Runtime
 {
-    internal sealed class AssemblyScanner
+    /// <summary>
+    /// Provides a mechanism for finding pipeline components within an assembly.
+    /// </summary>
+    public sealed class AssemblyScanner : IPipelineScanner
     {
-        private readonly IBuildLog _log;
+        private readonly AssemblyTypeScanner _typeScanner;
+        private readonly Assembly _assembly;
 
-        public AssemblyScanner(IBuildLog log)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AssemblyScanner" /> class.
+        /// </summary>
+        /// <param name="log">The log.</param>
+        /// <param name="assembly">The assembly.</param>
+        public AssemblyScanner(IBuildLog log, Assembly assembly)
         {
-            _log = log;
+            _typeScanner = new AssemblyTypeScanner(log);
+            _assembly = assembly;
         }
 
-        public IEnumerable<T> Scan<T>(Assembly assembly, bool log = false)
+        /// <summary>
+        /// Performs a scan for components.
+        /// </summary>
+        /// <returns>The components that was found during scan.</returns>
+        public IEnumerable<IPipelineComponent> Scan()
         {
-            var types = GetLoadableTypes(assembly);
-            foreach (Type type in types)
-            {
-                if (type.IsClass && !type.IsAbstract)
-                {
-                    if (typeof (T).IsAssignableFrom(type))
-                    {
-                        if (log)
-                        {
-                            _log.Verbose("Found component '{0}'", type.Name);
-                        }
-
-                        // Got an empty constructor?
-                        var emptyConstructor = type.GetConstructor(Type.EmptyTypes);
-                        if (emptyConstructor == null)
-                        {
-                            _log.Warning(Verbosity.Quiet, "Skipping component '{0}' (no parameterless constructor).", type.FullName);
-                            continue;
-                        }
-
-                        yield return (T) Activator.CreateInstance(type);
-                    }
-                }
-            }
-        }
-
-        private IEnumerable<Type> GetLoadableTypes(Assembly assembly)
-        {
-            if (assembly == null) throw new ArgumentNullException("assembly");
-            try
-            {
-                return assembly.GetTypes();
-            }
-            catch (ReflectionTypeLoadException e)
-            {
-                return e.Types.Where(t => t != null);
-            }
+            return _typeScanner.Scan<IPipelineComponent>(_assembly, log: true);
         }
     }
 }

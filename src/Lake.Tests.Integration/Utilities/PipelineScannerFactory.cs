@@ -15,7 +15,7 @@ namespace Lake.Tests.Integration
 
         public IPipelineScanner Create(DirectoryPath probingPath)
         {
-            return new PipelineAssemblyScanner(_log, typeof(PipelineScannerFactory).Assembly);
+            return new AssemblyScanner(_log, typeof(PipelineScannerFactory).Assembly);
         }
     }
 }

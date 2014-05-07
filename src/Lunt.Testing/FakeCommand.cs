@@ -1,4 +1,5 @@
 ﻿using System;
+using Lake;
 using Lake.Commands;
 
 namespace Lunt.Testing
@@ -12,7 +13,7 @@ namespace Lunt.Testing
             _func = func ?? (() => 0);
         }
 
-        public int Execute()
+        public int Execute(LakeOptions options)
         {
             return _func();
         }

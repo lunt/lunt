@@ -19,7 +19,7 @@ namespace Lake.Commands
             _console = console;
         }
 
-        public int Execute()
+        public int Execute(LakeOptions options)
         {
             OutputVersion(typeof (LakeApplication).Assembly);
             OutputVersion(typeof (IPipelineComponent).Assembly);

@@ -28,9 +28,10 @@ namespace Lake.Tests.Unit.Commands
             {
                 // Given
                 var console = new FakeConsole();
+                var options = new LakeOptions();
 
                 // When
-                var result = new ShowHelpCommand(console).Execute();
+                var result = new ShowHelpCommand(console).Execute(options);
 
                 // Then
                 Assert.Equal(0, result);

@@ -51,11 +51,11 @@ namespace Lake.Tests.Integration
 
         public void Dispose()
         {
-            GC.SuppressFinalize(this);
             Dispose(true);
+            GC.SuppressFinalize(this);            
         }
 
-        public void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
             if (!_disposed)
             {
@@ -67,7 +67,7 @@ namespace Lake.Tests.Integration
             }
         }
 
-        private void CopyFiles(string destination)
+        private static void CopyFiles(string destination)
         {
             var source = GetDataDirectoryPath();
             var files = Directory.GetFiles(source, "*", SearchOption.AllDirectories);
@@ -89,7 +89,7 @@ namespace Lake.Tests.Integration
             }
         }
 
-        private string GetDataDirectoryPath()
+        private static string GetDataDirectoryPath()
         {
             var baseDirectory = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
             if (baseDirectory == null)

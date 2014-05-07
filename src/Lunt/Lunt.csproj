@@ -65,11 +65,13 @@
     <Compile Include="AssetMetadata.cs" />
     <Compile Include="AssetExtractor.cs" />
     <Compile Include="AssetDefinition.cs" />
+    <Compile Include="Bootstrapping\DefaultBootstrapper.cs" />
+    <Compile Include="Bootstrapping\IBootstrapper.cs" />
     <Compile Include="BuildConfiguration.cs" />
     <Compile Include="BuildConfigurationValidator.cs" />
     <Compile Include="AssetBuildResult.cs" />
     <Compile Include="AssetBuildStatus.cs" />
-    <Compile Include="BuildConfigurationXmlReader.cs" />
+    <Compile Include="BuildConfigurationReader.cs" />
     <Compile Include="BuildEnvironment.cs" />
     <Compile Include="BuildManifestProvider.cs" />
     <Compile Include="ConsoleWriter.cs" />
@@ -85,6 +87,7 @@
     <Compile Include="Diagnostics\IBuildLog.cs" />
     <Compile Include="Diagnostics\LogExtensions.cs" />
     <Compile Include="Diagnostics\LogLevel.cs" />
+    <Compile Include="Diagnostics\TraceBuildLog.cs" />
     <Compile Include="Diagnostics\Verbosity.cs" />
     <Compile Include="Diagnostics\VerbosityTypeConverter.cs" />
     <Compile Include="Extensions\BinaryWriterExtensions.cs" />
@@ -130,13 +133,17 @@
     <Compile Include="LuntWriter.cs" />
     <Compile Include="PipelineComponentCollection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Runtime\AssemblyScanner.cs" />
+    <Compile Include="Runtime\AppDomainScanner.cs" />
+    <Compile Include="Runtime\AssemblyTypeScanner.cs" />
+    <Compile Include="Bootstrapping\Bootstrapper.cs" />
+    <Compile Include="Runtime\WorkingDirectoryScanner.cs" />
     <Compile Include="Runtime\IPipelineScanner.cs" />
-    <Compile Include="Runtime\PipelineAssemblyScanner.cs" />
-    <Compile Include="Runtime\PipelineDirectoryScanner.cs" />
+    <Compile Include="Runtime\AssemblyScanner.cs" />
+    <Compile Include="Runtime\DirectoryScanner.cs" />
     <Compile Include="..\SolutionInfo.cs">
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
+    <Compile Include="Bootstrapping\TinyIoC.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

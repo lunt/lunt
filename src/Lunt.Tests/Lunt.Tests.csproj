@@ -65,6 +65,7 @@
     <Compile Include="Unit\AssetDependencyTests.cs" />
     <Compile Include="Unit\AssetMetadataTests.cs" />
     <Compile Include="Unit\AssetTests.cs" />
+    <Compile Include="Unit\Bootstrapping\DefaultBootstrapperTests.cs" />
     <Compile Include="Unit\BuildConfigurationXmlReaderTests.cs" />
     <Compile Include="Unit\BuildConfigurationTests.cs" />
     <Compile Include="Unit\BuildEngineTests.cs" />

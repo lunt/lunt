@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("Lunt")]
 [assembly: AssemblyDescription("")]
@@ -10,3 +11,4 @@ using System.Runtime.CompilerServices;
 
 // We're CLS compliant.
 [assembly: CLSCompliant(true)]
+[assembly: ComVisible(false)]

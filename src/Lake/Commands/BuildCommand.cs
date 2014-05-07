@@ -9,7 +9,6 @@ namespace Lake.Commands
 {
     internal sealed class BuildCommand : ICommand
     {
-        private readonly LakeOptions _options;
         private readonly IBuildLog _log;
         private readonly IConsoleWriter _console;
         private readonly IHashComputer _hasher;
@@ -21,7 +20,7 @@ namespace Lake.Commands
 
         public BuildCommand(IBuildLog log, IConsoleWriter console,
             IPipelineScannerFactory scannerFactory,
-            IBuildEnvironment environment, LakeOptions options)
+            IBuildEnvironment environment)
         {
             if (log == null)
             {
@@ -43,26 +42,21 @@ namespace Lake.Commands
             {
                 throw new ArgumentException("The build environment's file system was null.", "environment");
             }
-            if (options == null)
-            {
-                throw new ArgumentNullException("options");
-            }
+
             _log = log;
             _console = console;
             _hasher = new HashComputer();
             _manifestProvider = new BuildManifestProvider();
             _environment = environment;
-            _configurationReader = new BuildConfigurationXmlReader(_environment.FileSystem);
+            _configurationReader = new BuildConfigurationReader(_environment.FileSystem);
             _scannerFactory = scannerFactory;
-            _options = options;
         }
 
-        internal BuildCommand(LakeOptions options, IBuildEngine engine, IBuildLog log,
+        internal BuildCommand(IBuildEngine engine, IBuildLog log,
             IConsoleWriter console, IHashComputer hasher,
             IPipelineScannerFactory scannerFactory, IBuildEnvironment environment,
             IBuildManifestProvider manifestProvider, IBuildConfigurationReader configurationReader)
         {
-            _options = options;
             _engine = engine;
             _log = log;
             _console = console;
@@ -73,31 +67,30 @@ namespace Lake.Commands
             _configurationReader = configurationReader;
         }
 
-        public int Execute()
+        public int Execute(LakeOptions options)
         {
-            if (_options.BuildConfiguration == null)
+            if (options.BuildConfiguration == null)
             {
                 throw new LuntException("Build configuration file path has not been set.");
             }
 
-            FixConfigurationPaths();
+            FixConfigurationPaths(options);
 
             // Read the build configuration.
-            var configuration = _configurationReader.Read(_options.BuildConfiguration);
+            var configuration = _configurationReader.Read(options.BuildConfiguration);
 
             // Copy settings from the console arguments to the configuration.
-            configuration.InputDirectory = _options.InputDirectory;
-            configuration.OutputDirectory = _options.OutputDirectory;
-            configuration.Incremental = !_options.Rebuild;
+            configuration.InputDirectory = options.InputDirectory;
+            configuration.OutputDirectory = options.OutputDirectory;
+            configuration.Incremental = !options.Rebuild;
 
             // Get the manifest path and load the previous manifest (if any).
-            FilePath manifestPath = string.Concat(_options.BuildConfiguration, ".manifest");
+            FilePath manifestPath = string.Concat(options.BuildConfiguration, ".manifest");
             var previousManifest = _manifestProvider.LoadManifest(_environment.FileSystem, manifestPath);
 
             // Find all components and create the engine.
-            var scanner = _scannerFactory.Create(GetAssemblyProbingPath());
-            var components = new PipelineComponentCollection(scanner);
-            var engine = _engine ?? new BuildEngine(_environment, components, _hasher, _log);
+            var scanner = _scannerFactory.Create(GetAssemblyProbingPath(options));
+            var engine = _engine ?? new BuildEngine(_environment, scanner, _hasher, _log);
 
             // Perform the build.
             var manifest = engine.Build(configuration, previousManifest);
@@ -111,46 +104,46 @@ namespace Lake.Commands
             return 0; // Success
         }
 
-        private void FixConfigurationPaths()
+        private void FixConfigurationPaths(LakeOptions options)
         {
             // Get the working directory.
             var workingDirectory = _environment.GetWorkingDirectory();
 
-            if (_options.BuildConfiguration.IsRelative)
+            if (options.BuildConfiguration.IsRelative)
             {
                 // Fix the build configuration file name.
-                _options.BuildConfiguration = workingDirectory.Combine(_options.BuildConfiguration);
+                options.BuildConfiguration = workingDirectory.Combine(options.BuildConfiguration);
             }
 
-            if (_options.InputDirectory == null)
+            if (options.InputDirectory == null)
             {
                 // No input directory set. Default to working directory.
-                _options.InputDirectory = new DirectoryPath(workingDirectory.FullPath);
+                options.InputDirectory = new DirectoryPath(workingDirectory.FullPath);
             }
-            else if (_options.InputDirectory.IsRelative)
+            else if (options.InputDirectory.IsRelative)
             {
                 // Input directory is relative. Make it relative to the working directory.
-                _options.InputDirectory = workingDirectory.Combine(_options.InputDirectory);
+                options.InputDirectory = workingDirectory.Combine(options.InputDirectory);
             }
 
-            if (_options.OutputDirectory == null)
+            if (options.OutputDirectory == null)
             {
                 // No output directory set. Default to working directory.
-                _options.OutputDirectory = new DirectoryPath(workingDirectory.FullPath);
+                options.OutputDirectory = new DirectoryPath(workingDirectory.FullPath);
             }
-            else if (_options.OutputDirectory.IsRelative)
+            else if (options.OutputDirectory.IsRelative)
             {
                 // Output directory is relative. Make it relative to the working directory.
-                _options.OutputDirectory = workingDirectory.Combine(_options.OutputDirectory);
+                options.OutputDirectory = workingDirectory.Combine(options.OutputDirectory);
             }
         }
 
-        private DirectoryPath GetAssemblyProbingPath()
+        private DirectoryPath GetAssemblyProbingPath(LakeOptions options)
         {
-            if (_options.ProbingDirectory != null)
+            if (options.ProbingDirectory != null)
             {
-                var probingPath = _options.ProbingDirectory;
-                if (_options.ProbingDirectory.IsRelative)
+                var probingPath = options.ProbingDirectory;
+                if (options.ProbingDirectory.IsRelative)
                 {
                     probingPath = _environment.GetWorkingDirectory().Combine(probingPath);
                 }

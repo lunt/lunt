@@ -1,9 +1,11 @@
-﻿namespace Lunt
+﻿using System;
+
+namespace Lunt
 {
     /// <summary>
     /// The Lunt build kernel.
     /// </summary>
-    public interface IBuildEngine
+    public interface IBuildEngine : IDisposable
     {
         /// <summary>
         /// Performs a build using the specified build configuration.

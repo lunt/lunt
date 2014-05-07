@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Lunt.Diagnostics;
 using Lunt.IO;
+using Lunt.Runtime;
 using Lunt.Testing;
 using Lunt.Tests.Fixtures;
 using Moq;
@@ -17,12 +18,12 @@ namespace Lunt.Tests.Unit
             public void Should_Throw_If_Environment_Is_Null()
             {
                 // Given
-                var components = new Mock<IPipelineComponentCollection>().Object;
+                var scanner = new Mock<IPipelineScanner>().Object;
                 var hashComputer = new Mock<IHashComputer>().Object;
                 var log = new Mock<IBuildLog>().Object;
 
                 // When
-                var result = Record.Exception(() => new BuildEngine(null, components, hashComputer, log));
+                var result = Record.Exception(() => new BuildEngine(null, scanner, hashComputer, log));
 
                 // Then
                 Assert.IsType<ArgumentNullException>(result);
@@ -34,12 +35,12 @@ namespace Lunt.Tests.Unit
             {
                 // Given
                 var environment = new Mock<IBuildEnvironment>().Object;
-                var components = new Mock<IPipelineComponentCollection>().Object;
+                var scanner = new Mock<IPipelineScanner>().Object;
                 var hashComputer = new Mock<IHashComputer>().Object;
                 var log = new Mock<IBuildLog>().Object;
 
                 // When
-                var result = Record.Exception(() => new BuildEngine(environment, components, hashComputer, log));
+                var result = Record.Exception(() => new BuildEngine(environment, scanner, hashComputer, log));
 
                 // Then
                 Assert.IsType<ArgumentException>(result);
@@ -47,7 +48,7 @@ namespace Lunt.Tests.Unit
             }
 
             [Fact]
-            public void Should_Throw_If_Component_Collection_Is_Null()
+            public void Should_Throw_If_Scanner_Is_Null()
             {
                 // Given
                 var environment = new FakeBuildEnvironment();
@@ -59,7 +60,7 @@ namespace Lunt.Tests.Unit
 
                 // Then
                 Assert.IsType<ArgumentNullException>(result);
-                Assert.Equal("components", ((ArgumentNullException) result).ParamName);
+                Assert.Equal("scanner", ((ArgumentNullException) result).ParamName);
             }
 
             [Fact]
@@ -67,11 +68,11 @@ namespace Lunt.Tests.Unit
             {
                 // Given
                 var environment = new FakeBuildEnvironment();
-                var components = new Mock<IPipelineComponentCollection>().Object;
+                var scanner = new Mock<IPipelineScanner>().Object;
                 var hashComputer = new Mock<IHashComputer>().Object;
 
                 // When
-                var result = Record.Exception(() => new BuildEngine(environment, components, hashComputer, null));
+                var result = Record.Exception(() => new BuildEngine(environment, scanner, hashComputer, null));
 
                 // Then
                 Assert.IsType<ArgumentNullException>(result);
@@ -230,7 +231,7 @@ namespace Lunt.Tests.Unit
             {
                 // Given
                 var environment = new FakeBuildEnvironment();
-                var component = new FakeComponentCollection();
+                var component = new Mock<IPipelineScanner>().Object;
                 var hashComputer = new Mock<IHashComputer>().Object;
                 var log = new Mock<IBuildLog>().Object;
                 var kernel = new BuildEngine(environment, component, hashComputer, log);

@@ -63,8 +63,9 @@
     <Compile Include="FakeFileSystem.cs" />
     <Compile Include="FakeHashComputer.cs" />
     <Compile Include="FakeImporter.cs" />
+    <Compile Include="FakePipelineScanner.cs" />
     <Compile Include="FakeProcessor.cs" />
-    <Compile Include="FakeWriter.cs" />    
+    <Compile Include="FakeWriter.cs" />
     <Compile Include="Utilities\BuildCommandFactory.cs" />
     <Compile Include="Utilities\BuildEngineFactory.cs" />
     <Compile Include="Utilities\BuildManifestHelper.cs" />
@@ -75,7 +76,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="..\SolutionInfo.cs">
       <Link>Properties\SolutionInfo.cs</Link>
-    </Compile>    
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Lunt\Lunt.csproj">

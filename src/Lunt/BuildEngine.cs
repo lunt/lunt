@@ -3,30 +3,30 @@ using System.Collections.Generic;
 using System.Linq;
 using Lunt.Diagnostics;
 using Lunt.IO;
+using Lunt.Runtime;
 
 namespace Lunt
 {
     /// <summary>
     /// The Lunt build engine.
     /// </summary>
-    public sealed class BuildEngine : IBuildEngine, IDisposable
+    public sealed class BuildEngine : IBuildEngine
     {
         private readonly IFileSystem _fileSystem;
         private readonly AssetBuilder _builder;
         private readonly IBuildLog _log;
         private readonly AssetExtractor _extractor;
         private bool _disposed;
-
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="BuildEngine" /> class.
         /// </summary>
         /// <param name="environment">The build environment</param>
-        /// <param name="components">The components.</param>
+        /// <param name="scanner">The pipeline scanner.</param>
         /// <param name="hasher">The hash computer.</param>
         /// <param name="log">The log.</param>
         /// <exception cref="System.ArgumentNullException">fileSystem</exception>
-        public BuildEngine(IBuildEnvironment environment, IPipelineComponentCollection components,
-            IHashComputer hasher, IBuildLog log)
+        public BuildEngine(IBuildEnvironment environment, IPipelineScanner scanner, IHashComputer hasher, IBuildLog log)
         {
             if (environment == null)
             {
@@ -36,9 +36,9 @@ namespace Lunt
             {
                 throw new ArgumentException("The build environment's file system was null.", "environment");
             }
-            if (components == null)
+            if (scanner == null)
             {
-                throw new ArgumentNullException("components");
+                throw new ArgumentNullException("scanner");
             }
             if (log == null)
             {
@@ -46,7 +46,7 @@ namespace Lunt
             }
 
             _fileSystem = environment.FileSystem;
-            _builder = new AssetBuilder(_fileSystem, components, hasher, log);
+            _builder = new AssetBuilder(_fileSystem, scanner, hasher, log);
             _log = log;
             _extractor = new AssetExtractor(environment);
         }

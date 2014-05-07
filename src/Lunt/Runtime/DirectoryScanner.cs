@@ -10,47 +10,32 @@ namespace Lunt.Runtime
     /// <summary>
     /// Provides a mechanism for finding pipeline components within a directory.
     /// </summary>
-    public sealed class PipelineDirectoryScanner : IPipelineScanner, IDisposable
+    public sealed class DirectoryScanner : IPipelineScanner
     {
-        private readonly AppDomain _domain;
         private readonly IBuildLog _log;
         private readonly List<Assembly> _ignoredAssemblies;
-        private readonly AssemblyScanner _scanner;
+        private readonly AssemblyTypeScanner _typeScanner;
         private readonly IDirectory _directory;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PipelineDirectoryScanner" /> class.
+        /// Initializes a new instance of the <see cref="DirectoryScanner" /> class.
         /// </summary>
         /// <param name="log">The log.</param>
         /// <param name="directory">The directory.</param>
-        public PipelineDirectoryScanner(IBuildLog log, IDirectory directory)
+        public DirectoryScanner(IBuildLog log, IDirectory directory)
         {
-            _domain = AppDomain.CreateDomain("Lunt-Temporary");
-            _scanner = new AssemblyScanner(log);
+            _typeScanner = new AssemblyTypeScanner(log);
             _log = log;
             _directory = directory;
 
             _ignoredAssemblies = new List<Assembly>();
-            _ignoredAssemblies.Add(typeof (IPipelineComponent).Assembly);
             _ignoredAssemblies.Add(typeof (BuildEngine).Assembly);
-            _ignoredAssemblies.Add(typeof (PipelineDirectoryScanner).Assembly);
-        }
-
-        /// <summary>
-        /// Releases all resources used by the current instance of the <see cref="PipelineDirectoryScanner"/> class.
-        /// </summary>
-        public void Dispose()
-        {
-            if (_domain != null)
-            {
-                AppDomain.Unload(_domain);
-            }
         }
 
         /// <summary>
         /// Performs a scan for components in the specified directory.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The components that was found during scan.</returns>
         public IEnumerable<IPipelineComponent> Scan()
         {
             // Make sure that the component directory exist.
@@ -60,12 +45,11 @@ namespace Lunt.Runtime
                 return Enumerable.Empty<IPipelineComponent>();
             }
 
-            // Find all assemblies that contains components.
-            var assemblyFiles = new List<IFile>();
+            var result = new List<IPipelineComponent>();
 
             // Get all the assemblies in the directory.
-            IEnumerable<IFile> files = _directory.GetFiles("*.dll", SearchScope.Current);
-            foreach (IFile file in files)
+            var files = _directory.GetFiles("*.dll", SearchScope.Current);
+            foreach (var file in files)
             {
                 _log.Debug("Examining assembly {0}...", file.Path.GetFilename());
 
@@ -83,27 +67,7 @@ namespace Lunt.Runtime
                 }
 
                 // Got any types here?
-                var types = _scanner.Scan<IPipelineComponent>(assembly);
-                if (types.Any())
-                {
-                    assemblyFiles.Add(file);
-                }
-            }
-
-            var result = new List<IPipelineComponent>();
-
-            // Load assemblies that contains the expected type into current domain.
-            foreach (IFile assemblyFile in assemblyFiles)
-            {
-                _log.Verbose("Loading assembly {0}...", assemblyFile.Path.GetFilename());
-
-                var assembly = LoadAssembly(assemblyFile);
-                if (assembly == null)
-                {
-                    continue;
-                }
-
-                var components = _scanner.Scan<IPipelineComponent>(assembly, log: true);
+                var components = _typeScanner.Scan<IPipelineComponent>(assembly);
                 foreach (var component in components)
                 {
                     result.Add(component);
@@ -118,7 +82,7 @@ namespace Lunt.Runtime
             try
             {
                 var name = AssemblyName.GetAssemblyName(file.Path.FullPath);
-                return _domain.Load(name);
+                return AppDomain.CurrentDomain.Load(name);
             }
             catch (BadImageFormatException)
             {

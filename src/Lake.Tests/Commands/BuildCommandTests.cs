@@ -21,10 +21,9 @@ namespace Lake.Tests.Unit.Commands
                 var console = new Mock<IConsoleWriter>().Object;
                 var scannerFactory = new Mock<IPipelineScannerFactory>().Object;
                 var environment = new Mock<IBuildEnvironment>().Object;
-                var options = new LakeOptions();
 
                 // When
-                var result = Record.Exception(() => new BuildCommand(null, console, scannerFactory, environment, options));
+                var result = Record.Exception(() => new BuildCommand(null, console, scannerFactory, environment));
 
                 // Then
                 Assert.IsType<ArgumentNullException>(result);
@@ -38,10 +37,9 @@ namespace Lake.Tests.Unit.Commands
                 var log = new Mock<IBuildLog>().Object;
                 var scannerFactory = new Mock<IPipelineScannerFactory>().Object;
                 var environment = new Mock<IBuildEnvironment>().Object;
-                var options = new LakeOptions();
 
                 // When
-                var result = Record.Exception(() => new BuildCommand(log, null, scannerFactory, environment, options));
+                var result = Record.Exception(() => new BuildCommand(log, null, scannerFactory, environment));
 
                 // Then
                 Assert.IsType<ArgumentNullException>(result);
@@ -55,10 +53,9 @@ namespace Lake.Tests.Unit.Commands
                 var log = new Mock<IBuildLog>().Object;
                 var console = new Mock<IConsoleWriter>().Object;
                 var environment = new Mock<IBuildEnvironment>().Object;
-                var options = new LakeOptions();
 
                 // When
-                var result = Record.Exception(() => new BuildCommand(log, console, null, environment, options));
+                var result = Record.Exception(() => new BuildCommand(log, console, null, environment));
 
                 // Then
                 Assert.IsType<ArgumentNullException>(result);
@@ -72,10 +69,9 @@ namespace Lake.Tests.Unit.Commands
                 var log = new Mock<IBuildLog>().Object;
                 var console = new Mock<IConsoleWriter>().Object;
                 var scannerFactory = new Mock<IPipelineScannerFactory>().Object;
-                var options = new LakeOptions();
 
                 // When
-                var result = Record.Exception(() => new BuildCommand(log, console, scannerFactory, null, options));
+                var result = Record.Exception(() => new BuildCommand(log, console, scannerFactory, null));
 
                 // Then
                 Assert.IsType<ArgumentNullException>(result);
@@ -89,32 +85,14 @@ namespace Lake.Tests.Unit.Commands
                 var log = new Mock<IBuildLog>().Object;
                 var console = new Mock<IConsoleWriter>().Object;
                 var scannerFactory = new Mock<IPipelineScannerFactory>().Object;
-                var options = new LakeOptions();
                 var environment = new Mock<IBuildEnvironment>().Object;
 
                 // When
-                var result = Record.Exception(() => new BuildCommand(log, console, scannerFactory, environment, options));
+                var result = Record.Exception(() => new BuildCommand(log, console, scannerFactory, environment));
 
                 // Then
                 Assert.IsType<ArgumentException>(result);
                 Assert.True(result.Message.StartsWith("The build environment's file system was null."));
-            }
-
-            [Fact]
-            public void Should_Throw_If_Options_Are_Null()
-            {
-                // Given
-                var log = new Mock<IBuildLog>().Object;
-                var console = new Mock<IConsoleWriter>().Object;
-                var scannerFactory = new Mock<IPipelineScannerFactory>().Object;
-                var environment = new FakeBuildEnvironment();
-
-                // When
-                var result = Record.Exception(() => new BuildCommand(log, console, scannerFactory, environment, null));
-
-                // Then
-                Assert.IsType<ArgumentNullException>(result);
-                Assert.Equal("options", ((ArgumentNullException)result).ParamName);
             }
         }
 
@@ -130,7 +108,7 @@ namespace Lake.Tests.Unit.Commands
                 var command = factory.Create();
 
                 // When
-                var result = Record.Exception(() => command.Execute());
+                var result = Record.Exception(() => command.Execute(factory.Options));
 
                 // Then
                 Assert.IsType<LuntException>(result);
@@ -147,7 +125,7 @@ namespace Lake.Tests.Unit.Commands
                 var command = factory.Create();
 
                 // When
-                command.Execute();
+                command.Execute(factory.Options);
 
                 // Then
                 factory.ConfigurationReader.Verify(x => x.Read(
@@ -164,7 +142,7 @@ namespace Lake.Tests.Unit.Commands
                 var command = factory.Create();
 
                 // When
-                command.Execute();
+                command.Execute(factory.Options);
 
                 // Then
                 factory.Engine.Verify(x => x.Build(
@@ -182,7 +160,7 @@ namespace Lake.Tests.Unit.Commands
                 var command = factory.Create();
 
                 // When
-                command.Execute();
+                command.Execute(factory.Options);
 
                 // Then
                 factory.Engine.Verify(x => x.Build(
@@ -200,7 +178,7 @@ namespace Lake.Tests.Unit.Commands
                 var command = factory.Create();
 
                 // When
-                command.Execute();
+                command.Execute(factory.Options);
 
                 // Then
                 factory.Engine.Verify(x => x.Build(
@@ -218,7 +196,7 @@ namespace Lake.Tests.Unit.Commands
                 var command = factory.Create();
 
                 // When
-                command.Execute();
+                command.Execute(factory.Options);
 
                 // Then
                 factory.Engine.Verify(x => x.Build(
@@ -240,7 +218,7 @@ namespace Lake.Tests.Unit.Commands
                 var command = factory.Create(reader.Object);
 
                 // When
-                command.Execute();
+                command.Execute(factory.Options);
 
                 // Then
                 reader.Verify();
@@ -260,7 +238,7 @@ namespace Lake.Tests.Unit.Commands
                 var command = factory.Create(manifestProvider: manifestProvider.Object);
 
                 // When
-                command.Execute();
+                command.Execute(factory.Options);
 
                 // Then
                 manifestProvider.Verify();
@@ -285,7 +263,7 @@ namespace Lake.Tests.Unit.Commands
                 var command = factory.Create(manifestProvider: manifestProvider.Object, engine: engine.Object);
 
                 // When
-                command.Execute();
+                command.Execute(factory.Options);
 
                 // Then
                 engine.Verify();
@@ -309,7 +287,7 @@ namespace Lake.Tests.Unit.Commands
                 var command = factory.Create(manifestProvider: manifestProvider.Object, engine: engine.Object);
 
                 // When
-                command.Execute();
+                command.Execute(factory.Options);
 
                 // Then
                 manifestProvider.Verify();
@@ -331,7 +309,7 @@ namespace Lake.Tests.Unit.Commands
                 var command = factory.Create();
 
                 // When    
-                command.Execute();
+                command.Execute(factory.Options);
 
                 // Then
                 const string expected = "\n========== Build: 2 succeeded, 1 failed, 3 skipped ==========";
@@ -347,7 +325,7 @@ namespace Lake.Tests.Unit.Commands
                 var command = factory.Create();
 
                 // When
-                command.Execute();
+                command.Execute(factory.Options);
 
                 // Then
                 factory.ScannerFactory.Verify(x => x.Create(It.Is<DirectoryPath>(path => path.FullPath == "/working/probing")));
@@ -362,7 +340,7 @@ namespace Lake.Tests.Unit.Commands
                 var command = factory.Create();
 
                 // When
-                command.Execute();
+                command.Execute(factory.Options);
 
                 // Then
                 factory.ScannerFactory.Verify(x => x.Create(It.Is<DirectoryPath>(path => path.FullPath=="/probing")));
@@ -376,7 +354,7 @@ namespace Lake.Tests.Unit.Commands
                 var command = factory.Create();
 
                 // When
-                command.Execute();
+                command.Execute(factory.Options);
 
                 // Then
                 factory.ScannerFactory.Verify(x => x.Create(It.Is<DirectoryPath>(path => path.FullPath == "/working")));

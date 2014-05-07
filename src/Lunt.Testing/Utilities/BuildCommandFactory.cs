@@ -106,7 +106,7 @@ namespace Lunt.Testing
                 .Returns(() => _workingDirectory)
                 .Verifiable();
 
-            return new BuildCommand(_options, engine ?? _engine.Object, 
+            return new BuildCommand(engine ?? _engine.Object, 
                 log, _console, hasher, 
                 factory ?? ScannerFactory.Object,
                 _environment.Object, 

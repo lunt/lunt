@@ -1,4 +1,5 @@
 ﻿using Lunt.IO;
+using Lunt.Tests.Framework;
 
 namespace Lunt.Testing
 {
@@ -64,7 +65,7 @@ namespace Lunt.Testing
 
         public BuildEngine CreateBuildEngine()
         {
-            _engine = new BuildEngine(_environment, _components, Hasher, _log);
+            _engine = new BuildEngine(_environment, new FakePipelineScanner(_components), Hasher, _log);
             return _engine;
         }
 

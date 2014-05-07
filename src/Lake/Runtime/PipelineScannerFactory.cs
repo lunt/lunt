@@ -19,7 +19,7 @@ namespace Lake.Runtime
         public IPipelineScanner Create(DirectoryPath probingPath)
         {
             var probingDirectory = _environment.FileSystem.GetDirectory(probingPath);
-            return new PipelineDirectoryScanner(_log, probingDirectory);
+            return new DirectoryScanner(_log, probingDirectory);
         }
     }
 }
