@@ -154,7 +154,8 @@ Target "Create-Lake-NuGet-Package" (fun _ ->
 
         NuGet (fun p -> 
             {p with
-                Project = "Lunt.Make"                           
+                Project = "Lunt.Make"
+                NoPackageAnalysis = true
                 OutputPath = nugetRoot
                 WorkingDir = coreRootDir
                 Version = releaseNotes.AssemblyVersion
