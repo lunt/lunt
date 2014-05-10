@@ -27,8 +27,11 @@ namespace Lunt.Tests.Unit.Bootstrapping
                 {
                     bootstrapper.Initialize();
 
-                    // When, Then
-                    Assert.DoesNotThrow(() => bootstrapper.GetEngine());
+                    // When
+                    var engine = bootstrapper.GetEngine();
+
+                    // Then
+                    Assert.IsType<BuildEngine>(engine);
                 }
             }
         }

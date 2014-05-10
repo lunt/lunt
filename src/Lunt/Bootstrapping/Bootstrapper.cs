@@ -7,7 +7,7 @@ namespace Lunt.Bootstrapping
     /// </summary>
     /// <typeparam name="TContainer">The container type.</typeparam>
     public abstract class Bootstrapper<TContainer> : IBootstrapper, IDisposable
-        where TContainer : class 
+        where TContainer : class
     {
         /// <summary>
         /// Gets or sets the application container.
@@ -19,7 +19,7 @@ namespace Lunt.Bootstrapping
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
         public void Dispose()
-        {            
+        {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
@@ -29,7 +29,7 @@ namespace Lunt.Bootstrapping
         /// </summary>
         /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
         protected virtual void Dispose(bool disposing)
-        {            
+        {
         }
 
         /// <summary>
