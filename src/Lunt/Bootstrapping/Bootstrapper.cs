@@ -60,7 +60,6 @@ namespace Lunt.Bootstrapping
             {
                 throw new LuntException("Bootstrapper have not been initialized.");
             }
-
             return ResolveBuildEngine(ApplicationContainer);
         }
 

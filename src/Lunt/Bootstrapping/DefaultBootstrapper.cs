@@ -55,9 +55,9 @@ namespace Lunt.Bootstrapping
         /// Registers the build engine.
         /// </summary>
         /// <param name="container">The container.</param>
-        protected override sealed void RegisterBuildEngine(TinyIoCContainer container)
+        protected override void RegisterBuildEngine(TinyIoCContainer container)
         {
-            container.Register(typeof (IBuildEngine), typeof (BuildEngine));
+            container.Register(typeof(IBuildEngine), typeof(BuildEngine)).AsSingleton();
         }
 
         /// <summary>
