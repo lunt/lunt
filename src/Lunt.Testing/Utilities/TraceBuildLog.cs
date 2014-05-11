@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 namespace Lunt.Testing
 {
-    public sealed class TraceBuildLog : IConsoleBuildLog
+    public sealed class TraceBuildLog : ILakeBuildLog
     {
         public Verbosity Verbosity { get; set; }
 

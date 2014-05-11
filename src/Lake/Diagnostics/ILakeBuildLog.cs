@@ -2,7 +2,7 @@
 
 namespace Lake.Diagnostics
 {
-    public interface IConsoleBuildLog : IBuildLog
+    public interface ILakeBuildLog : IBuildLog
     {
         Verbosity Verbosity { get; set; }
     }

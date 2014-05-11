@@ -84,6 +84,7 @@
     <Compile Include="BuildManifest.cs" />
     <Compile Include="BuildManifestItem.cs" />
     <Compile Include="AssetBuilder.cs" />
+    <Compile Include="Diagnostics\ConsoleBuildLog.cs" />
     <Compile Include="Diagnostics\IBuildLog.cs" />
     <Compile Include="Diagnostics\LogExtensions.cs" />
     <Compile Include="Diagnostics\LogLevel.cs" />

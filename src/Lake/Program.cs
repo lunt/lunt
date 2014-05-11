@@ -13,7 +13,7 @@ namespace Lake
         {
             // Create the dependencies the Lake application need.
             var console = new ConsoleWriter();
-            var log = new ConsoleBuildLog(console);
+            var log = new LakeBuildLog(console);
             var parser = new ArgumentParser(log);
             var fileSystem = new FileSystem();
             var environment = new BuildEnvironment(fileSystem);

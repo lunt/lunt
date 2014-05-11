@@ -1,28 +1,21 @@
 ﻿using System;
-using Lunt;
-using Lunt.Diagnostics;
 
-namespace Lake.Diagnostics
+namespace Lunt.Diagnostics
 {
     /// <summary>
     /// A build log that write messages to a <see cref="IConsoleWriter"/>.
     /// </summary>
-    internal sealed class ConsoleBuildLog : IConsoleBuildLog
+    public sealed class ConsoleBuildLog : IBuildLog
     {
-        private readonly IConsoleWriter _console;
+        private readonly IConsoleWriter _writer;
 
         /// <summary>
-        /// Gets or sets the build log verbosity.
+        /// Initializes a new instance of the <see cref="ConsoleBuildLog"/> class.
         /// </summary>
-        public Verbosity Verbosity { get; set; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ConsoleBuildLog" /> class.
-        /// </summary>
-        /// <param name="console">The console output writer.</param>
-        public ConsoleBuildLog(IConsoleWriter console)
+        /// <param name="writer">The writer.</param>
+        public ConsoleBuildLog(IConsoleWriter writer)
         {
-            _console = console;
+            _writer = writer;
         }
 
         /// <summary>
@@ -33,19 +26,14 @@ namespace Lake.Diagnostics
         /// <param name="message">The message.</param>
         public void Write(Verbosity verbosity, LogLevel level, string message)
         {
-            if (verbosity > Verbosity)
-            {
-                return;
-            }
-
             try
             {
-                _console.SetForeground(GetColor(level));
-                _console.WriteLine("[{0}] {1}", level.ToString().Substring(0, 1), message);
+                _writer.SetForeground(GetColor(level));
+                _writer.WriteLine(message);
             }
             finally
             {
-                _console.ResetColors();
+                _writer.ResetColors();
             }
         }
 

@@ -53,12 +53,13 @@
     <Compile Include="Commands\CommandFactoryTests.cs" />
     <Compile Include="Commands\ShowHelpCommandTests.cs" />
     <Compile Include="Commands\ShowVersionTests.cs" />
+    <Compile Include="Diagnostics\LakeBuildLogTests.cs" />
     <Compile Include="LakeApplicationTests.cs" />
     <Compile Include="LakeOptionsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="..\SolutionInfo.cs">
       <Link>Properties\SolutionInfo.cs</Link>
-    </Compile>    
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

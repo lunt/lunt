@@ -10,12 +10,12 @@ namespace Lake
 {
     public sealed class LakeApplication
     {
-        private readonly IConsoleBuildLog _log;
+        private readonly ILakeBuildLog _log;
         private readonly IConsoleWriter _console;
         private readonly IArgumentParser _parser;
         private readonly ICommandFactory _factory;
 
-        public LakeApplication(IConsoleWriter console, IConsoleBuildLog log,
+        public LakeApplication(IConsoleWriter console, ILakeBuildLog log,
             IArgumentParser parser, ICommandFactory factory)
         {
             _console = console;

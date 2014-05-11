@@ -30,7 +30,7 @@ namespace Lake.Tests.Unit
             public void Should_Show_Usage_Information(string command)
             {
                 // Given
-                var log = new Mock<IConsoleBuildLog>().Object;
+                var log = new Mock<ILakeBuildLog>().Object;
                 var console = new Mock<IConsoleWriter>().Object;
                 var parser = new ArgumentParser(log);
                 var factory = new Mock<ICommandFactory>();
@@ -52,7 +52,7 @@ namespace Lake.Tests.Unit
             public void Should_Show_Version_Information(string command)
             {
                 // Given
-                var log = new Mock<IConsoleBuildLog>().Object;
+                var log = new Mock<ILakeBuildLog>().Object;
                 var console = new Mock<IConsoleWriter>().Object;
                 var parser = new ArgumentParser(log);
                 var factory = new Mock<ICommandFactory>();
@@ -72,7 +72,7 @@ namespace Lake.Tests.Unit
             public void Should_Build_If_Output_Directory_And_Build_Configuration_Is_Set()
             {
                 // Given
-                var log = new Mock<IConsoleBuildLog>().Object;
+                var log = new Mock<ILakeBuildLog>().Object;
                 var console = new Mock<IConsoleWriter>().Object;
                 var parser = new ArgumentParser(log);
 
@@ -92,7 +92,7 @@ namespace Lake.Tests.Unit
             public void Should_Show_Usage_Information_If_Options_Are_Null()
             {
                 // Given
-                var log = new Mock<IConsoleBuildLog>().Object;
+                var log = new Mock<ILakeBuildLog>().Object;
                 var console = new Mock<IConsoleWriter>().Object;
                 var parser = new Mock<IArgumentParser>();
                 parser.Setup(x => x.Parse(It.IsAny<string[]>()))
@@ -114,7 +114,7 @@ namespace Lake.Tests.Unit
             public void Should_Show_Usage_Information_If_No_Options_Are_Set()
             {
                 // Given
-                var log = new Mock<IConsoleBuildLog>().Object;
+                var log = new Mock<ILakeBuildLog>().Object;
                 var console = new Mock<IConsoleWriter>().Object;
                 var parser = new Mock<IArgumentParser>();
                 parser.Setup(x => x.Parse(It.IsAny<string[]>()))
@@ -136,7 +136,7 @@ namespace Lake.Tests.Unit
             public void Should_Catch_Exceptions_In_Commands()
             {
                 // Given
-                var log = new Mock<IConsoleBuildLog>().Object;
+                var log = new Mock<ILakeBuildLog>().Object;
                 var console = new Mock<IConsoleWriter>().Object;
                 var parser = new ArgumentParser(log);
                 var factory = new Mock<ICommandFactory>();
