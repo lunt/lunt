@@ -12,15 +12,6 @@ namespace Lake.Tests.Unit
 {
     public class LakeApplicationTests
     {
-        public class TheConstructor
-        {
-            [Fact]
-            public void Should_Throw_If_Console_Is_Null()
-            {
-                
-            }
-        }
-
         public class TheRunCommand
         {
             [Theory]
