@@ -15,3 +15,4 @@
 * Asset build result messages are now stored as composites.
 
 ## New in 0.0.5
+* Assembly type scanner now skips dynamic assemblies.
