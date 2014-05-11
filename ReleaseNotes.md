@@ -8,8 +8,10 @@
 ### New in 0.0.3 (Released 2014/05/08)
 * Removed Lunt prefix from class names.
 
-### New in 0.0.4
+### New in 0.0.4 (Released 2014/05/11)
 * Kernel is now resolved as a singleton from container.
 * Moved the Lake console build log to Lunt.
 * Build log now preserves the provided composite format.
 * Asset build result messages are now stored as composites.
+
+## New in 0.0.5
