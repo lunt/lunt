@@ -17,8 +17,13 @@ namespace Lunt.Runtime
 
         public IEnumerable<T> Scan<T>(Assembly assembly, bool log = false)
         {
+            if (assembly.IsDynamic)
+            {
+                yield break;
+            }
+
             var types = GetLoadableTypes(assembly);
-            foreach (Type type in types)
+            foreach (var type in types)
             {
                 if (type.IsClass && !type.IsAbstract)
                 {
