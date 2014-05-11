@@ -8,6 +8,6 @@ using System.Runtime.InteropServices;
 // Expose internals to the test projects.
 [assembly: InternalsVisibleTo("Lake.Tests")]
 [assembly: InternalsVisibleTo("Lake.Tests.Integration")]
-[assembly: InternalsVisibleTo("Lunt.Tests.Framework")]
+[assembly: InternalsVisibleTo("Lunt.Testing")]
 
 [assembly: ComVisible(false)]
