@@ -11,3 +11,4 @@
 ### New in 0.0.4
 * Kernel is now resolved as a singleton from container.
 * Moved the Lake console build log to Lunt.
+* Build log now preserves the provided composite format.

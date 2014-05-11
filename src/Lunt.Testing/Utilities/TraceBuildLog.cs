@@ -13,9 +13,9 @@ namespace Lunt.Testing
             Verbosity = Verbosity.Verbose;
         }
 
-        public void Write(Verbosity verbosity, LogLevel level, string message)
+        public void Write(Verbosity verbosity, LogLevel level, string format, params object[] args)
         {
-            Trace.WriteLine(message);
+            Trace.WriteLine(string.Format(format, args));
         }
     }
 }

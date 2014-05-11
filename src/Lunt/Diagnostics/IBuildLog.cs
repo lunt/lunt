@@ -10,7 +10,8 @@
         /// </summary>
         /// <param name="verbosity">The verbosity.</param>
         /// <param name="level">The level.</param>
-        /// <param name="message">The message.</param>
-        void Write(Verbosity verbosity, LogLevel level, string message);
+        /// <param name="format">A composite format string.</param>
+        /// <param name="args">An object array that contains zero or more objects to format.</param>
+        void Write(Verbosity verbosity, LogLevel level, string format, params object[] args);
     }
 }

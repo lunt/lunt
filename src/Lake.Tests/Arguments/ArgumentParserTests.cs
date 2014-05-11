@@ -1,6 +1,8 @@
 ﻿using System;
 using Lake.Arguments;
 using Lunt.Diagnostics;
+using Lunt.Testing;
+
 using Moq;
 using Xunit;
 using Xunit.Extensions;
@@ -29,15 +31,15 @@ namespace Lake.Tests.Unit.Arguments
             public void Should_Log_And_Return_Null_If_Parser_Encounters_Unknown_Switch()
             {
                 // Given
-                var log = new Mock<IBuildLog>();
-                var parser = new ArgumentParser(log.Object);
+                var log = new FakeBuildLog();
+                var parser = new ArgumentParser(log);
 
                 // When
                 var result = parser.Parse(new[] {"-unknown"});
 
                 // Then
                 Assert.Null(result);
-                log.Verify(x => x.Write(Verbosity.Quiet, LogLevel.Error, "Unknown option: unknown"));
+                Assert.Equal("Unknown option: unknown", log.Messages[0]);
             }
 
             [Theory]

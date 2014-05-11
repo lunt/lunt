@@ -26,11 +26,11 @@ namespace Lunt.Tests.Unit.Diagnostics
                 get { return _message; }
             }
 
-            public void Write(Verbosity verbosity, LogLevel level, string message)
+            public void Write(Verbosity verbosity, LogLevel level, string format, params object[] args)
             {
                 _verbosity = verbosity;
                 _level = level;
-                _message = message;
+                _message = string.Format(format, args);
             }
         }
 

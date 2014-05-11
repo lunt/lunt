@@ -29,7 +29,7 @@ namespace Lunt.Diagnostics
         {
             if (log != null)
             {
-                log.Write(verbosity, LogLevel.Error, string.Format(CultureInfo.InvariantCulture, format, args));
+                log.Write(verbosity, LogLevel.Error, format, args);
             }
         }
 
@@ -55,7 +55,7 @@ namespace Lunt.Diagnostics
         {
             if (log != null)
             {
-                log.Write(verbosity, LogLevel.Warning, string.Format(CultureInfo.InvariantCulture, format, args));
+                log.Write(verbosity, LogLevel.Warning, format, args);
             }
         }
 
@@ -81,7 +81,7 @@ namespace Lunt.Diagnostics
         {
             if (log != null)
             {
-                log.Write(verbosity, LogLevel.Information, string.Format(CultureInfo.InvariantCulture, format, args));
+                log.Write(verbosity, LogLevel.Information, format, args);
             }
         }
 
@@ -107,7 +107,7 @@ namespace Lunt.Diagnostics
         {
             if (log != null)
             {
-                log.Write(verbosity, LogLevel.Verbose, string.Format(CultureInfo.InvariantCulture, format, args));
+                log.Write(verbosity, LogLevel.Verbose, format, args);
             }
         }
 
@@ -133,7 +133,7 @@ namespace Lunt.Diagnostics
         {
             if (log != null)
             {
-                log.Write(verbosity, LogLevel.Debug, string.Format(CultureInfo.InvariantCulture, format, args));
+                log.Write(verbosity, LogLevel.Debug, format, args);
             }
         }
     }

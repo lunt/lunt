@@ -17,9 +17,9 @@ namespace Lunt.Testing
             _messages = new List<string>();
         }
 
-        public void Write(Verbosity verbosity, LogLevel level, string message)
+        public void Write(Verbosity verbosity, LogLevel level, string format, params object[] args)
         {
-            _messages.Add(message);
+            _messages.Add(string.Format(format, args));
         }
     }
 }
