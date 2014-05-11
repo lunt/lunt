@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-
-namespace Lunt.Diagnostics
+﻿namespace Lunt.Diagnostics
 {
     /// <summary>
     /// Provides extension methods to the <see cref="IBuildLog"/> class.

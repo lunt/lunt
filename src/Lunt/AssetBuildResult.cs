@@ -8,7 +8,7 @@ namespace Lunt
     public sealed class AssetBuildResult
     {
         private readonly BuildManifestItem _manifestItem;
-        private readonly string _message;
+        private readonly Message _message;
 
         /// <summary>
         /// The asset that was built.
@@ -41,7 +41,7 @@ namespace Lunt
         /// Gets the message.
         /// </summary>
         /// <value>The message.</value>
-        public string Message
+        public Message Message
         {
             get { return _message; }
         }
@@ -52,14 +52,14 @@ namespace Lunt
         /// <param name="manifestItem">The manifest item.</param>
         /// <param name="message">The build result message.</param>
         /// <exception cref="System.ArgumentNullException">manifestItem</exception>
-        public AssetBuildResult(BuildManifestItem manifestItem, string message)
+        public AssetBuildResult(BuildManifestItem manifestItem, Message message)
         {
             if (manifestItem == null)
             {
                 throw new ArgumentNullException("manifestItem");
             }
             _manifestItem = manifestItem;
-            _message = message ?? string.Empty;
+            _message = message ?? Message.Empty;
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace Lunt
         {
             manifest.Status = AssetBuildStatus.Success;
             manifest.Message = string.Empty;
-            return new AssetBuildResult(manifest, string.Empty);
+            return new AssetBuildResult(manifest, Message.Empty);
         }
 
         /// <summary>
@@ -80,10 +80,10 @@ namespace Lunt
         /// <param name="manifest">The manifest.</param>
         /// <param name="message">The message.</param>
         /// <returns>A build result representing a failed build.</returns>
-        internal static AssetBuildResult Failure(BuildManifestItem manifest, string message)
+        internal static AssetBuildResult Failure(BuildManifestItem manifest, Message message)
         {
             manifest.Status = AssetBuildStatus.Failure;
-            manifest.Message = message;
+            manifest.Message = message.ToString();
             return new AssetBuildResult(manifest, message);
         }
     }

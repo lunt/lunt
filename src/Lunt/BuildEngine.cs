@@ -136,7 +136,7 @@ namespace Lunt
                 var result = _builder.Build(asset, configuration);
                 if (result.Status != AssetBuildStatus.Success)
                 {
-                    _log.Warning(result.Message);
+                    _log.Warning(result.Message.ToString());
                 }
 
                 // Add the result to the manifest.

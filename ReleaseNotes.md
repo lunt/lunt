@@ -12,3 +12,4 @@
 * Kernel is now resolved as a singleton from container.
 * Moved the Lake console build log to Lunt.
 * Build log now preserves the provided composite format.
+* Asset build result messages are now stored as composites.

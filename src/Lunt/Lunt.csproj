@@ -130,6 +130,7 @@
     <Compile Include="LuntException.cs" />
     <Compile Include="Importer.cs" />
     <Compile Include="ImporterAttribute.cs" />
+    <Compile Include="Message.cs" />
     <Compile Include="Processor.cs" />
     <Compile Include="Writer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

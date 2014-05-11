@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using Lunt.Descriptors;
 using Lunt.Diagnostics;
 using Lunt.IO;
@@ -66,8 +65,8 @@ namespace Lunt
             var extension = asset.Path.GetExtension();
             if (extension == null)
             {
-                const string format = "The asset @{0} has no file extension.";
-                return AssetBuildResult.Failure(manifest, string.Format(CultureInfo.InvariantCulture, format, asset.Path));
+                var message = new Message("The asset @{0} has no file extension.", asset.Path);
+                return AssetBuildResult.Failure(manifest, message);
             }
 
             // Get the source file and make sure it exist.
@@ -75,7 +74,7 @@ namespace Lunt
             var sourceFile = _fileSystem.GetFile(sourcePath);
             if (!sourceFile.Exists)
             {
-                var message = string.Format(CultureInfo.InvariantCulture, "Could not find the file '{0}'.", sourcePath.FullPath);
+                var message = new Message("Could not find the file '{0}'.", sourcePath.FullPath);
                 return AssetBuildResult.Failure(manifest, message);
             }
 
@@ -119,7 +118,7 @@ namespace Lunt
             var importerDescription = _registry.GetImporter(asset);
             if (importerDescription == null)
             {
-                var message = string.Format(CultureInfo.InvariantCulture, "Could not find an importer for @{0}.", asset.Path);
+                var message = new Message("Could not find an importer for @{0}.", asset.Path);
                 error = AssetBuildResult.Failure(manifest, message);
                 return false;
             }
@@ -128,7 +127,7 @@ namespace Lunt
             obj = importerDescription.Importer.Import(context, sourceFile);
             if (obj == null)
             {
-                var message = string.Format(CultureInfo.InvariantCulture, "Import of @{0} resulted in null.", asset.Path);
+                var message = new Message("Import of @{0} resulted in null.", asset.Path);
                 error = AssetBuildResult.Failure(manifest, message);
                 return false;
             }
@@ -153,7 +152,7 @@ namespace Lunt
                 if (importedType != processorSourceType)
                 {
                     const string format = "Cannot process @{0} since the data is of the wrong type ({1}). Processor expected {2}.";
-                    var message = string.Format(CultureInfo.InvariantCulture, format, asset.Path, importedType.FullName, processorSourceType.FullName);
+                    var message = new Message(format, asset.Path, importedType.FullName, processorSourceType.FullName);
                     error = AssetBuildResult.Failure(manifest, message);
                     return false;
                 }
@@ -162,7 +161,7 @@ namespace Lunt
                 obj = processorDescription.Processor.Process(context, obj);
                 if (obj == null)
                 {
-                    var message = string.Format(CultureInfo.InvariantCulture, "Processing of @{0} resulted in null.", asset.Path);
+                    var message = new Message("Processing of @{0} resulted in null.", asset.Path);
                     error = AssetBuildResult.Failure(manifest, message);
                     return false;
                 }
@@ -170,7 +169,7 @@ namespace Lunt
                 if (obj.GetType() != processorDescription.TargetType)
                 {
                     const string format = "Value returned from processor for @{0} does not match expected target type ({1}).";
-                    var message = string.Format(CultureInfo.InvariantCulture, format, asset.Path, processorDescription.TargetType.FullName);
+                    var message = new Message(format, asset.Path, processorDescription.TargetType.FullName);
                     error = AssetBuildResult.Failure(manifest, message);
                     return false;
                 }
@@ -179,7 +178,7 @@ namespace Lunt
             if (!string.IsNullOrWhiteSpace(asset.ProcessorName) && processorDescription == null)
             {
                 const string format = "Cannot process @{0} since the processor '{1}' wasn't found.";
-                var message = string.Format(CultureInfo.InvariantCulture, format, asset.Path, asset.ProcessorName);
+                var message = new Message(format, asset.Path, asset.ProcessorName);
                 error = AssetBuildResult.Failure(manifest, message);
                 return false;
             }
@@ -195,7 +194,7 @@ namespace Lunt
             var writerDescription = _registry.GetWriter(obj.GetType());
             if (writerDescription == null)
             {
-                var message = string.Format(CultureInfo.InvariantCulture, "Could not find a writer for @{0}.", asset.Path);
+                var message = new Message("Could not find a writer for @{0}.", asset.Path);
                 error = AssetBuildResult.Failure(manifest, message);
                 return false;
             }
@@ -211,7 +210,7 @@ namespace Lunt
                 if (!targetDirectory.Create())
                 {
                     const string format = "Could not create target directory '{0}'.";
-                    var message = string.Format(CultureInfo.InvariantCulture, format, targetDirectory.Path);
+                    var message = new Message(format, targetDirectory.Path);
                     error = AssetBuildResult.Failure(manifest, message);
                     return false;
                 }
