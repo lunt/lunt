@@ -101,7 +101,8 @@ namespace Lake.Commands
             // Output the result.
             OutputResult(manifest);
 
-            return 0; // Success
+            var hasErrors = manifest.Items.Any(x => x.Status == AssetBuildStatus.Failure);
+            return (int)(hasErrors ? ExitCode.BuildFailure : ExitCode.Success);
         }
 
         private void FixConfigurationPaths(LakeOptions options)

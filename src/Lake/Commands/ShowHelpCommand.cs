@@ -36,7 +36,7 @@ namespace Lake.Commands
             _console.WriteLine("    -colors             Outputs the build log with colors.");
             _console.WriteLine("    -rebuild            Performs a non incremental build.");
 
-            return 0;
+            return (int)ExitCode.Success;
         }
     }
 }

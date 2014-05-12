@@ -359,6 +359,54 @@ namespace Lake.Tests.Unit.Commands
                 // Then
                 factory.ScannerFactory.Verify(x => x.Create(It.Is<DirectoryPath>(path => path.FullPath == "/working")));
             }
+
+            [Fact]
+            public void Should_Return_Success_If_Build_Was_Successful()
+            {
+                // Given
+                var factory = new BuildCommandFactory();
+                factory.Manifest.Items.Add(new BuildManifestItem(new Asset("/assets/1.txt")) { Status = AssetBuildStatus.Success });
+                var command = factory.Create();
+
+                // When    
+                var result = command.Execute(factory.Options);
+
+                // Then
+                Assert.Equal((int)ExitCode.Success, result);
+            }
+
+            [Fact]
+            public void Should_Return_Success_Even_If_Assets_Were_Skipped()
+            {
+                // Given
+                var factory = new BuildCommandFactory();
+                factory.Manifest.Items.Add(new BuildManifestItem(new Asset("/assets/1.txt")) { Status = AssetBuildStatus.Success });
+                factory.Manifest.Items.Add(new BuildManifestItem(new Asset("/assets/2.txt")) { Status = AssetBuildStatus.Skipped });
+                var command = factory.Create();
+
+                // When    
+                var result = command.Execute(factory.Options);
+
+                // Then
+                Assert.Equal((int)ExitCode.Success, result);
+            }
+
+            [Fact]
+            public void Should_Return_Failure_If_Build_Of_Any_Asset_Failed()
+            {
+                // Given
+                var factory = new BuildCommandFactory();
+                factory.Manifest.Items.Add(new BuildManifestItem(new Asset("/assets/1.txt")) { Status = AssetBuildStatus.Success });
+                factory.Manifest.Items.Add(new BuildManifestItem(new Asset("/assets/2.txt")) { Status = AssetBuildStatus.Skipped });
+                factory.Manifest.Items.Add(new BuildManifestItem(new Asset("/assets/3.txt")) { Status = AssetBuildStatus.Failure });
+                var command = factory.Create();
+
+                // When    
+                var result = command.Execute(factory.Options);
+
+                // Then
+                Assert.Equal((int)ExitCode.BuildFailure, result);
+            }
         }
     }
 }

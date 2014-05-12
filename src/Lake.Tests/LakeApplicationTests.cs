@@ -140,7 +140,7 @@ namespace Lake.Tests.Unit
                     .Run(new[] {"-version"});
 
                 // Then
-                Assert.Equal(1, result);
+                Assert.Equal((int)ExitCode.Exception, result);
                 factory.Verify();
             }
         }

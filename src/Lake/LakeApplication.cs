@@ -50,7 +50,7 @@ namespace Lake
             {
                 _log.Error("An unhandled exception occured.");
                 _log.Error(ex.Message);
-                return 1;
+                return (int)ExitCode.Exception;
             }
         }
 

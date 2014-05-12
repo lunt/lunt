@@ -16,3 +16,4 @@
 
 ## New in 0.0.5
 * Assembly type scanner now skips dynamic assemblies.
+* Lake exit codes now give more information about executed build.

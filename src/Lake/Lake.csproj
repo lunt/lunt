@@ -58,6 +58,7 @@
     <Compile Include="Commands\ShowHelpCommand.cs" />
     <Compile Include="Diagnostics\LakeBuildLog.cs" />
     <Compile Include="Diagnostics\ILakeBuildLog.cs" />
+    <Compile Include="ExitCode.cs" />
     <Compile Include="LakeApplication.cs" />
     <Compile Include="LakeOptions.cs" />
     <Compile Include="Program.cs" />

@@ -23,7 +23,7 @@ namespace Lake.Commands
         {
             OutputVersion(typeof (LakeApplication).Assembly);
             OutputVersion(typeof (IPipelineComponent).Assembly);
-            return 0;
+            return (int)ExitCode.Success;
         }
 
         private void OutputVersion(Assembly assembly)
