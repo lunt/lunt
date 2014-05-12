@@ -16,4 +16,5 @@
 
 ## New in 0.0.5
 * Assembly type scanner now skips dynamic assemblies.
+* Added colors to build log.
 * Lake exit codes now give more information about executed build.
