@@ -60,7 +60,7 @@ namespace Lake.Arguments
         }
 
         public LakeOptions Parse(string[] args)
-        {
+       {
             var options = new LakeOptions();
             var isParsingOptions = true;
 
@@ -79,12 +79,6 @@ namespace Lake.Arguments
 
                     isParsingOptions = false;
 
-                    if (options.BuildConfiguration != null)
-                    {
-                        _log.Error("More than one build configuration specified.");
-                        return null;
-                    }
-
                     // Quoted?
                     var buildConfiguration = arg;
                     if (buildConfiguration.StartsWith("\"") && buildConfiguration.EndsWith("\""))
@@ -93,6 +87,14 @@ namespace Lake.Arguments
                     }
 
                     options.BuildConfiguration = new FilePath(buildConfiguration);
+                }
+                else
+                {
+                    if (options.BuildConfiguration != null)
+                    {
+                        _log.Error("More than one build configuration specified.");
+                        return null;
+                    }                    
                 }
             }
 

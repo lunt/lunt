@@ -7,18 +7,18 @@ namespace Lake.Runtime
 {
     internal sealed class PipelineScannerFactory : IPipelineScannerFactory
     {
-        private readonly IBuildEnvironment _environment;
+        private readonly IFileSystem _fileSystem;
         private readonly IBuildLog _log;
 
-        public PipelineScannerFactory(IBuildEnvironment environment, IBuildLog log)
+        public PipelineScannerFactory(IFileSystem fileSystem, IBuildLog log)
         {
-            _environment = environment;
+            _fileSystem = fileSystem;
             _log = log;
         }
 
         public IPipelineScanner Create(DirectoryPath probingPath)
         {
-            var probingDirectory = _environment.FileSystem.GetDirectory(probingPath);
+            var probingDirectory = _fileSystem.GetDirectory(probingPath);
             return new DirectoryScanner(_log, probingDirectory);
         }
     }

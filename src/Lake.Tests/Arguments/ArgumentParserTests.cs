@@ -229,6 +229,21 @@ namespace Lake.Tests.Unit.Arguments
                 Assert.Equal("build.config", result.BuildConfiguration.FullPath);
             }
 
+            [Fact]
+            public void Should_Throw_If_Multiple_Build_Configurations_Are_Provided()
+            {
+                // Given
+                var log = new FakeBuildLog();
+                var parser = new ArgumentParser(log);
+                var arguments = new[] { "build1.config", "build2.config" };
+
+                // When
+                var result = parser.Parse(arguments);
+
+                // Then
+                Assert.Equal("More than one build configuration specified.", log.Messages[0]);
+            }
+
             [Theory]
             [InlineData("/home/test/build.config")]
             [InlineData("\"/home/test/build.config\"")]

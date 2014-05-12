@@ -17,7 +17,7 @@ namespace Lake
             var parser = new ArgumentParser(log);
             var fileSystem = new FileSystem();
             var environment = new BuildEnvironment(fileSystem);
-            var scannerFactory = new PipelineScannerFactory(environment, log);
+            var scannerFactory = new PipelineScannerFactory(fileSystem, log);
             var factory = new CommandFactory(log, console, environment, scannerFactory);
 
             // Create the application and run it.
