@@ -8,7 +8,16 @@ namespace Lake.Diagnostics
     /// </summary>
     internal sealed class LakeBuildLog : ILakeBuildLog
     {
-        private readonly ConsoleBuildLog _log;
+        private readonly ColoredConsoleBuildLog _grayscaleLog;
+        private readonly ColoredConsoleBuildLog _colorLog;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether colors should be used.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if colors should be used; otherwise, <c>false</c>.
+        /// </value>
+        public bool Colors { get; set; }
 
         /// <summary>
         /// Gets or sets the build log verbosity.
@@ -21,7 +30,9 @@ namespace Lake.Diagnostics
         /// <param name="console">The console output writer.</param>
         public LakeBuildLog(IConsoleWriter console)
         {
-            _log = new ConsoleBuildLog(console);
+            _grayscaleLog = new ColoredConsoleBuildLog(console, grayscale: true);
+            _colorLog = new ColoredConsoleBuildLog(console);
+
             Verbosity = Verbosity.Diagnostic;
         }
 
@@ -38,8 +49,18 @@ namespace Lake.Diagnostics
             {
                 return;
             }
+
+            // Prefix the format with the log level.
             format = string.Concat("[", level.ToString().Substring(0, 1), "] ", format);
-            _log.Write(verbosity, level, format, args);
+
+            if (Colors)
+            {
+                _colorLog.Write(verbosity, level, format, args);
+            }
+            else
+            {
+                _grayscaleLog.Write(verbosity, level, format, args);
+            }
         }
     }
 }

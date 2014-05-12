@@ -18,9 +18,18 @@ namespace Lunt.Testing
             get { return _content; }
         }
 
+        public void Write(string format, params object[] args)
+        {
+            Content.Add(string.Format(CultureInfo.InvariantCulture, format, args));
+        }
+
         public void WriteLine(string format, params object[] args)
         {
             Content.Add(string.Format(CultureInfo.InvariantCulture, format, args));
+        }
+
+        public void SetBackground(ConsoleColor color)
+        {
         }
 
         public void SetForeground(ConsoleColor color)

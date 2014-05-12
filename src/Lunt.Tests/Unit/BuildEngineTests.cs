@@ -386,7 +386,7 @@ namespace Lunt.Tests.Unit
                 // Then
                 Assert.Equal(1, result.Items.Count);
                 Assert.Equal(AssetBuildStatus.Failure, result.Items[0].Status);
-                Assert.Equal("The asset @simple has no file extension.", result.Items[0].Message);
+                Assert.Equal("The asset simple has no file extension.", result.Items[0].Message);
             }
 
             [Fact]
@@ -404,7 +404,7 @@ namespace Lunt.Tests.Unit
                 // Then
                 Assert.Equal(1, result.Items.Count);
                 Assert.Equal(AssetBuildStatus.Failure, result.Items[0].Status);
-                Assert.Equal("Could not find an importer for @simple.asset.", result.Items[0].Message);
+                Assert.Equal("Could not find an importer for simple.asset.", result.Items[0].Message);
             }
 
             [Fact]
@@ -423,7 +423,7 @@ namespace Lunt.Tests.Unit
                 // Then
                 Assert.Equal(1, result.Items.Count);
                 Assert.Equal(AssetBuildStatus.Failure, result.Items[0].Status);
-                Assert.Equal("Import of @simple.asset resulted in null.", result.Items[0].Message);
+                Assert.Equal("Import of simple.asset resulted in null.", result.Items[0].Message);
             }
 
             [Fact]
@@ -447,7 +447,7 @@ namespace Lunt.Tests.Unit
                 // Then
                 Assert.Equal(1, result.Items.Count);
                 Assert.Equal(AssetBuildStatus.Failure, result.Items[0].Status);
-                Assert.Equal("Processing of @simple.asset resulted in null.", result.Items[0].Message);
+                Assert.Equal("Processing of simple.asset resulted in null.", result.Items[0].Message);
             }
 
             [Fact]
@@ -471,7 +471,7 @@ namespace Lunt.Tests.Unit
                 // Then
                 Assert.Equal(1, result.Items.Count);
                 Assert.Equal(AssetBuildStatus.Failure, result.Items[0].Status);
-                Assert.Equal("Value returned from processor for @simple.asset does not match expected target type (System.String).", result.Items[0].Message);
+                Assert.Equal("Value returned from processor for simple.asset does not match expected target type (System.String).", result.Items[0].Message);
             }
 
             [Fact]
@@ -490,7 +490,7 @@ namespace Lunt.Tests.Unit
                 // Then
                 Assert.Equal(1, result.Items.Count);
                 Assert.Equal(AssetBuildStatus.Failure, result.Items[0].Status);
-                Assert.Equal("Could not find a writer for @simple.asset.", result.Items[0].Message);
+                Assert.Equal("Could not find a writer for simple.asset.", result.Items[0].Message);
             }
 
             [Fact]
@@ -547,7 +547,7 @@ namespace Lunt.Tests.Unit
                 // Then
                 Assert.Equal(1, result.Items.Count);
                 Assert.Equal(AssetBuildStatus.Failure, result.Items[0].Status);
-                Assert.Equal("Cannot process @simple.asset since the processor 'MyProcessor' wasn't found.", result.Items[0].Message);
+                Assert.Equal("Cannot process simple.asset since the processor 'MyProcessor' wasn't found.", result.Items[0].Message);
             }
 
             [Fact]
@@ -571,7 +571,7 @@ namespace Lunt.Tests.Unit
                 // Then
                 Assert.Equal(1, result.Items.Count);
                 Assert.Equal(AssetBuildStatus.Failure, result.Items[0].Status);
-                Assert.Equal("Cannot process @simple.asset since the data is of the wrong type (System.String). " +
+                Assert.Equal("Cannot process simple.asset since the data is of the wrong type (System.String). " +
                              "Processor expected System.Int32.", result.Items[0].Message);
             }
 
@@ -1101,7 +1101,7 @@ namespace Lunt.Tests.Unit
 
                 // Then
                 Assert.Equal(AssetBuildStatus.Success, result.Items[0].Status);
-                Assert.True(facade.Log.Messages.Contains("Built @assets/simple.asset"));
+                Assert.True(facade.Log.Messages.Contains("Built assets/simple.asset"));
             }
 
             [Fact]

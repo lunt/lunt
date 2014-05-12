@@ -122,7 +122,7 @@ namespace Lunt
                     {
                         if (!ShouldRebuild(configuration, asset, assetManifest))
                         {
-                            _log.Information("Skipped @{0} (no change)", asset.Path);
+                            _log.Information("Skipped {0} (no change)", asset.Path);
                             assetManifest.Status = AssetBuildStatus.Skipped;
                             manifest.Items.Add(assetManifest);
                             continue;
@@ -130,13 +130,13 @@ namespace Lunt
                     }
                 }
 
-                _log.Information("Building @{0}", asset.Path);
+                _log.Information("Building {0}", asset.Path);
 
                 // Build the item.
                 var result = _builder.Build(asset, configuration);
                 if (result.Status != AssetBuildStatus.Success)
                 {
-                    _log.Warning(result.Message.ToString());
+                    _log.Warning(result.Message.Format, result.Message.Arguments);
                 }
 
                 // Add the result to the manifest.

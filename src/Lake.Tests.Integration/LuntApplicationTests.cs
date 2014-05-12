@@ -54,7 +54,7 @@ namespace Lake.Tests.Integration
                     context.ExecuteBuild("build_reverse.config");
 
                     // Then
-                    Assert.True(scope.Messages.Contains("Skipped @Text/Asset.txt (no change)"));
+                    Assert.True(scope.Messages.Contains("Skipped Text/Asset.txt (no change)"));
                 }
             }
         }

@@ -196,6 +196,22 @@ namespace Lake.Tests.Unit.Arguments
             }
 
             [Theory]
+            [InlineData("-colors")]
+            [InlineData("-c")]
+            public void Can_Parse_NoColors(string input)
+            {
+                // Given
+                var log = new Mock<IBuildLog>();
+                var parser = new ArgumentParser(log.Object);
+
+                // When
+                var result = parser.Parse(new[] { input });
+
+                // Then
+                Assert.True(result.Colors);
+            }
+
+            [Theory]
             [InlineData("build.config")]
             [InlineData("-verbosity=quiet build.config")]
             public void Can_Parse_Build_Configuration(string input)

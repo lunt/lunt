@@ -12,6 +12,7 @@ namespace Lake
         public DirectoryPath ProbingDirectory { get; set; }
 
         public Verbosity Verbosity { get; set; }
+        public bool Colors { get; set; }
 
         public bool ShowHelp { get; set; }
         public bool ShowVersion { get; set; }

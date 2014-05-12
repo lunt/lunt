@@ -52,6 +52,11 @@ namespace Lake.Arguments
                 "-rebuild", false,
                 @"Performs a non incremental build.",
                 o => o.Rebuild);
+
+            AddOption(new[] { "colors", "c" },
+                "-colors", false,
+                @"Outputs the build log with colors.",
+                o => o.Colors);
         }
 
         public LakeOptions Parse(string[] args)

@@ -18,6 +18,16 @@ namespace Lake.Tests.Unit
             }
 
             [Fact]
+            public void Should_Disable_Colors()
+            {
+                // Given, When
+                var result = new LakeOptions();
+
+                // Then
+                Assert.False(result.Colors);
+            }
+
+            [Fact]
             public void Should_Not_Show_Help()
             {
                 // Given, When

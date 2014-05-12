@@ -39,6 +39,7 @@ namespace Lake
                 {
                     // Update the log with the parsed options.
                     _log.Verbosity = options.Verbosity;
+                    _log.Colors = options.Colors;
                 }
 
                 // Create and execute the command.

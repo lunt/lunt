@@ -6,6 +6,7 @@ namespace Lunt.Testing
 {
     public sealed class TraceBuildLog : ILakeBuildLog
     {
+        public bool Colors { get; set; }
         public Verbosity Verbosity { get; set; }
 
         public TraceBuildLog()

@@ -8,6 +8,16 @@ namespace Lunt
     public sealed class ConsoleWriter : IConsoleWriter
     {
         /// <summary>
+        /// Writes the text representation of the specified array of objects.
+        /// </summary>
+        /// <param name="format">The format.</param>
+        /// <param name="args">The arguments.</param>
+        public void Write(string format, params object[] args)
+        {
+            Console.Write(format, args);
+        }
+
+        /// <summary>
         /// Writes the text representation of the specified array of objects, 
         /// followed by the current line terminator to the standard output stream.
         /// </summary>
@@ -16,6 +26,15 @@ namespace Lunt
         public void WriteLine(string format, params object[] args)
         {
             Console.WriteLine(format, args);
+        }
+
+        /// <summary>
+        /// Sets the background console color.
+        /// </summary>
+        /// <param name="color">The color.</param>
+        public void SetBackground(ConsoleColor color)
+        {
+            Console.BackgroundColor = color;
         }
 
         /// <summary>

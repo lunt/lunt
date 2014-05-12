@@ -65,7 +65,7 @@ namespace Lunt
             var extension = asset.Path.GetExtension();
             if (extension == null)
             {
-                var message = new Message("The asset @{0} has no file extension.", asset.Path);
+                var message = new Message("The asset {0} has no file extension.", asset.Path);
                 return AssetBuildResult.Failure(manifest, message);
             }
 
@@ -84,7 +84,7 @@ namespace Lunt
                 return result;
             }
 
-            _log.Information("Built @{0}", asset.Path);
+            _log.Information("Built {0}", asset.Path);
 
             manifest.Checksum = _hasher.Compute(sourceFile);
             manifest.Length = sourceFile.Length;
@@ -118,16 +118,16 @@ namespace Lunt
             var importerDescription = _registry.GetImporter(asset);
             if (importerDescription == null)
             {
-                var message = new Message("Could not find an importer for @{0}.", asset.Path);
+                var message = new Message("Could not find an importer for {0}.", asset.Path);
                 error = AssetBuildResult.Failure(manifest, message);
                 return false;
             }
 
-            _log.Verbose("{0}: Importing @{1}", importerDescription.Name, asset.Path);
+            _log.Verbose("{0}: Importing {1}", importerDescription.Name, asset.Path);
             obj = importerDescription.Importer.Import(context, sourceFile);
             if (obj == null)
             {
-                var message = new Message("Import of @{0} resulted in null.", asset.Path);
+                var message = new Message("Import of {0} resulted in null.", asset.Path);
                 error = AssetBuildResult.Failure(manifest, message);
                 return false;
             }
@@ -151,24 +151,24 @@ namespace Lunt
                 var processorSourceType = processorDescription.SourceType;
                 if (importedType != processorSourceType)
                 {
-                    const string format = "Cannot process @{0} since the data is of the wrong type ({1}). Processor expected {2}.";
+                    const string format = "Cannot process {0} since the data is of the wrong type ({1}). Processor expected {2}.";
                     var message = new Message(format, asset.Path, importedType.FullName, processorSourceType.FullName);
                     error = AssetBuildResult.Failure(manifest, message);
                     return false;
                 }
 
-                _log.Verbose("{0}: Processing @{1}", processorDescription.Name, asset.Path);
+                _log.Verbose("{0}: Processing {1}", processorDescription.Name, asset.Path);
                 obj = processorDescription.Processor.Process(context, obj);
                 if (obj == null)
                 {
-                    var message = new Message("Processing of @{0} resulted in null.", asset.Path);
+                    var message = new Message("Processing of {0} resulted in null.", asset.Path);
                     error = AssetBuildResult.Failure(manifest, message);
                     return false;
                 }
 
                 if (obj.GetType() != processorDescription.TargetType)
                 {
-                    const string format = "Value returned from processor for @{0} does not match expected target type ({1}).";
+                    const string format = "Value returned from processor for {0} does not match expected target type ({1}).";
                     var message = new Message(format, asset.Path, processorDescription.TargetType.FullName);
                     error = AssetBuildResult.Failure(manifest, message);
                     return false;
@@ -177,7 +177,7 @@ namespace Lunt
 
             if (!string.IsNullOrWhiteSpace(asset.ProcessorName) && processorDescription == null)
             {
-                const string format = "Cannot process @{0} since the processor '{1}' wasn't found.";
+                const string format = "Cannot process {0} since the processor '{1}' wasn't found.";
                 var message = new Message(format, asset.Path, asset.ProcessorName);
                 error = AssetBuildResult.Failure(manifest, message);
                 return false;
@@ -194,7 +194,7 @@ namespace Lunt
             var writerDescription = _registry.GetWriter(obj.GetType());
             if (writerDescription == null)
             {
-                var message = new Message("Could not find a writer for @{0}.", asset.Path);
+                var message = new Message("Could not find a writer for {0}.", asset.Path);
                 error = AssetBuildResult.Failure(manifest, message);
                 return false;
             }
@@ -216,7 +216,7 @@ namespace Lunt
                 }
             }
 
-            _log.Verbose("{0}: Writing @{1}", writerDescription.Name, asset.Path);
+            _log.Verbose("{0}: Writing {1}", writerDescription.Name, asset.Path);
             writerDescription.Writer.Write(context, targetFile, obj);
 
             error = null;

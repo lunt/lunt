@@ -73,6 +73,7 @@
     <Compile Include="Unit\BuildManifestItemTests.cs" />
     <Compile Include="Unit\BuildManifestProviderTests.cs" />
     <Compile Include="Unit\BuildManifestTests.cs" />
+    <Compile Include="Unit\Diagnostics\Format\FormatParserTests.cs" />
     <Compile Include="Unit\Diagnostics\LogExtensionsTests.cs" />
     <Compile Include="Unit\Diagnostics\VerboseTypeConverterTests.cs" />
     <Compile Include="Unit\IO\Converters\DirectoryPathTypeConverterTests.cs" />

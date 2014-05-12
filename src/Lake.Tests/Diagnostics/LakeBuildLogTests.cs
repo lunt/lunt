@@ -1,6 +1,8 @@
 ﻿using Lake.Diagnostics;
 using Lunt;
 using Lunt.Diagnostics;
+using Lunt.Testing;
+
 using Moq;
 using Xunit;
 
@@ -28,14 +30,14 @@ namespace Lake.Tests.Diagnostics
             public void Should_Prefix_The_Log_Message_With_The_Log_Level()
             {
                 // Given
-                var writer = new Mock<IConsoleWriter>();
-                var log = new LakeBuildLog(writer.Object);
+                var writer = new FakeConsole();
+                var log = new LakeBuildLog(writer);
 
                 // When
                 log.Write(Verbosity.Normal, LogLevel.Information, "Hello World");
 
                 // Then
-                writer.Verify(x => x.WriteLine("[I] Hello World"));
+                writer.Content.Contains("[I] Hello World");
             }
         }
     }
