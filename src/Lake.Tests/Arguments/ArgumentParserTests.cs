@@ -232,7 +232,7 @@ namespace Lake.Tests.Unit.Arguments
                 var arguments = new[] { "build1.config", "build2.config" };
 
                 // When
-                var result = parser.Parse(arguments);
+                parser.Parse(arguments);
 
                 // Then
                 Assert.Equal("More than one build configuration specified.", log.Messages[0]);

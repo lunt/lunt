@@ -1,8 +1,4 @@
-﻿using System;
-using IOFile = System.IO.FileInfo;
-using IODirectory = System.IO.DirectoryInfo;
-
-namespace Lunt.IO
+﻿namespace Lunt.IO
 {
     /// <summary>
     /// Representation of a physical file system.

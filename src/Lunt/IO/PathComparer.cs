@@ -11,6 +11,23 @@ namespace Lunt.IO
         private readonly bool _isCaseSensitive;
 
         /// <summary>
+        /// The default path comparer.
+        /// </summary>        
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
+        public static readonly PathComparer Default = new PathComparer(Machine.IsUnix());
+
+        /// <summary>
+        /// Gets a value indicating whether the comparer is case sensitive.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if the comparer is case sensitive; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsCaseSensitive
+        {
+            get { return _isCaseSensitive; }
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="PathComparer" /> class.
         /// </summary>
         /// <param name="isCaseSensitive">if set to <c>true</c> the comparison will be case sensitive.</param>
@@ -36,7 +53,7 @@ namespace Lunt.IO
                 return false;
             }
 
-            if (_isCaseSensitive)
+            if (IsCaseSensitive)
             {
                 return x.FullPath.Equals(y.FullPath);
             }
@@ -56,7 +73,7 @@ namespace Lunt.IO
             {
                 throw new ArgumentNullException("obj");
             }
-            if (_isCaseSensitive)
+            if (IsCaseSensitive)
             {
                 return obj.FullPath.GetHashCode();
             }

@@ -157,5 +157,36 @@ namespace Lunt.Tests.Unit.IO
                 Assert.Equal(expected, comparer.GetHashCode(first) == comparer.GetHashCode(second));
             }
         }
+
+        public sealed class TheDefaultProperty
+        {
+            [Fact]
+            public void Should_Return_Correct_Comparer_Depending_On_Operative_System()
+            {
+                // Given
+                var expected = Machine.IsUnix();
+
+                // When
+                var instance = PathComparer.Default;
+
+                // Then
+                Assert.Equal(expected, instance.IsCaseSensitive);
+            }
+        }
+
+        public sealed class TheIsCaseSensitiveProperty
+        {
+            [Theory]
+            [InlineData(true)]
+            [InlineData(false)]
+            public void Should_Return_Whether_Or_Not_The_Comparer_Is_Case_Sensitive(bool isCaseSensitive)
+            {
+                // Given, When
+                var comparer = new PathComparer(isCaseSensitive);
+
+                // Then
+                Assert.Equal(isCaseSensitive, comparer.IsCaseSensitive);
+            }
+        }
     }
 }
