@@ -123,6 +123,7 @@
     <Compile Include="IO\IFile.cs" />
     <Compile Include="IO\IFileSystem.cs" />
     <Compile Include="IO\IHashComputer.cs" />
+    <Compile Include="IO\Machine.cs" />
     <Compile Include="IO\NoCloseBinaryWriter.cs" />
     <Compile Include="IO\NoCloseBinaryReader.cs" />
     <Compile Include="BuildEngine.cs" />

@@ -36,11 +36,11 @@ namespace Lunt.IO
         /// <summary>
         /// Initializes a new instance of the <see cref="Directory" /> class.
         /// </summary>
-        /// <param name="directory">The directory.</param>
-        public Directory(DirectoryInfo directory)
+        /// <param name="path">The directory path.</param>
+        public Directory(DirectoryPath path)
         {
-            _directory = directory;
-            _path = new DirectoryPath(_directory.FullName);
+            _path = path;
+            _directory = new DirectoryInfo(_path.FullPath);
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace Lunt.IO
         public IEnumerable<IDirectory> GetDirectories(string filter, SearchScope scope)
         {
             SearchOption option = scope == SearchScope.Current ? SearchOption.TopDirectoryOnly : SearchOption.AllDirectories;
-            return _directory.GetDirectories(filter, option).Select(directory => new Directory(directory));
+            return _directory.GetDirectories(filter, option).Select(directory => new Directory(directory.FullName));
         }
 
         /// <summary>
@@ -85,7 +85,7 @@ namespace Lunt.IO
         public IEnumerable<IFile> GetFiles(string filter, SearchScope scope)
         {
             SearchOption option = scope == SearchScope.Current ? SearchOption.TopDirectoryOnly : SearchOption.AllDirectories;
-            return _directory.GetFiles(filter, option).Select(file => new File(file));
+            return _directory.GetFiles(filter, option).Select(file => new File(file.FullName));
         }
     }
 }

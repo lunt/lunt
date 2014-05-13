@@ -9,6 +9,8 @@ namespace Lunt.IO
     /// </summary>
     public sealed class FileSystem : IFileSystem
     {
+        private readonly bool _isCaseSensitive;
+
         /// <summary>
         /// Gets a value indicating whether the file system is case sensitive.
         /// </summary>
@@ -17,12 +19,15 @@ namespace Lunt.IO
         /// </value>
         public bool IsCaseSensitive
         {
-            get
-            {
-                var platform = (int) Environment.OSVersion.Platform;
-                var isUnix = (platform == 4) || (platform == 6) || (platform == 128);
-                return isUnix;
-            }
+            get { return _isCaseSensitive; }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FileSystem"/> class.
+        /// </summary>
+        public FileSystem()
+        {
+            _isCaseSensitive = Machine.IsUnix();
         }
 
         /// <summary>
@@ -34,7 +39,7 @@ namespace Lunt.IO
         /// </returns>
         public IFile GetFile(FilePath path)
         {
-            return new File(new IOFile(path.FullPath));
+            return new File(path);
         }
 
         /// <summary>
@@ -46,7 +51,7 @@ namespace Lunt.IO
         /// </returns>
         public IDirectory GetDirectory(DirectoryPath path)
         {
-            return new Directory(new IODirectory(path.FullPath));
+            return new Directory(path);
         }
     }
 }

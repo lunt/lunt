@@ -42,11 +42,11 @@ namespace Lunt.IO
         /// <summary>
         /// Initializes a new instance of the <see cref="File" /> class.
         /// </summary>
-        /// <param name="file">The file.</param>
-        public File(FileInfo file)
+        /// <param name="path">The file path.</param>
+        public File(FilePath path)
         {
-            _file = file;
-            _path = new FilePath(file.FullName);
+            _path = path;
+            _file = new FileInfo(path.FullPath);
         }
 
         /// <summary>

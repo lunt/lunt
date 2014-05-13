@@ -45,11 +45,9 @@ namespace Lake.Tests.Unit.Arguments
             [Theory]
             [InlineData("-input=test", "test")]
             [InlineData("-INPUT=test", "test")]
-            [InlineData("-input=\"test", "\"test")]
             [InlineData("-input=\"test\"", "test")]
             [InlineData("-i=test", "test")]
             [InlineData("-I=test", "test")]
-            [InlineData("-i=\"test", "\"test")]
             [InlineData("-i=\"test\"", "test")]
             public void Can_Parse_Input_Directory(string input, string value)
             {
@@ -68,11 +66,9 @@ namespace Lake.Tests.Unit.Arguments
             [Theory]
             [InlineData("-output=test", "test")]
             [InlineData("-OUTPUT=test", "test")]
-            [InlineData("-output=\"test", "\"test")]
             [InlineData("-output=\"test\"", "test")]
             [InlineData("-o=test", "test")]
             [InlineData("-O=test", "test")]
-            [InlineData("-o=\"test", "\"test")]
             [InlineData("-o=\"test\"", "test")]
             public void Can_Parse_Output_Directory(string input, string value)
             {
@@ -91,11 +87,9 @@ namespace Lake.Tests.Unit.Arguments
             [Theory]
             [InlineData("-probing=test", "test")]
             [InlineData("-PROBING=test", "test")]
-            [InlineData("-probing=\"test", "\"test")]
             [InlineData("-probing=\"test\"", "test")]
             [InlineData("-p=test", "test")]
             [InlineData("-P=test", "test")]
-            [InlineData("-p=\"test", "\"test")]
             [InlineData("-p=\"test\"", "test")]
             public void Can_Parse_Probing_Directory(string input, string value)
             {

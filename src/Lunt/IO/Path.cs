@@ -8,6 +8,8 @@ namespace Lunt.IO
     public abstract class Path
     {
         private readonly string _path;
+        private readonly bool _isRelative;
+        private readonly string[] _segments;
 
         /// <summary>
         /// Gets the full path.
@@ -26,7 +28,16 @@ namespace Lunt.IO
         /// </value>
         public bool IsRelative
         {
-            get { return !System.IO.Path.IsPathRooted(_path); }
+            get { return _isRelative; }
+        }
+
+        /// <summary>
+        /// Gets the segments that make up the path.
+        /// </summary>
+        /// <value>The segments that make up the path.</value>
+        public string[] Segments
+        {
+            get { return _segments; }
         }
 
         /// <summary>
@@ -47,6 +58,17 @@ namespace Lunt.IO
             }
             _path = path.Replace('\\', '/').Trim();
             _path = _path == "./" ? string.Empty : _path;
+
+            // Remove relative part of a path.
+            if (_path.StartsWith("./", StringComparison.Ordinal))
+            {
+                _path = _path.Substring(2);
+            }
+
+            _isRelative = !System.IO.Path.IsPathRooted(_path);
+
+            // Extract path segments.
+            _segments = _path.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
         }
 
         /// <summary>
