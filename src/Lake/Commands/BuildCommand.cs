@@ -16,7 +16,7 @@ namespace Lake.Commands
         private readonly IBuildEnvironment _environment;
         private readonly IBuildManifestProvider _manifestProvider;
         private readonly IBuildConfigurationReader _configurationReader;
-        private readonly IBuildEngine _engine;
+        private readonly IBuildKernel _kernel;
 
         public BuildCommand(IBuildLog log, IConsoleWriter console,
             IPipelineScannerFactory scannerFactory,
@@ -52,12 +52,12 @@ namespace Lake.Commands
             _scannerFactory = scannerFactory;
         }
 
-        internal BuildCommand(IBuildEngine engine, IBuildLog log,
+        internal BuildCommand(IBuildKernel kernel, IBuildLog log,
             IConsoleWriter console, IHashComputer hasher,
             IPipelineScannerFactory scannerFactory, IBuildEnvironment environment,
             IBuildManifestProvider manifestProvider, IBuildConfigurationReader configurationReader)
         {
-            _engine = engine;
+            _kernel = kernel;
             _log = log;
             _console = console;
             _hasher = hasher;
@@ -88,12 +88,12 @@ namespace Lake.Commands
             FilePath manifestPath = string.Concat(options.BuildConfiguration, ".manifest");
             var previousManifest = _manifestProvider.LoadManifest(_environment.FileSystem, manifestPath);
 
-            // Find all components and create the engine.
+            // Find all components and create the kernel.
             var scanner = _scannerFactory.Create(GetAssemblyProbingPath(options));
-            var engine = _engine ?? new BuildEngine(_environment, scanner, _hasher, _log);
+            var kernel = _kernel ?? new BuildKernel(_environment, scanner, _hasher, _log);
 
             // Perform the build.
-            var manifest = engine.Build(configuration, previousManifest);
+            var manifest = kernel.Build(configuration, previousManifest);
 
             // Save the build configuration.
             _manifestProvider.SaveManifest(_environment.FileSystem, manifestPath, manifest);

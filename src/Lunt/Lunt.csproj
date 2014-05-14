@@ -51,7 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Abstractions\IBuildConfigurationReader.cs" />
-    <Compile Include="Abstractions\IBuildEngine.cs" />
+    <Compile Include="Abstractions\IBuildKernel.cs" />
     <Compile Include="Abstractions\IBuildEnvironment.cs" />
     <Compile Include="Abstractions\IBuildManifestProvider.cs" />
     <Compile Include="Abstractions\IConsoleWriter.cs" />
@@ -126,7 +126,7 @@
     <Compile Include="IO\Machine.cs" />
     <Compile Include="IO\NoCloseBinaryWriter.cs" />
     <Compile Include="IO\NoCloseBinaryReader.cs" />
-    <Compile Include="BuildEngine.cs" />
+    <Compile Include="BuildKernel.cs" />
     <Compile Include="IO\Path.cs" />
     <Compile Include="IO\PathComparer.cs" />
     <Compile Include="IO\PathNormalizer.cs" />

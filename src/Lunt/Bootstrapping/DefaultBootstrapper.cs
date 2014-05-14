@@ -42,22 +42,22 @@ namespace Lunt.Bootstrapping
         }
 
         /// <summary>
-        /// Resolves the build engine.
+        /// Resolves the build kernel.
         /// </summary>
         /// <param name="container">The container.</param>
-        /// <returns>The resolved build engine.</returns>
-        protected override IBuildEngine ResolveBuildEngine(TinyIoCContainer container)
+        /// <returns>The resolved build kernel.</returns>
+        protected override IBuildKernel ResolveBuildKernel(TinyIoCContainer container)
         {
-            return container.Resolve<IBuildEngine>();
+            return container.Resolve<IBuildKernel>();
         }
 
         /// <summary>
-        /// Registers the build engine.
+        /// Registers the build kernel.
         /// </summary>
         /// <param name="container">The container.</param>
-        protected override void RegisterBuildEngine(TinyIoCContainer container)
+        protected override void RegisterBuildKernel(TinyIoCContainer container)
         {
-            container.Register(typeof(IBuildEngine), typeof(BuildEngine)).AsSingleton();
+            container.Register(typeof(IBuildKernel), typeof(BuildKernel)).AsSingleton();
         }
 
         /// <summary>

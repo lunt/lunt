@@ -67,7 +67,7 @@
     <Compile Include="FakeProcessor.cs" />
     <Compile Include="FakeWriter.cs" />
     <Compile Include="Utilities\BuildCommandFactory.cs" />
-    <Compile Include="Utilities\BuildEngineFactory.cs" />
+    <Compile Include="Utilities\BuildKernelFactory.cs" />
     <Compile Include="Utilities\BuildManifestHelper.cs" />
     <Compile Include="Utilities\ImporterGenerator.cs" />
     <Compile Include="Utilities\StringTraceListener.cs" />

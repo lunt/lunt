@@ -5,7 +5,7 @@ namespace Lunt
     /// <summary>
     /// The Lunt build kernel.
     /// </summary>
-    public interface IBuildEngine : IDisposable
+    public interface IBuildKernel : IDisposable
     {
         /// <summary>
         /// Performs a build using the specified build configuration.

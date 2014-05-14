@@ -8,9 +8,9 @@ using Lunt.Runtime;
 namespace Lunt
 {
     /// <summary>
-    /// The Lunt build engine.
+    /// The Lunt build kernel.
     /// </summary>
-    public sealed class BuildEngine : IBuildEngine
+    public sealed class BuildKernel : IBuildKernel
     {
         private readonly IFileSystem _fileSystem;
         private readonly AssetBuilder _builder;
@@ -19,14 +19,14 @@ namespace Lunt
         private bool _disposed;
         
         /// <summary>
-        /// Initializes a new instance of the <see cref="BuildEngine" /> class.
+        /// Initializes a new instance of the <see cref="BuildKernel" /> class.
         /// </summary>
         /// <param name="environment">The build environment</param>
         /// <param name="scanner">The pipeline scanner.</param>
         /// <param name="hasher">The hash computer.</param>
         /// <param name="log">The log.</param>
         /// <exception cref="System.ArgumentNullException">fileSystem</exception>
-        public BuildEngine(IBuildEnvironment environment, IPipelineScanner scanner, IHashComputer hasher, IBuildLog log)
+        public BuildKernel(IBuildEnvironment environment, IPipelineScanner scanner, IHashComputer hasher, IBuildLog log)
         {
             if (environment == null)
             {
@@ -88,7 +88,7 @@ namespace Lunt
             }
             if (_disposed)
             {
-                throw new ObjectDisposedException(GetType().FullName, "The build engine has been disposed.");
+                throw new ObjectDisposedException(GetType().FullName, "The build kernel has been disposed.");
             }
 
             // Validate the configuration.

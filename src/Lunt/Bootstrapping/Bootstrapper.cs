@@ -40,7 +40,7 @@ namespace Lunt.Bootstrapping
             ApplicationContainer = CreateContainer();
 
             // Register stuff.
-            RegisterBuildEngine(ApplicationContainer);
+            RegisterBuildKernel(ApplicationContainer);
             RegisterBuildEnvironment(ApplicationContainer);
             RegisterFileSystem(ApplicationContainer);
             RegisterHashComputer(ApplicationContainer);
@@ -51,16 +51,16 @@ namespace Lunt.Bootstrapping
         }
 
         /// <summary>
-        /// Gets the build engine.
+        /// Gets the build kernel.
         /// </summary>
-        /// <returns>The build engine.</returns>
-        public IBuildEngine GetEngine()
+        /// <returns>The build kernel.</returns>
+        public IBuildKernel GetKernel()
         {
             if (ApplicationContainer == null)
             {
                 throw new LuntException("Bootstrapper have not been initialized.");
             }
-            return ResolveBuildEngine(ApplicationContainer);
+            return ResolveBuildKernel(ApplicationContainer);
         }
 
         /// <summary>
@@ -78,17 +78,17 @@ namespace Lunt.Bootstrapping
         protected abstract TContainer CreateContainer();
 
         /// <summary>
-        /// Resolves the build engine.
+        /// Resolves the build kernel.
         /// </summary>
         /// <param name="container">The container.</param>
-        /// <returns>The build engine.</returns>
-        protected abstract IBuildEngine ResolveBuildEngine(TContainer container);
+        /// <returns>The build kernel.</returns>
+        protected abstract IBuildKernel ResolveBuildKernel(TContainer container);
 
         /// <summary>
-        /// Registers the build engine.
+        /// Registers the build kernel.
         /// </summary>
         /// <param name="container">The container.</param>
-        protected abstract void RegisterBuildEngine(TContainer container);
+        protected abstract void RegisterBuildKernel(TContainer container);
 
         /// <summary>
         /// Registers the build environment.

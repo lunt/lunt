@@ -3,9 +3,9 @@ using Lunt.Tests.Framework;
 
 namespace Lunt.Testing
 {
-    public class BuildEngineFactory
+    public class BuildKernelFactory
     {
-        private BuildEngine _engine;
+        private BuildKernel _kernel;
         private readonly FakeFileSystem _fileSystem;
         private readonly FakeBuildEnvironment _environment;
         private readonly IHashComputer _hasher;
@@ -16,9 +16,9 @@ namespace Lunt.Testing
         public static byte[] DefaultContent = {0, 1, 2, 3, 4, 5};
         public static string DefaultHash = "A_DUMMY_HASH";
 
-        public BuildEngine Engine
+        public BuildKernel Kernel
         {
-            get { return _engine; }
+            get { return _kernel; }
         }
 
         public FakeFileSystem FileSystem
@@ -46,7 +46,7 @@ namespace Lunt.Testing
             get { return _configuration; }
         }
 
-        public BuildEngineFactory(FakeFileSystem fileSystem = null)
+        public BuildKernelFactory(FakeFileSystem fileSystem = null)
         {
             _fileSystem = fileSystem ?? new FakeFileSystem();
 
@@ -63,15 +63,15 @@ namespace Lunt.Testing
             _hasher = new FakeHashComputer(DefaultHash);
         }
 
-        public BuildEngine CreateBuildEngine()
+        public BuildKernel CreateBuildKernel()
         {
-            _engine = new BuildEngine(_environment, new FakePipelineScanner(_components), Hasher, _log);
-            return _engine;
+            _kernel = new BuildKernel(_environment, new FakePipelineScanner(_components), Hasher, _log);
+            return _kernel;
         }
 
-        public static BuildEngineFactory CreateWithPreviousManifest(AssetDefinition assetDefinition, byte[] data, out BuildManifest manifest)
+        public static BuildKernelFactory CreateWithPreviousManifest(AssetDefinition assetDefinition, byte[] data, out BuildManifest manifest)
         {
-            var facade = new BuildEngineFactory();
+            var facade = new BuildKernelFactory();
 
             var sourceFilePath = facade.Configuration.InputDirectory.Combine(assetDefinition.Path);
             var sourceFile = facade.FileSystem.GetFile(sourceFilePath);

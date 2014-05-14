@@ -14,7 +14,7 @@ namespace Lunt.Testing
         private readonly string _workingDirectory;
         private readonly BuildConfiguration _configuration;
         private readonly Mock<IBuildConfigurationReader> _configurationReader;
-        private readonly Mock<IBuildEngine> _engine;
+        private readonly Mock<IBuildKernel> _kernel;
         private readonly Mock<IBuildEnvironment> _environment;
         private readonly Mock<IBuildManifestProvider> _manifestProvider;
         private readonly Mock<IPipelineScannerFactory> _scannerFactory;
@@ -45,9 +45,9 @@ namespace Lunt.Testing
             get { return _configurationReader; }
         }
 
-        public Mock<IBuildEngine> Engine
+        public Mock<IBuildKernel> Kernel
         {
-            get { return _engine; }
+            get { return _kernel; }
         }
 
         public FakeConsole Console
@@ -70,7 +70,7 @@ namespace Lunt.Testing
             _workingDirectory = "/working";
             _configuration = new BuildConfiguration();
             _configurationReader = new Mock<IBuildConfigurationReader>();
-            _engine = new Mock<IBuildEngine>();
+            _kernel = new Mock<IBuildKernel>();
             _environment = new Mock<IBuildEnvironment>();
             _manifestProvider = new Mock<IBuildManifestProvider>();
             _scannerFactory = new Mock<IPipelineScannerFactory>();
@@ -79,7 +79,7 @@ namespace Lunt.Testing
 
         public BuildCommand Create(IBuildConfigurationReader reader = null, 
             IBuildManifestProvider manifestProvider = null, 
-            IPipelineScannerFactory factory = null, IBuildEngine engine = null)
+            IPipelineScannerFactory factory = null, IBuildKernel kernel = null)
         {
             var log = new Mock<IBuildLog>().Object;
             var hasher = new Mock<IHashComputer>().Object;
@@ -96,9 +96,9 @@ namespace Lunt.Testing
                     .Returns(_configuration);
             }
 
-            if (engine == null)
+            if (kernel == null)
             {
-                _engine.Setup(x => x.Build(It.IsAny<BuildConfiguration>(), It.IsAny<BuildManifest>()))
+                _kernel.Setup(x => x.Build(It.IsAny<BuildConfiguration>(), It.IsAny<BuildManifest>()))
                     .Returns(_manifest);
             }
 
@@ -106,7 +106,7 @@ namespace Lunt.Testing
                 .Returns(() => _workingDirectory)
                 .Verifiable();
 
-            return new BuildCommand(engine ?? _engine.Object, 
+            return new BuildCommand(kernel ?? _kernel.Object, 
                 log, _console, hasher, 
                 factory ?? ScannerFactory.Object,
                 _environment.Object, 

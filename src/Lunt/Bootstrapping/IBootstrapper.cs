@@ -11,9 +11,9 @@ namespace Lunt.Bootstrapping
         void Initialize();
 
         /// <summary>
-        /// Gets the build engine.
+        /// Gets the build kernel.
         /// </summary>
-        /// <returns>The build engine.</returns>
-        IBuildEngine GetEngine();
+        /// <returns>The build kernel.</returns>
+        IBuildKernel GetKernel();
     }
 }

@@ -145,7 +145,7 @@ namespace Lake.Tests.Unit.Commands
                 command.Execute(factory.Options);
 
                 // Then
-                factory.Engine.Verify(x => x.Build(
+                factory.Kernel.Verify(x => x.Build(
                     It.Is<BuildConfiguration>(configuration => configuration.InputDirectory.FullPath == "/working"),
                     It.IsAny<BuildManifest>()));
             }
@@ -163,7 +163,7 @@ namespace Lake.Tests.Unit.Commands
                 command.Execute(factory.Options);
 
                 // Then
-                factory.Engine.Verify(x => x.Build(
+                factory.Kernel.Verify(x => x.Build(
                     It.Is<BuildConfiguration>(configuration => configuration.OutputDirectory.FullPath == "/working"),
                     It.IsAny<BuildManifest>()));
             }
@@ -181,7 +181,7 @@ namespace Lake.Tests.Unit.Commands
                 command.Execute(factory.Options);
 
                 // Then
-                factory.Engine.Verify(x => x.Build(
+                factory.Kernel.Verify(x => x.Build(
                     It.Is<BuildConfiguration>(configuration => configuration.InputDirectory.FullPath == "/working/input"),
                     It.IsAny<BuildManifest>()));
             }
@@ -199,7 +199,7 @@ namespace Lake.Tests.Unit.Commands
                 command.Execute(factory.Options);
 
                 // Then
-                factory.Engine.Verify(x => x.Build(
+                factory.Kernel.Verify(x => x.Build(
                     It.Is<BuildConfiguration>(configuration => configuration.OutputDirectory.FullPath == "/working/output"),
                     It.IsAny<BuildManifest>()));
             }
@@ -255,18 +255,18 @@ namespace Lake.Tests.Unit.Commands
                 manifestProvider.Setup(x => x.LoadManifest(It.IsAny<IFileSystem>(), It.IsAny<FilePath>()))
                     .Returns(previousManifest);
 
-                var engine = new Mock<IBuildEngine>();
-                engine.Setup(x => x.Build(factory.Configuration, previousManifest))
+                var kernel = new Mock<IBuildKernel>();
+                kernel.Setup(x => x.Build(factory.Configuration, previousManifest))
                     .Returns(new BuildManifest())
                     .Verifiable();
 
-                var command = factory.Create(manifestProvider: manifestProvider.Object, engine: engine.Object);
+                var command = factory.Create(manifestProvider: manifestProvider.Object, kernel: kernel.Object);
 
                 // When
                 command.Execute(factory.Options);
 
                 // Then
-                engine.Verify();
+                kernel.Verify();
             }
 
             [Fact]
@@ -280,11 +280,11 @@ namespace Lake.Tests.Unit.Commands
                 manifestProvider.Setup(x => x.SaveManifest(It.IsAny<IFileSystem>(), It.IsAny<FilePath>(), manifest))
                     .Verifiable();
 
-                var engine = new Mock<IBuildEngine>();
-                engine.Setup(x => x.Build(It.IsAny<BuildConfiguration>(), It.IsAny<BuildManifest>()))
+                var kernel = new Mock<IBuildKernel>();
+                kernel.Setup(x => x.Build(It.IsAny<BuildConfiguration>(), It.IsAny<BuildManifest>()))
                     .Returns(() => manifest);
 
-                var command = factory.Create(manifestProvider: manifestProvider.Object, engine: engine.Object);
+                var command = factory.Create(manifestProvider: manifestProvider.Object, kernel: kernel.Object);
 
                 // When
                 command.Execute(factory.Options);

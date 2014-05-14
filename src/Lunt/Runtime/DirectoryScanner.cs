@@ -29,7 +29,7 @@ namespace Lunt.Runtime
             _directory = directory;
 
             _ignoredAssemblies = new List<Assembly>();
-            _ignoredAssemblies.Add(typeof (BuildEngine).Assembly);
+            _ignoredAssemblies.Add(typeof (BuildKernel).Assembly);
         }
 
         /// <summary>

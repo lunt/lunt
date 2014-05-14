@@ -10,7 +10,7 @@ using Xunit;
 
 namespace Lunt.Tests.Unit
 {
-    public class BuildEngineTests
+    public class BuildKernelTests
     {
         public class TheConstructor
         {
@@ -23,7 +23,7 @@ namespace Lunt.Tests.Unit
                 var log = new Mock<IBuildLog>().Object;
 
                 // When
-                var result = Record.Exception(() => new BuildEngine(null, scanner, hashComputer, log));
+                var result = Record.Exception(() => new BuildKernel(null, scanner, hashComputer, log));
 
                 // Then
                 Assert.IsType<ArgumentNullException>(result);
@@ -40,7 +40,7 @@ namespace Lunt.Tests.Unit
                 var log = new Mock<IBuildLog>().Object;
 
                 // When
-                var result = Record.Exception(() => new BuildEngine(environment, scanner, hashComputer, log));
+                var result = Record.Exception(() => new BuildKernel(environment, scanner, hashComputer, log));
 
                 // Then
                 Assert.IsType<ArgumentException>(result);
@@ -56,7 +56,7 @@ namespace Lunt.Tests.Unit
                 var log = new Mock<IBuildLog>().Object;
 
                 // When
-                var result = Record.Exception(() => new BuildEngine(environment, null, hashComputer, log));
+                var result = Record.Exception(() => new BuildKernel(environment, null, hashComputer, log));
 
                 // Then
                 Assert.IsType<ArgumentNullException>(result);
@@ -72,7 +72,7 @@ namespace Lunt.Tests.Unit
                 var hashComputer = new Mock<IHashComputer>().Object;
 
                 // When
-                var result = Record.Exception(() => new BuildEngine(environment, scanner, hashComputer, null));
+                var result = Record.Exception(() => new BuildKernel(environment, scanner, hashComputer, null));
 
                 // Then
                 Assert.IsType<ArgumentNullException>(result);
@@ -83,11 +83,11 @@ namespace Lunt.Tests.Unit
             public void Should_Throw_If_Importer_Has_No_Attribute()
             {
                 // Given
-                var facade = new BuildEngineFactory();
+                var facade = new BuildKernelFactory();
                 facade.Components.Importers.Add(new FakeImporter<int>((c, f) => 0));
 
                 // When
-                var result = Record.Exception(() => facade.CreateBuildEngine());
+                var result = Record.Exception(() => facade.CreateBuildKernel());
 
                 // Then
                 Assert.IsType<LuntException>(result);
@@ -100,11 +100,11 @@ namespace Lunt.Tests.Unit
             public void Should_Throw_If_Importer_Is_Missing_Extension()
             {
                 // Given
-                var facade = new BuildEngineFactory();
+                var facade = new BuildKernelFactory();
                 facade.Components.Importers.Add(FakeImporter<int>.Mock((c, f) => 0, null));
 
                 // When
-                var result = Record.Exception(() => facade.CreateBuildEngine());
+                var result = Record.Exception(() => facade.CreateBuildKernel());
 
                 // Then
                 Assert.IsType<LuntException>(result);
@@ -115,12 +115,12 @@ namespace Lunt.Tests.Unit
             public void Should_Throw_If_Adding_Two_Importers_Handling_Same_Type()
             {
                 // Given
-                var facade = new BuildEngineFactory();
+                var facade = new BuildKernelFactory();
                 facade.Components.Importers.Add(FakeImporter<int>.Mock((c, f) => 0, ".asset"));
                 facade.Components.Importers.Add(FakeImporter<int>.Mock((c, f) => 0, ".asset"));
 
                 // When
-                var result = Record.Exception(() => facade.CreateBuildEngine());
+                var result = Record.Exception(() => facade.CreateBuildKernel());
 
                 // Then
                 Assert.IsType<LuntException>(result);
@@ -131,11 +131,11 @@ namespace Lunt.Tests.Unit
             public void Should_Throw_If_Default_Processor_For_Importer_Is_Not_A_Processor()
             {
                 // Given
-                var facade = new BuildEngineFactory();
+                var facade = new BuildKernelFactory();
                 facade.Components.Importers.Add(FakeImporter<int>.Mock((c, f) => 0, ".asset", defaultProcessor: typeof (string)));
 
                 // When
-                var result = Record.Exception(() => facade.CreateBuildEngine());
+                var result = Record.Exception(() => facade.CreateBuildKernel());
 
                 // Then
                 Assert.IsType<LuntException>(result);
@@ -147,11 +147,11 @@ namespace Lunt.Tests.Unit
             public void Should_Throw_If_Default_Processor_For_Importer_Is_Abstract()
             {
                 // Given
-                var facade = new BuildEngineFactory();
+                var facade = new BuildKernelFactory();
                 facade.Components.Importers.Add(FakeImporter<int>.Mock((c, f) => 0, ".asset", defaultProcessor: typeof (Processor<>)));
 
                 // When
-                var result = Record.Exception(() => facade.CreateBuildEngine());
+                var result = Record.Exception(() => facade.CreateBuildKernel());
 
                 // Then
                 Assert.IsType<LuntException>(result);
@@ -163,12 +163,12 @@ namespace Lunt.Tests.Unit
             public void Should_Throw_If_Processor_Source_Type_Is_Null()
             {
                 // Given
-                var facade = new BuildEngineFactory();
+                var facade = new BuildKernelFactory();
                 var processor = new FakeProcessor(null, sourceType: null, targetType: typeof (int));
                 facade.Components.Processors.Add(processor);
 
                 // When
-                var result = Record.Exception(() => facade.CreateBuildEngine());
+                var result = Record.Exception(() => facade.CreateBuildKernel());
 
                 // Then
                 Assert.IsType<LuntException>(result);
@@ -179,12 +179,12 @@ namespace Lunt.Tests.Unit
             public void Should_Throw_If_Processor_Target_Type_Is_Null()
             {
                 // Given
-                var facade = new BuildEngineFactory();
+                var facade = new BuildKernelFactory();
                 var processor = new FakeProcessor(null, sourceType: typeof (int), targetType: null);
                 facade.Components.Processors.Add(processor);
 
                 // When
-                var result = Record.Exception(() => facade.CreateBuildEngine());
+                var result = Record.Exception(() => facade.CreateBuildKernel());
 
                 // Then
                 Assert.IsType<LuntException>(result);
@@ -195,12 +195,12 @@ namespace Lunt.Tests.Unit
             public void Should_Throw_If_Writer_Target_Type_Is_Null()
             {
                 // Given
-                var facade = new BuildEngineFactory();
+                var facade = new BuildKernelFactory();
                 var writer = new FakeWriter(null, targetType: null);
                 facade.Components.Writers.Add(writer);
 
                 // When
-                var result = Record.Exception(() => facade.CreateBuildEngine());
+                var result = Record.Exception(() => facade.CreateBuildKernel());
 
                 // Then
                 Assert.IsType<LuntException>(result);
@@ -211,12 +211,12 @@ namespace Lunt.Tests.Unit
             public void Should_Throw_If_Adding_Two_Writers_Handling_Same_Target_Type()
             {
                 // Given
-                var facade = new BuildEngineFactory();
+                var facade = new BuildKernelFactory();
                 facade.Components.Writers.Add(new FakeWriter<int>((c, f, v) => { }));
                 facade.Components.Writers.Add(FakeWriter<Int32>.Mock((c, f, v) => { }));
 
                 // When
-                var result = Record.Exception(() => facade.CreateBuildEngine());
+                var result = Record.Exception(() => facade.CreateBuildKernel());
 
                 // Then
                 Assert.IsType<LuntException>(result);
@@ -234,7 +234,7 @@ namespace Lunt.Tests.Unit
                 var component = new Mock<IPipelineScanner>().Object;
                 var hashComputer = new Mock<IHashComputer>().Object;
                 var log = new Mock<IBuildLog>().Object;
-                var kernel = new BuildEngine(environment, component, hashComputer, log);
+                var kernel = new BuildKernel(environment, component, hashComputer, log);
 
                 // When
                 var result = Record.Exception(() => kernel.Build(null));
@@ -248,12 +248,12 @@ namespace Lunt.Tests.Unit
             public void Should_Return_Empty_Manifest_If_No_Assets_Were_Provided()
             {
                 // Given
-                var facade = new BuildEngineFactory();
+                var facade = new BuildKernelFactory();
                 facade.FileSystem.GetCreatedFile("/input/simple.asset");
-                facade.CreateBuildEngine();
+                facade.CreateBuildKernel();
 
                 // When
-                var result = facade.Engine.Build(facade.Configuration);
+                var result = facade.Kernel.Build(facade.Configuration);
 
                 // Then
                 Assert.Equal(0, result.Items.Count);
@@ -263,12 +263,12 @@ namespace Lunt.Tests.Unit
             public void Should_Throw_If_Input_Directory_Is_Null()
             {
                 // Given
-                var facade = new BuildEngineFactory();
+                var facade = new BuildKernelFactory();
                 facade.Configuration.InputDirectory = null;
-                facade.CreateBuildEngine();
+                facade.CreateBuildKernel();
 
                 // When
-                var result = Record.Exception(() => facade.Engine.Build(facade.Configuration));
+                var result = Record.Exception(() => facade.Kernel.Build(facade.Configuration));
 
                 // Then
                 Assert.IsType<LuntException>(result);
@@ -279,12 +279,12 @@ namespace Lunt.Tests.Unit
             public void Should_Throw_If_Output_Directory_Is_Null()
             {
                 // Given
-                var facade = new BuildEngineFactory();
+                var facade = new BuildKernelFactory();
                 facade.Configuration.OutputDirectory = null;
-                facade.CreateBuildEngine();
+                facade.CreateBuildKernel();
 
                 // When
-                var result = Record.Exception(() => facade.Engine.Build(facade.Configuration));
+                var result = Record.Exception(() => facade.Kernel.Build(facade.Configuration));
 
                 // Then
                 Assert.IsType<LuntException>(result);
@@ -295,12 +295,12 @@ namespace Lunt.Tests.Unit
             public void Should_Throw_If_Input_Directory_Is_Relative()
             {
                 // Given
-                var facade = new BuildEngineFactory();
+                var facade = new BuildKernelFactory();
                 facade.Configuration.InputDirectory = "relative-input";
-                facade.CreateBuildEngine();
+                facade.CreateBuildKernel();
 
                 // When
-                var result = Record.Exception(() => facade.Engine.Build(facade.Configuration));
+                var result = Record.Exception(() => facade.Kernel.Build(facade.Configuration));
 
                 // Then
                 Assert.IsType<LuntException>(result);
@@ -311,12 +311,12 @@ namespace Lunt.Tests.Unit
             public void Should_Throw_If_Output_Directory_Is_Relative()
             {
                 // Given
-                var facade = new BuildEngineFactory();
+                var facade = new BuildKernelFactory();
                 facade.Configuration.OutputDirectory = "relative-output";
-                facade.CreateBuildEngine();
+                facade.CreateBuildKernel();
 
                 // When
-                var result = Record.Exception(() => facade.Engine.Build(facade.Configuration));
+                var result = Record.Exception(() => facade.Kernel.Build(facade.Configuration));
 
                 // Then
                 Assert.IsType<LuntException>(result);
@@ -327,13 +327,13 @@ namespace Lunt.Tests.Unit
             public void Should_Throw_If_Input_Directory_Does_Not_Exist()
             {
                 // Given
-                var facade = new BuildEngineFactory();
+                var facade = new BuildKernelFactory();
                 facade.FileSystem.GetDirectory("/input");
                 facade.FileSystem.DeleteDirectory("/input");
-                facade.CreateBuildEngine();
+                facade.CreateBuildKernel();
 
                 // When
-                var result = Record.Exception(() => facade.Engine.Build(facade.Configuration));
+                var result = Record.Exception(() => facade.Kernel.Build(facade.Configuration));
 
                 // Then
                 Assert.IsType<LuntException>(result);
@@ -344,12 +344,12 @@ namespace Lunt.Tests.Unit
             public void Returns_Empty_Manifest_If_No_Assets_Were_Provided_In_Configuration()
             {
                 // Given
-                var facade = new BuildEngineFactory();
+                var facade = new BuildKernelFactory();
                 facade.Configuration.Assets.Clear();
-                facade.CreateBuildEngine();
+                facade.CreateBuildKernel();
 
                 // When
-                var result = facade.Engine.Build(facade.Configuration);
+                var result = facade.Kernel.Build(facade.Configuration);
 
                 // Then
                 Assert.Equal(0, result.Items.Count);
@@ -359,12 +359,12 @@ namespace Lunt.Tests.Unit
             public void Returns_Failure_If_Asset_File_Is_Missing()
             {
                 // Given
-                var facade = new BuildEngineFactory();
+                var facade = new BuildKernelFactory();
                 facade.Configuration.Assets.Add(new AssetDefinition("simple.asset"));
-                facade.CreateBuildEngine();
+                facade.CreateBuildKernel();
 
                 // When
-                var result = facade.Engine.Build(facade.Configuration);
+                var result = facade.Kernel.Build(facade.Configuration);
 
                 // Then
                 Assert.Equal(1, result.Items.Count);
@@ -376,12 +376,12 @@ namespace Lunt.Tests.Unit
             public void Returns_Failure_If_Asset_Has_No_File_Extension()
             {
                 // Given
-                var facade = new BuildEngineFactory();
+                var facade = new BuildKernelFactory();
                 facade.Configuration.Assets.Add(new AssetDefinition("simple"));
-                facade.CreateBuildEngine();
+                facade.CreateBuildKernel();
 
                 // When
-                var result = facade.Engine.Build(facade.Configuration);
+                var result = facade.Kernel.Build(facade.Configuration);
 
                 // Then
                 Assert.Equal(1, result.Items.Count);
@@ -393,13 +393,13 @@ namespace Lunt.Tests.Unit
             public void Returns_Failure_If_Importer_Is_Missing()
             {
                 // Given
-                var facade = new BuildEngineFactory();
+                var facade = new BuildKernelFactory();
                 facade.FileSystem.GetCreatedFile("/input/simple.asset");
                 facade.Configuration.Assets.Add(new AssetDefinition("simple.asset"));
-                facade.CreateBuildEngine();
+                facade.CreateBuildKernel();
 
                 // When
-                var result = facade.Engine.Build(facade.Configuration);
+                var result = facade.Kernel.Build(facade.Configuration);
 
                 // Then
                 Assert.Equal(1, result.Items.Count);
@@ -411,14 +411,14 @@ namespace Lunt.Tests.Unit
             public void Returns_Failure_If_Imported_Data_Was_Null()
             {
                 // Given
-                var facade = new BuildEngineFactory();
+                var facade = new BuildKernelFactory();
                 facade.FileSystem.GetCreatedFile("/input/simple.asset");
                 facade.Configuration.Assets.Add(new AssetDefinition("simple.asset"));
                 facade.Components.Importers.Add(FakeImporter<string>.Mock((c, f) => null, ".asset"));
-                facade.CreateBuildEngine();
+                facade.CreateBuildKernel();
 
                 // When
-                var result = facade.Engine.Build(facade.Configuration);
+                var result = facade.Kernel.Build(facade.Configuration);
 
                 // Then
                 Assert.Equal(1, result.Items.Count);
@@ -430,7 +430,7 @@ namespace Lunt.Tests.Unit
             public void Returns_Failure_If_Processed_Data_Was_Null()
             {
                 // Given
-                var facade = new BuildEngineFactory();
+                var facade = new BuildKernelFactory();
                 facade.FileSystem.GetCreatedFile("/input/simple.asset");
                 facade.Configuration.Assets.Add(new AssetDefinition("simple.asset"));
 
@@ -439,10 +439,10 @@ namespace Lunt.Tests.Unit
                 facade.Components.Importers.Add(importer);
                 facade.Components.Processors.Add(processor);
 
-                facade.CreateBuildEngine();
+                facade.CreateBuildKernel();
 
                 // When
-                var result = facade.Engine.Build(facade.Configuration);
+                var result = facade.Kernel.Build(facade.Configuration);
 
                 // Then
                 Assert.Equal(1, result.Items.Count);
@@ -454,7 +454,7 @@ namespace Lunt.Tests.Unit
             public void Returns_Failure_If_Processed_Data_Was_Not_Of_Expected_Type()
             {
                 // Given
-                var facade = new BuildEngineFactory();
+                var facade = new BuildKernelFactory();
                 facade.FileSystem.GetCreatedFile("/input/simple.asset");
                 facade.Configuration.Assets.Add(new AssetDefinition("simple.asset"));
 
@@ -463,10 +463,10 @@ namespace Lunt.Tests.Unit
                 facade.Components.Importers.Add(importer);
                 facade.Components.Processors.Add(processor);
 
-                facade.CreateBuildEngine();
+                facade.CreateBuildKernel();
 
                 // When
-                var result = facade.Engine.Build(facade.Configuration);
+                var result = facade.Kernel.Build(facade.Configuration);
 
                 // Then
                 Assert.Equal(1, result.Items.Count);
@@ -478,14 +478,14 @@ namespace Lunt.Tests.Unit
             public void Returns_Failure_If_Writer_Is_Missing()
             {
                 // Given
-                var facade = new BuildEngineFactory();
+                var facade = new BuildKernelFactory();
                 facade.FileSystem.GetCreatedFile("/input/simple.asset");
                 facade.Configuration.Assets.Add(new AssetDefinition("simple.asset"));
                 facade.Components.Importers.Add(FakeImporter<string>.Mock((c, f) => "Hello", ".asset"));
-                facade.CreateBuildEngine();
+                facade.CreateBuildKernel();
 
                 // When
-                var result = facade.Engine.Build(facade.Configuration);
+                var result = facade.Kernel.Build(facade.Configuration);
 
                 // Then
                 Assert.Equal(1, result.Items.Count);
@@ -499,7 +499,7 @@ namespace Lunt.Tests.Unit
                 var result = false;
 
                 // Given
-                var facade = new BuildEngineFactory();
+                var facade = new BuildKernelFactory();
                 facade.FileSystem.GetCreatedFile("/input/simple.asset");
 
                 var asset = new AssetDefinition("simple.asset");
@@ -516,10 +516,10 @@ namespace Lunt.Tests.Unit
                     return v;
                 }, "MyProcessor"));
 
-                facade.CreateBuildEngine();
+                facade.CreateBuildKernel();
 
                 // When
-                facade.Engine.Build(facade.Configuration);
+                facade.Kernel.Build(facade.Configuration);
 
                 // Then
                 Assert.True(result);
@@ -529,7 +529,7 @@ namespace Lunt.Tests.Unit
             public void Returns_Failure_If_Asset_Processor_Is_Missing()
             {
                 // Given
-                var facade = new BuildEngineFactory();
+                var facade = new BuildKernelFactory();
                 facade.FileSystem.GetCreatedFile("/input/simple.asset");
 
                 var asset = new AssetDefinition("simple.asset");
@@ -539,10 +539,10 @@ namespace Lunt.Tests.Unit
                 var importer = FakeImporter<string>.Mock((c, f) => "Hello", ".asset");
                 facade.Components.Importers.Add(importer);
 
-                facade.CreateBuildEngine();
+                facade.CreateBuildKernel();
 
                 // When
-                var result = facade.Engine.Build(facade.Configuration);
+                var result = facade.Kernel.Build(facade.Configuration);
 
                 // Then
                 Assert.Equal(1, result.Items.Count);
@@ -554,7 +554,7 @@ namespace Lunt.Tests.Unit
             public void Should_Return_Failure_If_Imported_Data_Do_Not_Match_Processor_Source_Type()
             {
                 // Given
-                var facade = new BuildEngineFactory();
+                var facade = new BuildKernelFactory();
                 facade.FileSystem.GetCreatedFile("/input/simple.asset");
                 facade.Configuration.Assets.Add(new AssetDefinition("simple.asset"));
 
@@ -563,10 +563,10 @@ namespace Lunt.Tests.Unit
                 facade.Components.Importers.Add(importer);
                 facade.Components.Processors.Add(processor);
 
-                facade.CreateBuildEngine();
+                facade.CreateBuildKernel();
 
                 // When
-                var result = facade.Engine.Build(facade.Configuration);
+                var result = facade.Kernel.Build(facade.Configuration);
 
                 // Then
                 Assert.Equal(1, result.Items.Count);
@@ -579,16 +579,16 @@ namespace Lunt.Tests.Unit
             public void Should_Create_Target_Directory_If_Missing()
             {
                 // Given
-                var facade = new BuildEngineFactory();
+                var facade = new BuildKernelFactory();
                 facade.FileSystem.GetCreatedFile("/input/assets/simple.asset");
                 facade.Configuration.Assets.Add(new AssetDefinition("assets/simple.asset"));
                 facade.Components.Importers.Add(FakeImporter<string>.Mock((c, f) => "Hello", ".asset"));
                 facade.Components.Writers.Add(FakeWriter<string>.Mock((c, f, v) => { }));
 
-                facade.CreateBuildEngine();
+                facade.CreateBuildKernel();
 
                 // When
-                facade.Engine.Build(facade.Configuration);
+                facade.Kernel.Build(facade.Configuration);
                 var directory = facade.FileSystem.GetDirectory("/output/assets");
 
                 // Then
@@ -599,17 +599,17 @@ namespace Lunt.Tests.Unit
             public void Returns_Failure_If_Target_Directory_Can_Not_Be_Created()
             {
                 // Given
-                var facade = new BuildEngineFactory();
+                var facade = new BuildKernelFactory();
                 facade.FileSystem.GetCreatedFile("/input/assets/simple.asset");
                 facade.FileSystem.GetNonCreatableDirectory("/output/assets");
                 facade.Configuration.Assets.Add(new AssetDefinition("assets/simple.asset"));
                 facade.Components.Importers.Add(FakeImporter<string>.Mock((c, f) => "Hello", ".asset"));
                 facade.Components.Writers.Add(FakeWriter<string>.Mock((c, f, v) => { }));
 
-                facade.CreateBuildEngine();
+                facade.CreateBuildKernel();
 
                 // When
-                var result = facade.Engine.Build(facade.Configuration);
+                var result = facade.Kernel.Build(facade.Configuration);
 
                 // Then
                 Assert.Equal(1, result.Items.Count);
@@ -624,17 +624,17 @@ namespace Lunt.Tests.Unit
                 var data = new Mock<IDisposable>();
                 data.Setup(d => d.Dispose()).Verifiable();
 
-                var facade = new BuildEngineFactory();
+                var facade = new BuildKernelFactory();
                 facade.FileSystem.GetCreatedFile("/input/assets/simple.asset");
                 facade.FileSystem.GetNonCreatableDirectory("/output/assets");
                 facade.Configuration.Assets.Add(new AssetDefinition("assets/simple.asset"));
                 facade.Components.Importers.Add(FakeImporter<IDisposable>.Mock((c, f) => data.Object, ".asset"));
                 facade.Components.Writers.Add(FakeWriter<IDisposable>.Mock((c, f, v) => { }));
 
-                facade.CreateBuildEngine();
+                facade.CreateBuildKernel();
 
                 // When
-                facade.Engine.Build(facade.Configuration);
+                facade.Kernel.Build(facade.Configuration);
 
                 // Then
                 data.VerifyAll();
@@ -644,7 +644,7 @@ namespace Lunt.Tests.Unit
             public void Target_File_Should_Have_The_Correct_Extension()
             {
                 // Given
-                var facade = new BuildEngineFactory();
+                var facade = new BuildKernelFactory();
                 facade.FileSystem.GetCreatedFile("/input/assets/simple.asset");
                 facade.Configuration.Assets.Add(new AssetDefinition("assets/simple.asset"));
                 facade.Components.Importers.Add(FakeImporter<string>.Mock((c, f) => string.Empty, ".asset"));
@@ -652,10 +652,10 @@ namespace Lunt.Tests.Unit
 
                 var target = facade.FileSystem.GetFile("/output/assets/simple.dat");
 
-                facade.CreateBuildEngine();
+                facade.CreateBuildKernel();
 
                 // When
-                facade.Engine.Build(facade.Configuration);
+                facade.Kernel.Build(facade.Configuration);
 
                 // Then
                 Assert.True(target.Exists);
@@ -667,7 +667,7 @@ namespace Lunt.Tests.Unit
                 Context interceptedContext = null;
 
                 // Given
-                var facade = new BuildEngineFactory();
+                var facade = new BuildKernelFactory();
                 var asset = new AssetDefinition("assets/simple.asset");
                 facade.FileSystem.GetCreatedFile("/input/assets/simple.asset");
                 facade.Configuration.Assets.Add(asset);
@@ -678,10 +678,10 @@ namespace Lunt.Tests.Unit
                 }, ".asset"));
                 facade.Components.Writers.Add(FakeWriter<string>.Mock((c, f, v) => { }));
 
-                facade.CreateBuildEngine();
+                facade.CreateBuildKernel();
 
                 // When
-                facade.Engine.Build(facade.Configuration);
+                facade.Kernel.Build(facade.Configuration);
 
                 // Then
                 Assert.Equal(facade.FileSystem, interceptedContext.FileSystem);
@@ -695,7 +695,7 @@ namespace Lunt.Tests.Unit
                 Context interceptedContext = null;
 
                 // Given
-                var facade = new BuildEngineFactory();
+                var facade = new BuildKernelFactory();
                 var asset = new AssetDefinition("assets/simple.asset");
                 var processor = new FakeProcessor<string, string>((c, v) =>
                 {
@@ -708,10 +708,10 @@ namespace Lunt.Tests.Unit
                 facade.Components.Processors.Add(processor);
                 facade.Components.Writers.Add(FakeWriter<string>.Mock((c, f, v) => { }));
 
-                facade.CreateBuildEngine();
+                facade.CreateBuildKernel();
 
                 // When
-                facade.Engine.Build(facade.Configuration);
+                facade.Kernel.Build(facade.Configuration);
 
                 // Then
                 Assert.Equal(facade.FileSystem, interceptedContext.FileSystem);
@@ -725,7 +725,7 @@ namespace Lunt.Tests.Unit
                 Context interceptedContext = null;
 
                 // Given
-                var facade = new BuildEngineFactory();
+                var facade = new BuildKernelFactory();
                 var asset = new AssetDefinition("assets/simple.asset");
                 facade.FileSystem.GetCreatedFile("/input/assets/simple.asset");
                 facade.FileSystem.GetCreatedFile("/output/assets/simple.dat");
@@ -733,10 +733,10 @@ namespace Lunt.Tests.Unit
                 facade.Components.Importers.Add(FakeImporter<string>.Mock((c, f) => string.Empty, ".asset"));
                 facade.Components.Writers.Add(FakeWriter<string>.Mock((c, f, v) => { interceptedContext = c; }));
 
-                facade.CreateBuildEngine();
+                facade.CreateBuildKernel();
 
                 // When
-                facade.Engine.Build(facade.Configuration);
+                facade.Kernel.Build(facade.Configuration);
 
                 // Then
                 Assert.Equal(facade.FileSystem, interceptedContext.FileSystem);
@@ -748,7 +748,7 @@ namespace Lunt.Tests.Unit
             public void Build_Manifest_Should_Contain_Checksum_For_Source_File()
             {
                 // Given
-                var facade = new BuildEngineFactory();
+                var facade = new BuildKernelFactory();
                 var asset = new AssetDefinition("assets/simple.asset");
 
                 var content = new byte[] { 0, 1, 2, 3, 4, 5 };
@@ -763,10 +763,10 @@ namespace Lunt.Tests.Unit
                 facade.Components.Processors.Add(processor);
                 facade.Components.Writers.Add(writer);
 
-                facade.CreateBuildEngine();
+                facade.CreateBuildKernel();
 
                 // When
-                var result = facade.Engine.Build(facade.Configuration);
+                var result = facade.Kernel.Build(facade.Configuration);
 
                 // Then
                 Assert.NotEmpty(result.Items[0].Checksum);
@@ -776,7 +776,7 @@ namespace Lunt.Tests.Unit
             public void Build_Manifest_Should_Contain_File_Length_For_Source_File()
             {
                 // Given
-                var facade = new BuildEngineFactory();
+                var facade = new BuildKernelFactory();
                 var asset = new AssetDefinition("assets/simple.asset");
 
                 var content = new byte[] { 0, 1, 2, 3, 4, 5 };
@@ -791,10 +791,10 @@ namespace Lunt.Tests.Unit
                 facade.Components.Processors.Add(processor);
                 facade.Components.Writers.Add(writer);
 
-                facade.CreateBuildEngine();
+                facade.CreateBuildKernel();
 
                 // When
-                var result = facade.Engine.Build(facade.Configuration);
+                var result = facade.Kernel.Build(facade.Configuration);
 
                 // Then
                 Assert.Equal(content.Length, result.Items[0].Length);
@@ -805,19 +805,19 @@ namespace Lunt.Tests.Unit
             {
                 // Given
                 var asset = new AssetDefinition("assets/simple.asset");
-                var data = BuildEngineFactory.DefaultContent;
+                var data = BuildKernelFactory.DefaultContent;
 
                 BuildManifest manifest;
-                var facade = BuildEngineFactory.CreateWithPreviousManifest(asset, data, out manifest);
+                var facade = BuildKernelFactory.CreateWithPreviousManifest(asset, data, out manifest);
 
-                facade.FileSystem.GetFile("/input/assets/simple.asset").Create(BuildEngineFactory.DefaultContent);
+                facade.FileSystem.GetFile("/input/assets/simple.asset").Create(BuildKernelFactory.DefaultContent);
                 facade.FileSystem.GetCreatedFile("/output/assets/simple.dat");
 
                 facade.Configuration.Incremental = true;
-                facade.CreateBuildEngine();
+                facade.CreateBuildKernel();
 
                 // When
-                var result = facade.Engine.Build(facade.Configuration, manifest);
+                var result = facade.Kernel.Build(facade.Configuration, manifest);
 
                 // Then
                 Assert.True(facade.Configuration.Incremental);
@@ -829,20 +829,20 @@ namespace Lunt.Tests.Unit
             {
                 // Given
                 var asset = new AssetDefinition("assets/simple.asset");
-                var data = BuildEngineFactory.DefaultContent;
+                var data = BuildKernelFactory.DefaultContent;
 
                 BuildManifest manifest;
-                var facade = BuildEngineFactory.CreateWithPreviousManifest(asset, data, out manifest);
+                var facade = BuildKernelFactory.CreateWithPreviousManifest(asset, data, out manifest);
 
                 manifest.Items[0].Length = data.Length - 1;
 
-                facade.FileSystem.GetFile("/input/assets/simple.asset").Create(BuildEngineFactory.DefaultContent);
+                facade.FileSystem.GetFile("/input/assets/simple.asset").Create(BuildKernelFactory.DefaultContent);
 
                 facade.Configuration.Incremental = true;
-                facade.CreateBuildEngine();
+                facade.CreateBuildKernel();
 
                 // When
-                var result = facade.Engine.Build(facade.Configuration, manifest);
+                var result = facade.Kernel.Build(facade.Configuration, manifest);
 
                 // Then
                 Assert.True(facade.Configuration.Incremental);
@@ -855,21 +855,21 @@ namespace Lunt.Tests.Unit
             {
                 // Given
                 var asset = new AssetDefinition("assets/simple.asset");
-                var data = BuildEngineFactory.DefaultContent;
+                var data = BuildKernelFactory.DefaultContent;
 
                 BuildManifest manifest;
-                var facade = BuildEngineFactory.CreateWithPreviousManifest(asset, data, out manifest);
+                var facade = BuildKernelFactory.CreateWithPreviousManifest(asset, data, out manifest);
 
                 manifest.Items[0].Length = data.Length - 1;
 
-                facade.FileSystem.GetFile("/input/assets/simple.asset").Create(BuildEngineFactory.DefaultContent);
+                facade.FileSystem.GetFile("/input/assets/simple.asset").Create(BuildKernelFactory.DefaultContent);
                 facade.FileSystem.GetCreatedFile("/output/assets/simple.dat");
 
                 facade.Configuration.Incremental = true;
-                facade.CreateBuildEngine();
+                facade.CreateBuildKernel();
 
                 // When
-                var result = facade.Engine.Build(facade.Configuration, manifest);
+                var result = facade.Kernel.Build(facade.Configuration, manifest);
 
                 // Then
                 Assert.True(facade.Configuration.Incremental);
@@ -882,21 +882,21 @@ namespace Lunt.Tests.Unit
             {
                 // Given
                 var asset = new AssetDefinition("assets/simple.asset");
-                var data = BuildEngineFactory.DefaultContent;
+                var data = BuildKernelFactory.DefaultContent;
 
                 BuildManifest manifest;
-                var facade = BuildEngineFactory.CreateWithPreviousManifest(asset, data, out manifest);
+                var facade = BuildKernelFactory.CreateWithPreviousManifest(asset, data, out manifest);
 
                 manifest.Items[0].Checksum = "ABCDEFGHIJKLMN";
 
-                facade.FileSystem.GetFile("/input/assets/simple.asset").Create(BuildEngineFactory.DefaultContent);
+                facade.FileSystem.GetFile("/input/assets/simple.asset").Create(BuildKernelFactory.DefaultContent);
                 facade.FileSystem.GetCreatedFile("/output/assets/simple.dat");
 
                 facade.Configuration.Incremental = true;
-                facade.CreateBuildEngine();
+                facade.CreateBuildKernel();
 
                 // When
-                var result = facade.Engine.Build(facade.Configuration, manifest);
+                var result = facade.Kernel.Build(facade.Configuration, manifest);
 
                 // Then
                 Assert.True(facade.Configuration.Incremental);
@@ -910,21 +910,21 @@ namespace Lunt.Tests.Unit
                 // Given
                 var metadata = new Dictionary<string, string> {{"Key", "Value"}};
                 var asset = new AssetDefinition("assets/simple.asset", metadata);
-                var data = BuildEngineFactory.DefaultContent;
+                var data = BuildKernelFactory.DefaultContent;
 
                 BuildManifest manifest;
-                var facade = BuildEngineFactory.CreateWithPreviousManifest(asset, data, out manifest);
+                var facade = BuildKernelFactory.CreateWithPreviousManifest(asset, data, out manifest);
 
                 manifest.Items[0] = BuildManifestHelper.CloneWithoutMetadata(manifest.Items[0]);
 
-                facade.FileSystem.GetFile("/input/assets/simple.asset").Create(BuildEngineFactory.DefaultContent);
+                facade.FileSystem.GetFile("/input/assets/simple.asset").Create(BuildKernelFactory.DefaultContent);
                 facade.FileSystem.GetCreatedFile("/output/assets/simple.dat");
 
                 facade.Configuration.Incremental = true;
-                facade.CreateBuildEngine();
+                facade.CreateBuildKernel();
 
                 // When
-                var result = facade.Engine.Build(facade.Configuration, manifest);
+                var result = facade.Kernel.Build(facade.Configuration, manifest);
 
                 // Then
                 Assert.True(facade.Configuration.Incremental);
@@ -938,22 +938,22 @@ namespace Lunt.Tests.Unit
                 // Given
                 var metadata = new Dictionary<string, string> {{"Key", "Value"}};
                 var asset = new AssetDefinition("assets/simple.asset", metadata);
-                var data = BuildEngineFactory.DefaultContent;
+                var data = BuildKernelFactory.DefaultContent;
 
                 BuildManifest manifest;
-                var facade = BuildEngineFactory.CreateWithPreviousManifest(asset, data, out manifest);
+                var facade = BuildKernelFactory.CreateWithPreviousManifest(asset, data, out manifest);
 
                 var newMetadata = new Dictionary<string, string> {{"Key2", "Value"}};
                 manifest.Items[0] = BuildManifestHelper.CloneWithMetadata(manifest.Items[0], newMetadata);
 
-                facade.FileSystem.GetFile("/input/assets/simple.asset").Create(BuildEngineFactory.DefaultContent);
+                facade.FileSystem.GetFile("/input/assets/simple.asset").Create(BuildKernelFactory.DefaultContent);
                 facade.FileSystem.GetCreatedFile("/output/assets/simple.dat");
 
                 facade.Configuration.Incremental = true;
-                facade.CreateBuildEngine();
+                facade.CreateBuildKernel();
 
                 // When
-                var result = facade.Engine.Build(facade.Configuration, manifest);
+                var result = facade.Kernel.Build(facade.Configuration, manifest);
 
                 // Then
                 Assert.True(facade.Configuration.Incremental);
@@ -967,22 +967,22 @@ namespace Lunt.Tests.Unit
                 // Given
                 var metadata = new Dictionary<string, string> {{"Key", "Value"}};
                 var asset = new AssetDefinition("assets/simple.asset", metadata);
-                var data = BuildEngineFactory.DefaultContent;
+                var data = BuildKernelFactory.DefaultContent;
 
                 BuildManifest manifest;
-                var facade = BuildEngineFactory.CreateWithPreviousManifest(asset, data, out manifest);
+                var facade = BuildKernelFactory.CreateWithPreviousManifest(asset, data, out manifest);
 
                 var newMetadata = new Dictionary<string, string> {{"Key", "Value2"}};
                 manifest.Items[0] = BuildManifestHelper.CloneWithMetadata(manifest.Items[0], newMetadata);
 
-                facade.FileSystem.GetFile("/input/assets/simple.asset").Create(BuildEngineFactory.DefaultContent);
+                facade.FileSystem.GetFile("/input/assets/simple.asset").Create(BuildKernelFactory.DefaultContent);
                 facade.FileSystem.GetCreatedFile("/output/assets/simple.dat");
 
                 facade.Configuration.Incremental = true;
-                facade.CreateBuildEngine();
+                facade.CreateBuildKernel();
 
                 // When
-                var result = facade.Engine.Build(facade.Configuration, manifest);
+                var result = facade.Kernel.Build(facade.Configuration, manifest);
 
                 // Then
                 Assert.True(facade.Configuration.Incremental);
@@ -995,22 +995,22 @@ namespace Lunt.Tests.Unit
             {
                 // Given
                 var asset = new AssetDefinition("assets/simple.asset");
-                var data = BuildEngineFactory.DefaultContent;
+                var data = BuildKernelFactory.DefaultContent;
 
                 BuildManifest manifest;
-                var facade = BuildEngineFactory.CreateWithPreviousManifest(asset, data, out manifest);
+                var facade = BuildKernelFactory.CreateWithPreviousManifest(asset, data, out manifest);
 
-                facade.FileSystem.GetFile("/input/assets/simple.asset").Create(BuildEngineFactory.DefaultContent);
+                facade.FileSystem.GetFile("/input/assets/simple.asset").Create(BuildKernelFactory.DefaultContent);
                 facade.FileSystem.GetCreatedFile("/output/assets/simple.dat");
 
                 // Add file that does not exist in the file system.
                 manifest.Items[0].Dependencies = new[] {new AssetDependency("assets/other.asset", 0, "ABC")};
 
                 facade.Configuration.Incremental = true;
-                facade.CreateBuildEngine();
+                facade.CreateBuildKernel();
 
                 // When
-                var result = facade.Engine.Build(facade.Configuration, manifest);
+                var result = facade.Kernel.Build(facade.Configuration, manifest);
 
                 // Then
                 Assert.True(facade.Configuration.Incremental);
@@ -1023,12 +1023,12 @@ namespace Lunt.Tests.Unit
             {
                 // Given
                 var asset = new AssetDefinition("assets/simple.asset");
-                var data = BuildEngineFactory.DefaultContent;
+                var data = BuildKernelFactory.DefaultContent;
 
                 BuildManifest manifest;
-                var facade = BuildEngineFactory.CreateWithPreviousManifest(asset, data, out manifest);
+                var facade = BuildKernelFactory.CreateWithPreviousManifest(asset, data, out manifest);
 
-                facade.FileSystem.GetFile("/input/assets/simple.asset").Create(BuildEngineFactory.DefaultContent);
+                facade.FileSystem.GetFile("/input/assets/simple.asset").Create(BuildKernelFactory.DefaultContent);
                 facade.FileSystem.GetCreatedFile("/output/assets/simple.dat");
 
                 // Add file that does not exist in the file system.
@@ -1037,10 +1037,10 @@ namespace Lunt.Tests.Unit
                 file.Create(new byte[] {1, 2, 3});
 
                 facade.Configuration.Incremental = true;
-                facade.CreateBuildEngine();
+                facade.CreateBuildKernel();
 
                 // When
-                var result = facade.Engine.Build(facade.Configuration, manifest);
+                var result = facade.Kernel.Build(facade.Configuration, manifest);
 
                 // Then
                 Assert.True(facade.Configuration.Incremental);
@@ -1053,12 +1053,12 @@ namespace Lunt.Tests.Unit
             {
                 // Given
                 var asset = new AssetDefinition("assets/simple.asset");
-                var data = BuildEngineFactory.DefaultContent;
+                var data = BuildKernelFactory.DefaultContent;
 
                 BuildManifest manifest;
-                var facade = BuildEngineFactory.CreateWithPreviousManifest(asset, data, out manifest);
+                var facade = BuildKernelFactory.CreateWithPreviousManifest(asset, data, out manifest);
 
-                facade.FileSystem.GetFile("/input/assets/simple.asset").Create(BuildEngineFactory.DefaultContent);
+                facade.FileSystem.GetFile("/input/assets/simple.asset").Create(BuildKernelFactory.DefaultContent);
                 facade.FileSystem.GetCreatedFile("/output/assets/simple.dat");
 
                 // Add file that does not exist in the file system.
@@ -1067,10 +1067,10 @@ namespace Lunt.Tests.Unit
                 file.Create(new byte[] {1, 2, 3});
 
                 facade.Configuration.Incremental = true;
-                facade.CreateBuildEngine();
+                facade.CreateBuildKernel();
 
                 // When
-                var result = facade.Engine.Build(facade.Configuration, manifest);
+                var result = facade.Kernel.Build(facade.Configuration, manifest);
 
                 // Then
                 Assert.True(facade.Configuration.Incremental);
@@ -1083,21 +1083,21 @@ namespace Lunt.Tests.Unit
             {
                 // Given
                 var asset = new AssetDefinition("assets/simple.asset");
-                var data = BuildEngineFactory.DefaultContent;
+                var data = BuildKernelFactory.DefaultContent;
 
                 BuildManifest manifest;
-                var facade = BuildEngineFactory.CreateWithPreviousManifest(asset, data, out manifest);
+                var facade = BuildKernelFactory.CreateWithPreviousManifest(asset, data, out manifest);
 
                 manifest.Items[0].Length = data.Length - 1;
 
-                facade.FileSystem.GetFile("input/assets/simple.asset").Create(BuildEngineFactory.DefaultContent);
+                facade.FileSystem.GetFile("input/assets/simple.asset").Create(BuildKernelFactory.DefaultContent);
                 facade.FileSystem.GetCreatedFile("output/assets/simple.dat");
 
                 facade.Configuration.Incremental = false;
-                facade.CreateBuildEngine();
+                facade.CreateBuildKernel();
 
                 // When
-                var result = facade.Engine.Build(facade.Configuration, manifest);
+                var result = facade.Kernel.Build(facade.Configuration, manifest);
 
                 // Then
                 Assert.Equal(AssetBuildStatus.Success, result.Items[0].Status);
@@ -1105,19 +1105,19 @@ namespace Lunt.Tests.Unit
             }
 
             [Fact]
-            public void Should_Throw_Exception_If_Building_Content_With_A_Disposed_Build_Engine()
+            public void Should_Throw_Exception_If_Building_Content_With_A_Disposed_Build_Kernel()
             {
                 // Given
-                var facade = new BuildEngineFactory();
-                facade.CreateBuildEngine();
-                facade.Engine.Dispose();
+                var facade = new BuildKernelFactory();
+                facade.CreateBuildKernel();
+                facade.Kernel.Dispose();
 
                 // When
-                var result = Record.Exception(() => facade.Engine.Build(facade.Configuration));
+                var result = Record.Exception(() => facade.Kernel.Build(facade.Configuration));
 
                 // Then
                 Assert.IsType<ObjectDisposedException>(result);
-                Assert.True(result.Message.StartsWith("The build engine has been disposed."));
+                Assert.True(result.Message.StartsWith("The build kernel has been disposed."));
             }
 
             [Fact]
@@ -1125,8 +1125,8 @@ namespace Lunt.Tests.Unit
             {
                 // Given
                 var fileSystem = new GlobberFixture().FileSystem;
-                var facade = new BuildEngineFactory(fileSystem);
-                var engine = facade.CreateBuildEngine();
+                var facade = new BuildKernelFactory(fileSystem);
+                var kernel = facade.CreateBuildKernel();
 
                 var configuration = new BuildConfiguration();
                 configuration.InputDirectory = "/Temp";
@@ -1134,7 +1134,7 @@ namespace Lunt.Tests.Unit
                 configuration.Assets.Add(new AssetDefinition("**/*.txt"));
 
                 // When
-                var result = engine.Build(configuration);
+                var result = kernel.Build(configuration);
 
                 // Then
                 Assert.Equal(2, result.Items.Count);
@@ -1149,8 +1149,8 @@ namespace Lunt.Tests.Unit
                 var fileSystem = new GlobberFixture().FileSystem;
                 fileSystem.GetCreatedDirectory("/Input");
 
-                var facade = new BuildEngineFactory(fileSystem);
-                var engine = facade.CreateBuildEngine();
+                var facade = new BuildKernelFactory(fileSystem);
+                var kernel = facade.CreateBuildKernel();
 
                 var configuration = new BuildConfiguration();
                 configuration.InputDirectory = "/Input";
@@ -1158,7 +1158,7 @@ namespace Lunt.Tests.Unit
                 configuration.Assets.Add(new AssetDefinition("/Temp/**/*.txt"));
 
                 // When
-                var result = Record.Exception(() => engine.Build(configuration));
+                var result = Record.Exception(() => kernel.Build(configuration));
 
                 // Then
                 Assert.IsType<LuntException>(result);
