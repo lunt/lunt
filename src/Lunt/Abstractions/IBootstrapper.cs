@@ -1,15 +1,10 @@
-namespace Lunt.Bootstrapping
+namespace Lunt
 {
     /// <summary>
     /// Represents a bootstrapper.
     /// </summary>
     public interface IBootstrapper
     {
-        /// <summary>
-        /// Initializes the bootstrapper.
-        /// </summary>
-        void Initialize();
-
         /// <summary>
         /// Gets the build kernel.
         /// </summary>

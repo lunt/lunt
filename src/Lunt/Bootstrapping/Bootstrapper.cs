@@ -1,53 +1,26 @@
-﻿using System;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Lunt.Bootstrapping
 {
     /// <summary>
     /// The bootstrapper base class.
     /// </summary>
-    /// <typeparam name="TContainer">The container type.</typeparam>
-    public abstract class Bootstrapper<TContainer> : IBootstrapper, IDisposable
-        where TContainer : class
+    public abstract class Bootstrapper<TContainer> : IBootstrapper
+        where TContainer : class 
     {
-        /// <summary>
-        /// Gets or sets the application container.
-        /// </summary>
-        /// <value>The application container.</value>
-        public TContainer ApplicationContainer { get; protected set; }
+        private TContainer _container;
+        private readonly object _lock;
+        private readonly IInternalConfiguration _configuration;
 
         /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// Initializes a new instance of the <see cref="Bootstrapper{TContainer}"/> class.
         /// </summary>
-        public void Dispose()
+        /// <param name="configuration">The internal configuration to be used.</param>
+        protected Bootstrapper(IInternalConfiguration configuration = null)
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        /// <summary>
-        /// Releases unmanaged and - optionally - managed resources.
-        /// </summary>
-        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
-        protected virtual void Dispose(bool disposing)
-        {
-        }
-
-        /// <summary>
-        /// Initializes the bootstrapper.
-        /// </summary>
-        public void Initialize()
-        {
-            ApplicationContainer = CreateContainer();
-
-            // Register stuff.
-            RegisterBuildKernel(ApplicationContainer);
-            RegisterBuildEnvironment(ApplicationContainer);
-            RegisterFileSystem(ApplicationContainer);
-            RegisterHashComputer(ApplicationContainer);
-            RegisterBuildLog(ApplicationContainer);
-            RegisterPipelineScanner(ApplicationContainer);
-
-            ConfigureContainer(ApplicationContainer);
+            _lock = new object();
+            _configuration = configuration ?? new InternalConfiguration();
         }
 
         /// <summary>
@@ -56,68 +29,78 @@ namespace Lunt.Bootstrapping
         /// <returns>The build kernel.</returns>
         public IBuildKernel GetKernel()
         {
-            if (ApplicationContainer == null)
+            lock (_lock)
             {
-                throw new LuntException("Bootstrapper have not been initialized.");
+                if (_container == null)
+                {
+                    // Create a new container.
+                    _container = CreateContainer();
+                   
+                    // Get all registrations and add the build kernel registration.
+                    var registrations = GetRegistrations().ToList();
+                    registrations.Add(new TypeRegistration(typeof(IBuildKernel), typeof(BuildKernel), Lifetime.Singleton));
+
+                    // Perform registrations.
+                    RegisterTypeRegistrations(_container, registrations.OfType<TypeRegistration>());
+                    RegisterInstanceRegistrations(_container, registrations.OfType<InstanceRegistration>());
+                    RegisterFactoryRegistrations(_container, registrations.OfType<FactoryRegistration>());
+                    
+                    // Let the bootstrapper configure the container as well.
+                    // Good for more advanced tinkering.
+                    ConfigureContainer(_container);
+                }
+                return ResolveKernel(_container);
             }
-            return ResolveBuildKernel(ApplicationContainer);
         }
 
         /// <summary>
-        /// Allows the container to be configured.
+        /// Gets all registrations from the internal configuration.
         /// </summary>
-        /// <param name="container">The container to be configured.</param>
-        protected virtual void ConfigureContainer(TContainer container)
+        /// <returns>All registrations.</returns>
+        protected virtual IEnumerable<ContainerRegistration> GetRegistrations()
         {
+            return _configuration.GetRegistrations();
         }
 
         /// <summary>
         /// Creates the container.
         /// </summary>
-        /// <returns>A container.</returns>
+        /// <returns>A new container.</returns>
         protected abstract TContainer CreateContainer();
 
         /// <summary>
-        /// Resolves the build kernel.
+        /// Configures the container.
         /// </summary>
-        /// <param name="container">The container.</param>
+        protected virtual void ConfigureContainer(TContainer container)
+        {            
+        }
+
+        /// <summary>
+        /// Resolves the kernel.
+        /// </summary>
+        /// <param name="container">The container to resolve the kernel from.</param>
         /// <returns>The build kernel.</returns>
-        protected abstract IBuildKernel ResolveBuildKernel(TContainer container);
+        protected abstract IBuildKernel ResolveKernel(TContainer container);
 
         /// <summary>
-        /// Registers the build kernel.
+        /// Registers type registrations.
         /// </summary>
         /// <param name="container">The container.</param>
-        protected abstract void RegisterBuildKernel(TContainer container);
+        /// <param name="registrations">The registrations to register with the container.</param>
+        protected abstract void RegisterTypeRegistrations(TContainer container, IEnumerable<TypeRegistration> registrations);
 
         /// <summary>
-        /// Registers the build environment.
+        /// Registers instance registrations.
         /// </summary>
         /// <param name="container">The container.</param>
-        protected abstract void RegisterBuildEnvironment(TContainer container);
+        /// <param name="registrations">The registrations to register with the container.</param>
+        protected abstract void RegisterInstanceRegistrations(TContainer container, IEnumerable<InstanceRegistration> registrations);
 
         /// <summary>
-        /// Registers the file system.
+        /// Registers factory registrations.
         /// </summary>
         /// <param name="container">The container.</param>
-        protected abstract void RegisterFileSystem(TContainer container);
-
-        /// <summary>
-        /// Registers the hash computer.
-        /// </summary>
-        /// <param name="container">The container.</param>
-        protected abstract void RegisterHashComputer(TContainer container);
-
-        /// <summary>
-        /// Registers the build log.
-        /// </summary>
-        /// <param name="container">The container.</param>
-        protected abstract void RegisterBuildLog(TContainer container);
-
-        /// <summary>
-        /// Registers the pipeline scanner.
-        /// </summary>
-        /// <param name="container">The container.</param>
-        protected abstract void RegisterPipelineScanner(TContainer container);
+        /// <param name="registrations">The registrations to register with the container.</param>
+        protected abstract void RegisterFactoryRegistrations(TContainer container, IEnumerable<FactoryRegistration> registrations);
     }
 }

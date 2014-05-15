@@ -65,8 +65,17 @@
     <Compile Include="AssetMetadata.cs" />
     <Compile Include="AssetExtractor.cs" />
     <Compile Include="AssetDefinition.cs" />
+    <Compile Include="Bootstrapping\Bootstrapper.cs" />
+    <Compile Include="Bootstrapping\Registrations\FactoryRegistrationContext.cs" />
+    <Compile Include="Bootstrapping\Registrations\ContainerRegistration.cs" />
     <Compile Include="Bootstrapping\DefaultBootstrapper.cs" />
-    <Compile Include="Bootstrapping\IBootstrapper.cs" />
+    <Compile Include="Bootstrapping\Registrations\FactoryRegistration.cs" />
+    <Compile Include="Abstractions\IBootstrapper.cs" />
+    <Compile Include="Abstractions\IInternalConfiguration.cs" />
+    <Compile Include="Bootstrapping\Registrations\InstanceRegistration.cs" />
+    <Compile Include="Bootstrapping\Lifetime.cs" />
+    <Compile Include="Bootstrapping\InternalConfiguration.cs" />
+    <Compile Include="Bootstrapping\Registrations\TypeRegistration.cs" />
     <Compile Include="BuildConfiguration.cs" />
     <Compile Include="BuildConfigurationValidator.cs" />
     <Compile Include="AssetBuildResult.cs" />
@@ -143,7 +152,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Runtime\AppDomainScanner.cs" />
     <Compile Include="Runtime\AssemblyTypeScanner.cs" />
-    <Compile Include="Bootstrapping\Bootstrapper.cs" />
     <Compile Include="Runtime\WorkingDirectoryScanner.cs" />
     <Compile Include="Runtime\IPipelineScanner.cs" />
     <Compile Include="Runtime\AssemblyScanner.cs" />

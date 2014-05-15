@@ -1,3 +1,4 @@
+﻿using System.Collections.Generic;
 using Lunt.Bootstrapping.TinyIoc;
 using Lunt.Diagnostics;
 using Lunt.IO;
@@ -6,34 +7,21 @@ using Lunt.Runtime;
 namespace Lunt.Bootstrapping
 {
     /// <summary>
-    /// The default bootstrapper that uses TinyIoc.
+    /// The default bootstrapper using TinyIoC.
     /// </summary>
     public class DefaultBootstrapper : Bootstrapper<TinyIoCContainer>
     {
-        private bool _disposed;
-
         /// <summary>
-        /// Releases unmanaged and - optionally - managed resources.
+        /// Initializes a new instance of the <see cref="DefaultBootstrapper"/> class.
         /// </summary>
-        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
-        protected override void Dispose(bool disposing)
+        /// <param name="configuration">The configuration.</param>
+        public DefaultBootstrapper(IInternalConfiguration configuration = null)
+            : base(configuration)
         {
-            if (!_disposed)
-            {
-                if (disposing)
-                {
-                    if (ApplicationContainer != null)
-                    {
-                        ApplicationContainer.Dispose();
-                        ApplicationContainer = null;
-                    }
-                }
-                _disposed = true;
-            }
         }
 
         /// <summary>
-        /// Creates an TinyIoC container.
+        /// Creates the container.
         /// </summary>
         /// <returns>A TinyIoC container.</returns>
         protected override TinyIoCContainer CreateContainer()
@@ -42,67 +30,73 @@ namespace Lunt.Bootstrapping
         }
 
         /// <summary>
-        /// Resolves the build kernel.
+        /// Resolves the kernel.
         /// </summary>
-        /// <param name="container">The container.</param>
-        /// <returns>The resolved build kernel.</returns>
-        protected override IBuildKernel ResolveBuildKernel(TinyIoCContainer container)
+        /// <param name="container">The container to resolve the kernel from.</param>
+        /// <returns>The build kernel.</returns>
+        protected sealed override IBuildKernel ResolveKernel(TinyIoCContainer container)
         {
             return container.Resolve<IBuildKernel>();
         }
 
         /// <summary>
-        /// Registers the build kernel.
+        /// Registers type registrations.
         /// </summary>
         /// <param name="container">The container.</param>
-        protected override void RegisterBuildKernel(TinyIoCContainer container)
+        /// <param name="registrations">The registrations to register with the container.</param>
+        protected sealed override void RegisterTypeRegistrations(TinyIoCContainer container, IEnumerable<TypeRegistration> registrations)
         {
-            container.Register(typeof(IBuildKernel), typeof(BuildKernel)).AsSingleton();
+            foreach (var registration in registrations)
+            {
+                var registered = container.Register(registration.RegistrationType, registration.ImplementationType);
+                ConfigureLifetime(registered, registration.Lifetime);
+            }
         }
 
         /// <summary>
-        /// Registers the build environment.
+        /// Registers instance registrations.
         /// </summary>
         /// <param name="container">The container.</param>
-        protected override void RegisterBuildEnvironment(TinyIoCContainer container)
+        /// <param name="registrations">The registrations to register with the container.</param>
+        protected override sealed void RegisterInstanceRegistrations(TinyIoCContainer container, IEnumerable<InstanceRegistration> registrations)
         {
-            container.Register(typeof(IBuildEnvironment), typeof(BuildEnvironment)).AsSingleton();
+            foreach (var registration in registrations)
+            {
+                var registered = container.Register(registration.RegistrationType, registration.Instance);
+                ConfigureLifetime(registered, registration.Lifetime);
+            }
         }
 
         /// <summary>
-        /// Registers the file system.
+        /// Registers factory registrations.
         /// </summary>
         /// <param name="container">The container.</param>
-        protected override void RegisterFileSystem(TinyIoCContainer container)
+        /// <param name="registrations">The registrations to register with the container.</param>
+        protected override void RegisterFactoryRegistrations(TinyIoCContainer container, IEnumerable<FactoryRegistration> registrations)
         {
-            container.Register(typeof(IFileSystem), typeof(FileSystem)).AsSingleton();
+            foreach (var registration in registrations)
+            {
+                FactoryRegistration scopedRegistration = registration;
+                var registered = container.Register(registration.RegistrationType, (c, np) =>
+                {
+                    var context = new FactoryRegistrationContext(c.Resolve);
+                    return scopedRegistration.Factory(context);
+                });
+                ConfigureLifetime(registered, registration.Lifetime);
+            }
         }
 
-        /// <summary>
-        /// Registers the hash computer.
-        /// </summary>
-        /// <param name="container">The container.</param>
-        protected override void RegisterHashComputer(TinyIoCContainer container)
+        private static void ConfigureLifetime(TinyIoCContainer.RegisterOptions options, Lifetime lifetime)
         {
-            container.Register(typeof(IHashComputer), typeof(HashComputer)).AsSingleton();
-        }
-
-        /// <summary>
-        /// Registers the build log.
-        /// </summary>
-        /// <param name="container">The container.</param>
-        protected override void RegisterBuildLog(TinyIoCContainer container)
-        {
-            container.Register(typeof(IBuildLog), typeof(TraceBuildLog)).AsSingleton();
-        }
-
-        /// <summary>
-        /// Registers the pipeline scanner.
-        /// </summary>
-        /// <param name="container">The container.</param>
-        protected override void RegisterPipelineScanner(TinyIoCContainer container)
-        {
-            container.Register(typeof(IPipelineScanner), typeof(AppDomainScanner)).AsSingleton();
+            switch (lifetime)
+            {
+                case Lifetime.Singleton:
+                    options.AsSingleton();
+                    break;
+                case Lifetime.InstancePerDependency:
+                    options.AsMultiInstance();
+                    break;
+            }
         }
     }
 }
