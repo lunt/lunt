@@ -15,6 +15,9 @@
 * Asset build result messages are now stored as composites.
 
 ## New in 0.0.5
+* Renamed the build engine to make place for the convention based engine.
+* Nancyfied the bootstrapper to make it more versatile.
+* Added convention based build engine that uses the bootstrapper.
 * Assembly type scanner now skips dynamic assemblies.
 * Added colors to build log.
 * Lake exit codes now give more information about executed build.
