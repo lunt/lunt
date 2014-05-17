@@ -67,7 +67,7 @@ namespace Lunt.Diagnostics
             }
         }
 
-        private IDictionary<LogLevel, ColoredConsolePalette> GetPalette(bool grayscale)
+        private static IDictionary<LogLevel, ColoredConsolePalette> GetPalette(bool grayscale)
         {
             if (grayscale)
             {

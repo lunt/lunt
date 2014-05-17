@@ -63,7 +63,7 @@ namespace Lunt.Testing
                 proxyOptions, new object[] {func});
         }
 
-        public override TTarget Process(Context context, TSource source)
+        protected override TTarget Process(Context context, TSource source)
         {
             return _func(context, source);
         }

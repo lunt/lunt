@@ -58,7 +58,7 @@ namespace Lunt.IO
         /// <returns>The extension.</returns>
         public string GetExtension()
         {
-            string extension = System.IO.Path.GetExtension(FullPath);
+            var extension = System.IO.Path.GetExtension(FullPath);
             return string.IsNullOrWhiteSpace(extension) ? null : extension;
         }
 

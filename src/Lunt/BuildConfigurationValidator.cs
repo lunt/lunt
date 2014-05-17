@@ -28,7 +28,7 @@ namespace Lunt
             if (inputDirectory == null || !inputDirectory.Exists)
             {
                 const string format = "Input directory '{0}' does not exist.";
-                string message = string.Format(CultureInfo.InvariantCulture, format, configuration.InputDirectory);
+                var message = string.Format(CultureInfo.InvariantCulture, format, configuration.InputDirectory);
                 throw new LuntException(message);
             }
         }

@@ -103,14 +103,14 @@ namespace Lunt
 
             if (!file.Exists)
             {
-                string message = string.Format(CultureInfo.InvariantCulture, "The dependency '{0}' does not exist.", file.Path);
+                var message = string.Format(CultureInfo.InvariantCulture, "The dependency '{0}' does not exist.", file.Path);
                 throw new LuntException(message);
             }
 
             // Must be part of the input directory.
-            if (!file.Path.FullPath.StartsWith(_configuration.InputDirectory.FullPath))
+            if (!file.Path.FullPath.StartsWith(_configuration.InputDirectory.FullPath, StringComparison.OrdinalIgnoreCase))
             {
-                string message = string.Format(CultureInfo.InvariantCulture, "The dependency '{0}' is not relative to input directory.", file.Path);
+                var message = string.Format(CultureInfo.InvariantCulture, "The dependency '{0}' is not relative to input directory.", file.Path);
                 throw new LuntException(message);
             }
 

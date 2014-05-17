@@ -56,7 +56,7 @@ namespace Lunt.Testing
             {
                 var end = _position + count;
                 var fileSize = _file.ContentLength;
-                long maxLengthToRead = end > fileSize ? fileSize - _position : count;
+                var maxLengthToRead = end > fileSize ? fileSize - _position : count;
                 Buffer.BlockCopy(_file.Content, (int) _position, buffer, offset, (int) maxLengthToRead);
                 _position += maxLengthToRead;
                 return (int) maxLengthToRead;

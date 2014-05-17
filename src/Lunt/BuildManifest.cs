@@ -54,7 +54,7 @@ namespace Lunt
                 reader.ReadInt32(); // Version
                 var itemCount = reader.ReadInt32();
 
-                for (int i = 0; i < itemCount; i++)
+                for (var i = 0; i < itemCount; i++)
                 {
                     var path = reader.ReadString();
                     var status = (AssetBuildStatus) reader.ReadInt32();
@@ -65,7 +65,7 @@ namespace Lunt
                     // Read metadata from stream.
                     var metadataCount = reader.ReadInt32();
                     var metadata = new Dictionary<string, string>();
-                    for (int j = 0; j < metadataCount; j++)
+                    for (var j = 0; j < metadataCount; j++)
                     {
                         var key = reader.ReadString();
                         var value = reader.ReadString();
@@ -84,7 +84,7 @@ namespace Lunt
                     // Read dependencies.
                     var dependencyCount = reader.ReadInt32();
                     var dependencies = new List<AssetDependency>();
-                    for (int j = 0; j < dependencyCount; j++)
+                    for (var j = 0; j < dependencyCount; j++)
                     {
                         var dependencyPath = new FilePath(reader.ReadString());
                         var dependencyFileSize = reader.ReadInt64();
@@ -126,7 +126,7 @@ namespace Lunt
                         writer.WriteString(item.Asset.Metadata.GetValue(key));
                     }
 
-                    int dependencyCount = item.Dependencies != null ? item.Dependencies.Length : 0;
+                    var dependencyCount = item.Dependencies != null ? item.Dependencies.Length : 0;
                     writer.Write(dependencyCount);
                     if (item.Dependencies != null)
                     {

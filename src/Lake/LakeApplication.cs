@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using Lake.Arguments;
 using Lake.Commands;
@@ -24,7 +25,7 @@ namespace Lake
             _factory = factory;
         }
 
-        public int Run(string[] args)
+        public int Run(IEnumerable<string> args)
         {
             try
             {

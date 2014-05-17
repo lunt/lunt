@@ -71,7 +71,7 @@ namespace Lunt.IO
         /// <returns></returns>
         public IEnumerable<IDirectory> GetDirectories(string filter, SearchScope scope)
         {
-            SearchOption option = scope == SearchScope.Current ? SearchOption.TopDirectoryOnly : SearchOption.AllDirectories;
+            var option = scope == SearchScope.Current ? SearchOption.TopDirectoryOnly : SearchOption.AllDirectories;
             return _directory.GetDirectories(filter, option).Select(directory => new Directory(directory.FullName));
         }
 
@@ -84,7 +84,7 @@ namespace Lunt.IO
         /// <returns></returns>
         public IEnumerable<IFile> GetFiles(string filter, SearchScope scope)
         {
-            SearchOption option = scope == SearchScope.Current ? SearchOption.TopDirectoryOnly : SearchOption.AllDirectories;
+            var option = scope == SearchScope.Current ? SearchOption.TopDirectoryOnly : SearchOption.AllDirectories;
             return _directory.GetFiles(filter, option).Select(file => new File(file.FullName));
         }
     }

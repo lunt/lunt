@@ -1,8 +1,5 @@
 ﻿using System.Collections.Generic;
 using Lunt.Bootstrapping.TinyIoc;
-using Lunt.Diagnostics;
-using Lunt.IO;
-using Lunt.Runtime;
 
 namespace Lunt.Bootstrapping
 {
@@ -76,7 +73,7 @@ namespace Lunt.Bootstrapping
         {
             foreach (var registration in registrations)
             {
-                FactoryRegistration scopedRegistration = registration;
+                var scopedRegistration = registration;
                 var registered = container.Register(registration.RegistrationType, (c, np) =>
                 {
                     var context = new FactoryRegistrationContext(c.Resolve);

@@ -35,7 +35,7 @@ namespace Lake.Tests.Unit.Commands
 
                 // Then
                 Assert.Equal(0, result);
-                Assert.True(console.Content[0].StartsWith("Usage: Lake.exe"));
+                Assert.True(console.Content[0].StartsWith("Usage: Lake.exe", StringComparison.Ordinal));
             }
         }
     }

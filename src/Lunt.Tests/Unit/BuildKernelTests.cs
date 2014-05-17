@@ -44,7 +44,7 @@ namespace Lunt.Tests.Unit
 
                 // Then
                 Assert.IsType<ArgumentException>(result);
-                Assert.True(result.Message.StartsWith("The build environment's file system was null."));
+                Assert.True(result.Message.StartsWith("The build environment's file system was null.", StringComparison.Ordinal));
             }
 
             [Fact]
@@ -1117,7 +1117,7 @@ namespace Lunt.Tests.Unit
 
                 // Then
                 Assert.IsType<ObjectDisposedException>(result);
-                Assert.True(result.Message.StartsWith("The build kernel has been disposed."));
+                Assert.True(result.Message.StartsWith("The build kernel has been disposed.", StringComparison.Ordinal));
             }
 
             [Fact]

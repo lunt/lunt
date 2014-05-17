@@ -13,8 +13,8 @@ namespace Lunt.Testing
         private readonly FakeComponentCollection _components;
         private readonly FakeBuildLog _log;
 
-        public static byte[] DefaultContent = {0, 1, 2, 3, 4, 5};
-        public static string DefaultHash = "A_DUMMY_HASH";
+        public static readonly byte[] DefaultContent = {0, 1, 2, 3, 4, 5};
+        public const string DefaultHash = "A_DUMMY_HASH";
 
         public BuildKernel Kernel
         {

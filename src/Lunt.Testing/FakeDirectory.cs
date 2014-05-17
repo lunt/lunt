@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Lunt.IO;
 
 namespace Lunt.Testing
 {
-    public class FakeDirectory : IDirectory
+    public sealed class FakeDirectory : IDirectory
     {
         private readonly FakeFileSystem _fileSystem;
         private readonly DirectoryPath _path;
@@ -30,7 +31,7 @@ namespace Lunt.Testing
             _creatable = creatable;
         }
 
-        public virtual bool Create()
+        public bool Create()
         {
             if (_creatable)
             {
@@ -42,7 +43,7 @@ namespace Lunt.Testing
         public IEnumerable<IDirectory> GetDirectories(string filter, SearchScope scope)
         {
             var result = new List<IDirectory>();
-            var children = _fileSystem.Directories.Where(x => x.Key.FullPath.StartsWith(_path.FullPath + "/"));
+            var children = _fileSystem.Directories.Where(x => x.Key.FullPath.StartsWith(_path.FullPath + "/", StringComparison.OrdinalIgnoreCase));
             foreach (var child in children)
             {
                 var relative = child.Key.FullPath.Substring(_path.FullPath.Length + 1);
@@ -57,7 +58,7 @@ namespace Lunt.Testing
         public IEnumerable<IFile> GetFiles(string filter, SearchScope scope)
         {
             var result = new List<IFile>();
-            var children = _fileSystem.Files.Where(x => x.Key.FullPath.StartsWith(_path.FullPath + "/"));
+            var children = _fileSystem.Files.Where(x => x.Key.FullPath.StartsWith(_path.FullPath + "/", StringComparison.OrdinalIgnoreCase));
             foreach (var child in children)
             {
                 var relative = child.Key.FullPath.Substring(_path.FullPath.Length + 1);

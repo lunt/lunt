@@ -60,7 +60,7 @@ namespace Lunt
         /// Reads a build configuration from an XML file.
         /// </summary>
         /// <returns>A build configuration read from the specified XML file.</returns>
-        public BuildConfiguration Read(XDocument document)
+        public static BuildConfiguration Read(XDocument document)
         {
             if (document == null)
             {
@@ -70,17 +70,17 @@ namespace Lunt
             var configuration = new BuildConfiguration();
 
             // Make sure the root element is correct.
-            XElement buildElement = HasRoot(document, "build");
+            var buildElement = HasRoot(document, "build");
             if (buildElement == null)
             {
                 throw new LuntException("Configuration XML is missing 'build' element.");
             }
 
             // Parse the content.
-            foreach (XElement contentElement in GetElements(document.Root, "asset", StringComparison.OrdinalIgnoreCase))
+            foreach (var contentElement in GetElements(document.Root, "asset", StringComparison.OrdinalIgnoreCase))
             {
                 // Get the path.
-                string path = GetAttributeValue(contentElement, "path");
+                var path = GetAttributeValue(contentElement, "path");
                 if (path != null)
                 {
                     if (string.IsNullOrWhiteSpace(path))
@@ -90,7 +90,7 @@ namespace Lunt
                 }
 
                 // Get the processor (if one defined).
-                string processor = GetAttributeValue(contentElement, "processor");
+                var processor = GetAttributeValue(contentElement, "processor");
                 if (processor != null)
                 {
                     processor = processor.Trim();
@@ -102,10 +102,10 @@ namespace Lunt
 
                 // Parse metadata (if any).
                 var metadata = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-                foreach (XElement metadataElement in GetElements(contentElement, "metadata", StringComparison.OrdinalIgnoreCase))
+                foreach (var metadataElement in GetElements(contentElement, "metadata", StringComparison.OrdinalIgnoreCase))
                 {
                     // Get the key.
-                    string key = GetAttributeValue(metadataElement, "key");
+                    var key = GetAttributeValue(metadataElement, "key");
                     if (key == null)
                     {
                         throw new LuntException("Metadata element is missing 'key' attribute.");
@@ -141,7 +141,7 @@ namespace Lunt
             return null;
         }
 
-        private static IEnumerable<XElement> GetElements(XElement element, string name, StringComparison comparison)
+        private static IEnumerable<XElement> GetElements(XContainer element, string name, StringComparison comparison)
         {
             return element.Elements().Where(e => e.Name.LocalName.Equals(name, comparison));
         }

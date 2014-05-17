@@ -78,11 +78,8 @@ namespace Lunt.Tests.Unit
             [Fact]
             public void Document_Passed_To_Constructor_Cannot_Be_Null()
             {
-                // Given
-                var reader = new BuildConfigurationReader(new FakeFileSystem());
-
-                // When
-                var result = Record.Exception(() => reader.Read((XDocument)null));
+                // Given, When
+                var result = Record.Exception(() => BuildConfigurationReader.Read((XDocument)null));
 
                 // Then
                 Assert.IsType<ArgumentNullException>(result);
@@ -93,13 +90,11 @@ namespace Lunt.Tests.Unit
             public void XML_Must_Contain_Build_Element()
             {
                 // Given
-                var reader = new BuildConfigurationReader(new FakeFileSystem());
-
                 const string xml = @"<Hello World=""True""/>";
-                XDocument document = XDocument.Parse(xml);
+                var document = XDocument.Parse(xml);
 
                 // When
-                var result = Record.Exception(() => reader.Read(document));
+                var result = Record.Exception(() => BuildConfigurationReader.Read(document));
 
                 // Then
                 Assert.IsType<LuntException>(result);
@@ -110,13 +105,11 @@ namespace Lunt.Tests.Unit
             public void Build_Element_Is_Case_Insensitive()
             {
                 // Given
-                var reader = new BuildConfigurationReader(new FakeFileSystem());
-
                 const string xml = @"<BUILD/>";
-                XDocument document = XDocument.Parse(xml);
+                var document = XDocument.Parse(xml);
 
                 // When
-                var result = reader.Read(document);
+                var result = BuildConfigurationReader.Read(document);
 
                 // Then
                 Assert.NotNull(result);
@@ -127,13 +120,11 @@ namespace Lunt.Tests.Unit
             public void Path_Attribute_Of_Content_Cannot_Be_Empty()
             {
                 // Given
-                var reader = new BuildConfigurationReader(new FakeFileSystem());
-
                 const string xml = @"<build><asset path=""""/></build>";
-                XDocument document = XDocument.Parse(xml);
+                var document = XDocument.Parse(xml);
 
                 // When
-                var result = Record.Exception(() => reader.Read(document));
+                var result = Record.Exception(() => BuildConfigurationReader.Read(document));
 
                 // Then
                 Assert.IsType<LuntException>(result);
@@ -144,13 +135,11 @@ namespace Lunt.Tests.Unit
             public void Can_Read_Asset_Element()
             {
                 // Given
-                var reader = new BuildConfigurationReader(new FakeFileSystem());
-
                 const string xml = @"<build><asset path=""texture.png""/></build>";
-                XDocument document = XDocument.Parse(xml);
+                var document = XDocument.Parse(xml);
 
                 // When
-                var result = reader.Read(document);
+                var result = BuildConfigurationReader.Read(document);
 
                 // Then
                 Assert.Equal(1, result.Assets.Count);
@@ -162,13 +151,11 @@ namespace Lunt.Tests.Unit
             public void Asset_Element_Is_Case_Insensitive()
             {
                 // Given
-                var reader = new BuildConfigurationReader(new FakeFileSystem());
-
                 const string xml = @"<build><ASSET path=""texture.png""/></build>";
-                XDocument document = XDocument.Parse(xml);
+                var document = XDocument.Parse(xml);
 
                 // When
-                var result = reader.Read(document);
+                var result = BuildConfigurationReader.Read(document);
 
                 // Then
                 Assert.Equal(1, result.Assets.Count);
@@ -180,13 +167,11 @@ namespace Lunt.Tests.Unit
             public void Path_Attribute_Of_Asset_Element_Is_Case_Insensitive()
             {
                 // Given
-                var reader = new BuildConfigurationReader(new FakeFileSystem());
-
                 const string xml = @"<build><asset PATH=""texture.png""/></build>";
-                XDocument document = XDocument.Parse(xml);
+                var document = XDocument.Parse(xml);
 
                 // When
-                var result = reader.Read(document);
+                var result = BuildConfigurationReader.Read(document);
 
                 // Then
                 Assert.Equal(1, result.Assets.Count);
@@ -198,13 +183,11 @@ namespace Lunt.Tests.Unit
             public void Asset_Element_Can_Have_Processor_Attribute()
             {
                 // Given
-                var reader = new BuildConfigurationReader(new FakeFileSystem());
-
                 const string xml = @"<build><asset path=""texture.png"" processor=""MyProcessor""/></build>";
-                XDocument document = XDocument.Parse(xml);
+                var document = XDocument.Parse(xml);
 
                 // When
-                var result = reader.Read(document);
+                var result = BuildConfigurationReader.Read(document);
 
                 // Then
                 Assert.Equal(1, result.Assets.Count);
@@ -215,13 +198,11 @@ namespace Lunt.Tests.Unit
             public void Processor_Attribute_Of_Asset_Element_Is_Case_Insensitive()
             {
                 // Given
-                var reader = new BuildConfigurationReader(new FakeFileSystem());
-
                 const string xml = @"<build><asset path=""texture.png"" PROCESSOR=""MyProcessor""/></build>";
-                XDocument document = XDocument.Parse(xml);
+                var document = XDocument.Parse(xml);
 
                 // When
-                var result = reader.Read(document);
+                var result = BuildConfigurationReader.Read(document);
 
                 // Then
                 Assert.Equal(1, result.Assets.Count);
@@ -232,13 +213,11 @@ namespace Lunt.Tests.Unit
             public void Asset_Processor_Attribute_Value_Can_Not_Be_Empty()
             {
                 // Given
-                var reader = new BuildConfigurationReader(new FakeFileSystem());
-
                 const string xml = @"<build><asset path=""texture.png"" PROCESSOR=""""/></build>";
-                XDocument document = XDocument.Parse(xml);
+                var document = XDocument.Parse(xml);
 
                 // When
-                var result = reader.Read(document);
+                var result = BuildConfigurationReader.Read(document);
 
                 // Then
                 Assert.Equal(1, result.Assets.Count);
@@ -249,13 +228,11 @@ namespace Lunt.Tests.Unit
             public void Can_Read_Metadata()
             {
                 // Given
-                var reader = new BuildConfigurationReader(new FakeFileSystem());
-
                 const string xml = @"<build><asset path=""texture.png""><metadata key=""key"">value</metadata></asset></build>";
-                XDocument document = XDocument.Parse(xml);
+                var document = XDocument.Parse(xml);
 
                 // When
-                var result = reader.Read(document);
+                var result = BuildConfigurationReader.Read(document);
 
                 // Then
                 Assert.True(result.Assets[0].Metadata.ContainsKey("key"));
@@ -266,13 +243,11 @@ namespace Lunt.Tests.Unit
             public void Metadata_Element_Must_Contain_Key_Attribute()
             {
                 // Given
-                var reader = new BuildConfigurationReader(new FakeFileSystem());
-
                 const string xml = @"<build><asset path=""texture.png""><metadata>value</metadata></asset></build>";
-                XDocument document = XDocument.Parse(xml);
+                var document = XDocument.Parse(xml);
 
                 // When
-                var result = Record.Exception(() => reader.Read(document));
+                var result = Record.Exception(() => BuildConfigurationReader.Read(document));
 
                 // Then
                 Assert.IsType<LuntException>(result);
@@ -283,13 +258,11 @@ namespace Lunt.Tests.Unit
             public void Key_Attribute_Of_Metadata_Can_Not_Be_Empty()
             {
                 // Given
-                var reader = new BuildConfigurationReader(new FakeFileSystem());
-
                 const string xml = @"<build><asset path=""texture.png""><metadata key="""">value</metadata></asset></build>";
-                XDocument document = XDocument.Parse(xml);
+                var document = XDocument.Parse(xml);
 
                 // When
-                var result = Record.Exception(() => reader.Read(document));
+                var result = Record.Exception(() => BuildConfigurationReader.Read(document));
 
                 // Then
                 Assert.IsType<LuntException>(result);
@@ -300,13 +273,11 @@ namespace Lunt.Tests.Unit
             public void Path_Attribute_With_No_Wildcards_Is_Treated_Like_A_Regular_Path()
             {
                 // Given
-                var reader = new BuildConfigurationReader(new FakeFileSystem());
-
                 const string xml = @"<build><asset path=""Text/asset.txt"" /></build>";
-                XDocument document = XDocument.Parse(xml);
+                var document = XDocument.Parse(xml);
 
                 // When
-                var result = reader.Read(document);
+                var result = BuildConfigurationReader.Read(document);
 
                 // Then
                 Assert.Equal(1, result.Assets.Count);
@@ -317,13 +288,11 @@ namespace Lunt.Tests.Unit
             public void Path_Attribute_With_Directory_Wildcard_Is_Treated_Like_A_Glob()
             {
                 // Given
-                var reader = new BuildConfigurationReader(new FakeFileSystem());
-
                 const string xml = @"<build><asset path=""Text/**/asset.txt"" /></build>";
-                XDocument document = XDocument.Parse(xml);
+                var document = XDocument.Parse(xml);
 
                 // When
-                var result = reader.Read(document);
+                var result = BuildConfigurationReader.Read(document);
 
                 // Then
                 Assert.Equal(1, result.Assets.Count);
@@ -334,13 +303,11 @@ namespace Lunt.Tests.Unit
             public void Path_Attribute_With_Character_Wildcard_Is_Treated_Like_A_Glob()
             {
                 // Given
-                var reader = new BuildConfigurationReader(new FakeFileSystem());
-
                 const string xml = @"<build><asset path=""Text/a??et.txt"" /></build>";
-                XDocument document = XDocument.Parse(xml);
+                var document = XDocument.Parse(xml);
 
                 // When
-                var result = reader.Read(document);
+                var result = BuildConfigurationReader.Read(document);
 
                 // Then
                 Assert.Equal(1, result.Assets.Count);

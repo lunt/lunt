@@ -92,7 +92,7 @@ namespace Lake.Tests.Unit.Commands
 
                 // Then
                 Assert.IsType<ArgumentException>(result);
-                Assert.True(result.Message.StartsWith("The build environment's file system was null."));
+                Assert.True(result.Message.StartsWith("The build environment's file system was null.", StringComparison.Ordinal));
             }
         }
 

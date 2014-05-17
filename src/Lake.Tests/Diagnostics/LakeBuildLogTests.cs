@@ -37,7 +37,7 @@ namespace Lake.Tests.Diagnostics
                 log.Write(Verbosity.Normal, LogLevel.Information, "Hello World");
 
                 // Then
-                writer.Content.Contains("[I] Hello World");
+                Assert.True(writer.Content.Contains("[I] Hello World"));
             }
         }
     }

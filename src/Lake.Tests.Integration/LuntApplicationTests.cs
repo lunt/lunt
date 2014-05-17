@@ -17,7 +17,7 @@ namespace Lake.Tests.Integration
                 var result = context.ExecuteBuild("build.config");
 
                 // Then
-                context.Assert.ApplicationExitedWithoutError(result);
+                IntegrationAssertion.ApplicationExitedWithoutError(result);
                 context.Assert.TargetFileExists("Output/Text/Asset.dat");
                 context.Assert.HasContent("Output/Text/Asset.dat", "HELLO WORLD");
             }
@@ -32,7 +32,7 @@ namespace Lake.Tests.Integration
                 var result = context.ExecuteBuild("build_reverse.config");
 
                 // Then
-                context.Assert.ApplicationExitedWithoutError(result);
+                IntegrationAssertion.ApplicationExitedWithoutError(result);
                 context.Assert.TargetFileExists("Output/Text/Asset.dat");
                 context.Assert.HasContent("Output/Text/Asset.dat", "DLROW OLLEH");
             }
@@ -92,7 +92,7 @@ namespace Lake.Tests.Integration
                 var result = context.ExecuteBuild("build_glob.config");
 
                 // Then
-                context.Assert.ApplicationExitedWithoutError(result);
+                IntegrationAssertion.ApplicationExitedWithoutError(result);
                 context.Assert.TargetFileExists("Output/Text/Asset.dat");
                 context.Assert.TargetFileExists("Output/Text/Other.dat");
             }
@@ -109,7 +109,7 @@ namespace Lake.Tests.Integration
                 var result = context.RunApplication(options);
 
                 // Then
-                context.Assert.ApplicationExitedWithoutError(result);
+                IntegrationAssertion.ApplicationExitedWithoutError(result);
                 context.Assert.TargetFileExists("Output/Text/Asset.dat");
                 context.Assert.TargetFileExists("Output/Text/Other.dat");
                 context.Assert.TargetFileExists("Output/Text/More/Hello.dat");
@@ -127,7 +127,7 @@ namespace Lake.Tests.Integration
                 var result = context.RunApplication(options);
 
                 // Then
-                context.Assert.ApplicationExitedWithoutError(result);
+                IntegrationAssertion.ApplicationExitedWithoutError(result);
                 context.Assert.TargetFileExists("Output/Text/Asset.dat");
                 context.Assert.TargetFileExists("Output/Text/Other.dat");
                 context.Assert.TargetFileExists("Output/Text/More/Hello.dat");
@@ -145,7 +145,7 @@ namespace Lake.Tests.Integration
                 var result = context.RunApplication(options);
 
                 // Then
-                context.Assert.ApplicationExitedWithoutError(result);
+                IntegrationAssertion.ApplicationExitedWithoutError(result);
                 context.Assert.TargetFileExists("Output/Text/Asset.dat");
                 context.Assert.TargetFileExists("Output/Text/Other.dat");
                 context.Assert.TargetFileExists("Output/Text/More/Hello.dat");

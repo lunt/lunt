@@ -4,11 +4,10 @@ using System.Reflection;
 
 namespace Lake.Tests.Integration
 {
-    public class IntegrationContext : IDisposable
+    public sealed class IntegrationContext : IDisposable
     {
         private readonly string _remotePath;
         private readonly IntegrationAssertion _assert;
-        private bool _disposed;
 
         public string AssetsPath
         {
@@ -44,26 +43,11 @@ namespace Lake.Tests.Integration
             CopyFiles(_remotePath);
         }
 
-        ~IntegrationContext()
-        {
-            Dispose(false);
-        }
-
         public void Dispose()
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);            
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!_disposed)
+            if (Directory.Exists(_remotePath))
             {
-                if (Directory.Exists(_remotePath))
-                {
-                    Directory.Delete(_remotePath, true);
-                }
-                _disposed = true;
+                Directory.Delete(_remotePath, true);
             }
         }
 

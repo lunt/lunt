@@ -13,7 +13,7 @@ namespace Lake.Tests.Integration
             _context = context;
         }
 
-        public void ApplicationExitedWithoutError(IntegrationTestResult result)
+        public static void ApplicationExitedWithoutError(IntegrationTestResult result)
         {
             if (result == null || result.ExitCode != 0)
             {
@@ -27,7 +27,7 @@ namespace Lake.Tests.Integration
             if (!File.Exists(filename))
             {
                 const string format = "The file '{0}' did not exist.";
-                string message = string.Format(format, filename);
+                var message = string.Format(format, filename);
                 throw new AssertException(message);
             }
         }

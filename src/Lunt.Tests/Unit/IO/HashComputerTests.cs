@@ -33,8 +33,8 @@ namespace Lunt.Tests.Unit.IO
             var file = filesystem.GetFile("file.data").Create("Hello World");
 
             // When
-            string first = hasher.Compute(file);
-            string second = hasher.Compute(file);
+            var first = hasher.Compute(file);
+            var second = hasher.Compute(file);
 
             // Then
             Assert.Equal(first, second);
@@ -50,8 +50,8 @@ namespace Lunt.Tests.Unit.IO
             var file2 = filesystem.GetFile("file2.data").Create("Goodbye World");
 
             // When
-            string first = hasher.Compute(file1);
-            string second = hasher.Compute(file2);
+            var first = hasher.Compute(file1);
+            var second = hasher.Compute(file2);
 
             // Then
             Assert.NotEqual(first, second);

@@ -25,7 +25,7 @@ namespace Lunt.Tests.Unit.IO
 
             // Then
             Assert.IsType<ArgumentException>(result);
-            Assert.True(result.Message.StartsWith("Path to be collapsed cannot be relative."));
+            Assert.True(result.Message.StartsWith("Path to be collapsed cannot be relative.", StringComparison.Ordinal));
             Assert.Equal("path", ((ArgumentException)result).ParamName);
         }
 

@@ -59,7 +59,7 @@ namespace Lake.Arguments
                 o => o.Colors);
         }
 
-        public LakeOptions Parse(string[] args)
+        public LakeOptions Parse(IEnumerable<string> args)
        {
             var options = new LakeOptions();
             var isParsingOptions = true;
@@ -81,7 +81,8 @@ namespace Lake.Arguments
 
                     // Quoted?
                     var buildConfiguration = arg;
-                    if (buildConfiguration.StartsWith("\"") && buildConfiguration.EndsWith("\""))
+                    if (buildConfiguration.StartsWith("\"", StringComparison.OrdinalIgnoreCase) 
+                        && buildConfiguration.EndsWith("\"", StringComparison.OrdinalIgnoreCase))
                     {
                         buildConfiguration = buildConfiguration.Trim('"');
                     }
@@ -118,7 +119,7 @@ namespace Lake.Arguments
         {
             string name, value;
 
-            int separatorIndex = arg.IndexOfAny(new[] {'='});
+            var separatorIndex = arg.IndexOfAny(new[] {'='});
             if (separatorIndex < 0)
             {
                 name = arg.Substring(1);
@@ -158,7 +159,7 @@ namespace Lake.Arguments
                             _log.Error(format, value, command.Property.PropertyType.FullName);
                             return false;
                         }
-                        object convertedValue = converter.ConvertFromInvariantString(value);
+                        var convertedValue = converter.ConvertFromInvariantString(value);
                         command.Property.SetValue(options, convertedValue, null);
                         return true;
                     }

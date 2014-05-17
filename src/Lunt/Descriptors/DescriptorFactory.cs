@@ -22,7 +22,7 @@ namespace Lunt.Descriptors
                 if (attribute == null)
                 {
                     const string format = "The importer {0} has not been decorated with an importer attribute.";
-                    string message = string.Format(CultureInfo.InvariantCulture, format, importerType.FullName);
+                    var message = string.Format(CultureInfo.InvariantCulture, format, importerType.FullName);
                     throw new LuntException(message);
                 }
 
@@ -30,7 +30,7 @@ namespace Lunt.Descriptors
                 if (attribute.FileExtensions.Length == 0 || attribute.FileExtensions[0] == null)
                 {
                     const string format = "The importer {0} has not been associated with any file extensions.";
-                    string message = string.Format(CultureInfo.InvariantCulture, format, importerType.FullName);
+                    var message = string.Format(CultureInfo.InvariantCulture, format, importerType.FullName);
                     throw new LuntException(message);
                 }
 
@@ -41,7 +41,7 @@ namespace Lunt.Descriptors
                     if (registeredExtensions.Contains(extension, StringComparer.OrdinalIgnoreCase))
                     {
                         const string format = "More than one importer has been associated with the file extension '{0}'.";
-                        string message = string.Format(CultureInfo.InvariantCulture, format, extension);
+                        var message = string.Format(CultureInfo.InvariantCulture, format, extension);
                         throw new LuntException(message);
                     }
 
@@ -55,14 +55,14 @@ namespace Lunt.Descriptors
                     if (!typeof (IProcessor).IsAssignableFrom(attribute.DefaultProcessor))
                     {
                         const string format = "The default processor ({0}) referenced by {1} is not a processor.";
-                        string message = string.Format(CultureInfo.InvariantCulture, format, attribute.DefaultProcessor.FullName, importerType.FullName);
+                        var message = string.Format(CultureInfo.InvariantCulture, format, attribute.DefaultProcessor.FullName, importerType.FullName);
                         throw new LuntException(message);
                     }
 
                     if (attribute.DefaultProcessor.IsAbstract)
                     {
                         const string format = "The default processor ({0}) referenced by {1} is abstract.";
-                        string message = string.Format(CultureInfo.InvariantCulture, format, attribute.DefaultProcessor.FullName, importerType.FullName);
+                        var message = string.Format(CultureInfo.InvariantCulture, format, attribute.DefaultProcessor.FullName, importerType.FullName);
                         throw new LuntException(message);
                     }
                 }
@@ -90,13 +90,13 @@ namespace Lunt.Descriptors
                 if (processor.GetSourceType() == null)
                 {
                     const string format = "The processor {0} has no source type.";
-                    string message = string.Format(CultureInfo.InvariantCulture, format, processorType.FullName);
+                    var message = string.Format(CultureInfo.InvariantCulture, format, processorType.FullName);
                     throw new LuntException(message);
                 }
                 if (processor.GetTargetType() == null)
                 {
                     const string format = "The processor {0} has no target type.";
-                    string message = string.Format(CultureInfo.InvariantCulture, format, processorType.FullName);
+                    var message = string.Format(CultureInfo.InvariantCulture, format, processorType.FullName);
                     throw new LuntException(message);
                 }
 
@@ -124,14 +124,14 @@ namespace Lunt.Descriptors
                 if (writer.GetTargetType() == null)
                 {
                     const string format = "The writer {0} has no target type.";
-                    string message = string.Format(CultureInfo.InvariantCulture, format, writerType.FullName);
+                    var message = string.Format(CultureInfo.InvariantCulture, format, writerType.FullName);
                     throw new LuntException(message);
                 }
 
                 if (writers.Select(w => w.TargetType).Any(registeredTargetType => registeredTargetType == targetType))
                 {
                     const string format = "More than one writer has been associated with the type {0}.";
-                    string message = string.Format(CultureInfo.InvariantCulture, format, targetType.FullName);
+                    var message = string.Format(CultureInfo.InvariantCulture, format, targetType.FullName);
                     throw new LuntException(message);
                 }
 
@@ -148,8 +148,8 @@ namespace Lunt.Descriptors
 
         private static void GetName(ComponentDescriptor descriptor)
         {
-            Type descriptorType = descriptor.GetComponentType();
-            string name = descriptorType.Name;
+            var descriptorType = descriptor.GetComponentType();
+            var name = descriptorType.Name;
 
             var nameAttribute = descriptorType.GetAttribute<DisplayNameAttribute>();
             if (nameAttribute != null)
