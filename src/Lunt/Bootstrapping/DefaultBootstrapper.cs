@@ -27,13 +27,14 @@ namespace Lunt.Bootstrapping
         }
 
         /// <summary>
-        /// Resolves the kernel.
+        /// Resolves a service from the container.
         /// </summary>
-        /// <param name="container">The container to resolve the kernel from.</param>
-        /// <returns>The build kernel.</returns>
-        protected sealed override IBuildKernel ResolveKernel(TinyIoCContainer container)
+        /// <typeparam name="T">The service type to resolve from the container.</typeparam>
+        /// <param name="container">The container.</param>
+        /// <returns>The resolved service.</returns>
+        protected sealed override T ResolveService<T>(TinyIoCContainer container)
         {
-            return container.Resolve<IBuildKernel>();
+            return container.Resolve<T>();
         }
 
         /// <summary>

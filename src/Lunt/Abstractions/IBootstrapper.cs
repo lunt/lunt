@@ -6,9 +6,10 @@ namespace Lunt
     public interface IBootstrapper
     {
         /// <summary>
-        /// Gets the build kernel.
+        /// Resolves a service.
         /// </summary>
-        /// <returns>The build kernel.</returns>
-        IBuildKernel GetKernel();
+        /// <typeparam name="T">The service type to resolve.</typeparam>
+        /// <returns>The resolved service.</returns>
+        T GetService<T>() where T : class;
     }
 }

@@ -14,7 +14,7 @@ namespace Lunt.Tests.Unit.Bootstrapping
                 var bootstrapper = new DefaultBootstrapper();
 
                 // When
-                var engine = bootstrapper.GetKernel();
+                var engine = bootstrapper.GetService<IBuildKernel>();
 
                 // Then
                 Assert.IsType<BuildKernel>(engine);

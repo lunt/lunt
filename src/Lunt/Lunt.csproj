@@ -81,6 +81,8 @@
     <Compile Include="AssetBuildResult.cs" />
     <Compile Include="AssetBuildStatus.cs" />
     <Compile Include="BuildConfigurationReader.cs" />
+    <Compile Include="BuildEngine.cs" />
+    <Compile Include="BuildEngineSettings.cs" />
     <Compile Include="BuildEnvironment.cs" />
     <Compile Include="BuildManifestProvider.cs" />
     <Compile Include="ConsoleWriter.cs" />
@@ -107,6 +109,7 @@
     <Compile Include="Diagnostics\Verbosity.cs" />
     <Compile Include="Diagnostics\VerbosityTypeConverter.cs" />
     <Compile Include="Extensions\BinaryWriterExtensions.cs" />
+    <Compile Include="Extensions\BootstrapperExtensions.cs" />
     <Compile Include="Extensions\TypeExtensions.cs" />
     <Compile Include="IO\Converters\DirectoryPathTypeConverter.cs" />
     <Compile Include="IO\Converters\FilePathTypeConverter.cs" />

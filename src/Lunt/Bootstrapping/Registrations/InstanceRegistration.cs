@@ -39,9 +39,8 @@ namespace Lunt.Bootstrapping
         /// </summary>
         /// <param name="registrationType">The registration type.</param>
         /// <param name="instance">The instance to register.</param>
-        /// <param name="lifetime">The lifetime.</param>
-        public InstanceRegistration(Type registrationType, object instance, Lifetime lifetime)
-            : base(lifetime)
+        public InstanceRegistration(Type registrationType, object instance)
+            : base(Lifetime.Default)
         {
             _registrationType = registrationType;
             _instance = instance;

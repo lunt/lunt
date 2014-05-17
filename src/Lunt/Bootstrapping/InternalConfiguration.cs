@@ -51,6 +51,12 @@ namespace Lunt.Bootstrapping
         public Type BuildLog { get; set; }
 
         /// <summary>
+        /// Gets or sets the build kernel type to be used.
+        /// </summary>
+        /// <value>The build kernel type to be used.</value>
+        public Type BuildKernel { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="InternalConfiguration"/> class.
         /// </summary>
         public InternalConfiguration()
@@ -59,7 +65,8 @@ namespace Lunt.Bootstrapping
             PipelineScanner = typeof (AppDomainScanner);
             FileSystem = typeof (FileSystem);
             HashComputer = typeof (HashComputer);
-            BuildLog = typeof (TraceBuildLog);
+            BuildLog = typeof(TraceBuildLog);
+            BuildKernel = typeof(BuildKernel);
         }
 
         /// <summary>
@@ -74,7 +81,9 @@ namespace Lunt.Bootstrapping
                 new TypeRegistration(typeof (IPipelineScanner), PipelineScanner, Lifetime.Singleton),
                 new TypeRegistration(typeof (IFileSystem), FileSystem, Lifetime.Singleton),
                 new TypeRegistration(typeof (IHashComputer), HashComputer, Lifetime.Singleton),
-                new TypeRegistration(typeof (IBuildLog), BuildLog, Lifetime.Singleton)
+                new TypeRegistration(typeof (IBuildLog), BuildLog, Lifetime.Singleton),
+                new TypeRegistration(typeof (IBuildKernel), BuildKernel, Lifetime.Singleton)
+
             };
         }
     }

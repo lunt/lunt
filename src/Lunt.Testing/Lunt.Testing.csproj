@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\FileExtensions.cs" />
+    <Compile Include="Extensions\ShouldExtensions.cs" />
     <Compile Include="FakeBuildEnvironment.cs" />
     <Compile Include="FakeBuildLog.cs" />
     <Compile Include="FakeCommand.cs" />
@@ -63,6 +64,7 @@
     <Compile Include="FakeFileSystem.cs" />
     <Compile Include="FakeHashComputer.cs" />
     <Compile Include="FakeImporter.cs" />
+    <Compile Include="FakeInternalConfiguration.cs" />
     <Compile Include="FakePipelineScanner.cs" />
     <Compile Include="FakeProcessor.cs" />
     <Compile Include="FakeWriter.cs" />

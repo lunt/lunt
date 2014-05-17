@@ -7,11 +7,12 @@ namespace Lunt.Bootstrapping
     /// The bootstrapper base class.
     /// </summary>
     public abstract class Bootstrapper<TContainer> : IBootstrapper
-        where TContainer : class 
+        where TContainer : class
     {
         private TContainer _container;
         private readonly object _lock;
         private readonly IInternalConfiguration _configuration;
+        private bool _isInitialized;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Bootstrapper{TContainer}"/> class.
@@ -23,43 +24,46 @@ namespace Lunt.Bootstrapping
             _configuration = configuration ?? new InternalConfiguration();
         }
 
-        /// <summary>
-        /// Gets the build kernel.
-        /// </summary>
-        /// <returns>The build kernel.</returns>
-        public IBuildKernel GetKernel()
+        private void Initialize()
         {
             lock (_lock)
             {
-                if (_container == null)
+                if (!_isInitialized)
                 {
                     // Create a new container.
                     _container = CreateContainer();
-                   
+
                     // Get all registrations and add the build kernel registration.
-                    var registrations = GetRegistrations().ToList();
-                    registrations.Add(new TypeRegistration(typeof(IBuildKernel), typeof(BuildKernel), Lifetime.Singleton));
+                    var registrations = _configuration.GetRegistrations().ToList();
 
                     // Perform registrations.
                     RegisterTypeRegistrations(_container, registrations.OfType<TypeRegistration>());
                     RegisterInstanceRegistrations(_container, registrations.OfType<InstanceRegistration>());
                     RegisterFactoryRegistrations(_container, registrations.OfType<FactoryRegistration>());
-                    
+
                     // Let the bootstrapper configure the container as well.
                     // Good for more advanced tinkering.
                     ConfigureContainer(_container);
+
+                    // We're now initialized.
+                    _isInitialized = true;
                 }
-                return ResolveKernel(_container);
             }
         }
 
         /// <summary>
-        /// Gets all registrations from the internal configuration.
+        /// Resolves a service.
         /// </summary>
-        /// <returns>All registrations.</returns>
-        protected virtual IEnumerable<ContainerRegistration> GetRegistrations()
+        /// <typeparam name="T">The service type to resolve.</typeparam>
+        /// <returns>The resolved service.</returns>
+        public T GetService<T>()
+            where T : class 
         {
-            return _configuration.GetRegistrations();
+            if (!_isInitialized)
+            {
+                Initialize();
+            }
+            return ResolveService<T>(_container);
         }
 
         /// <summary>
@@ -72,15 +76,16 @@ namespace Lunt.Bootstrapping
         /// Configures the container.
         /// </summary>
         protected virtual void ConfigureContainer(TContainer container)
-        {            
+        {
         }
 
         /// <summary>
-        /// Resolves the kernel.
+        /// Resolves a service from the container.
         /// </summary>
-        /// <param name="container">The container to resolve the kernel from.</param>
-        /// <returns>The build kernel.</returns>
-        protected abstract IBuildKernel ResolveKernel(TContainer container);
+        /// <typeparam name="T">The service type to resolve from the container.</typeparam>
+        /// <param name="container">The container.</param>
+        /// <returns>The resolved service.</returns>
+        protected abstract T ResolveService<T>(TContainer container) where T : class;
 
         /// <summary>
         /// Registers type registrations.

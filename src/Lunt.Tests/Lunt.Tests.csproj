@@ -68,6 +68,8 @@
     <Compile Include="Unit\Bootstrapping\DefaultBootstrapperTests.cs" />
     <Compile Include="Unit\BuildConfigurationXmlReaderTests.cs" />
     <Compile Include="Unit\BuildConfigurationTests.cs" />
+    <Compile Include="Unit\BuildEngineSettingsTests.cs" />
+    <Compile Include="Unit\BuildEngineTests.cs" />
     <Compile Include="Unit\BuildKernelTests.cs" />
     <Compile Include="Unit\BuildEnvironmentTests.cs" />
     <Compile Include="Unit\BuildManifestItemTests.cs" />
