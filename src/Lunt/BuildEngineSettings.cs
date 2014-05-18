@@ -33,6 +33,14 @@ namespace Lunt
         }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to build incrementally.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if building incrementally; otherwise, <c>false</c>.
+        /// </value>
+        public bool Incremental { get; set; }
+
+        /// <summary>
         /// Gets or sets the input path.
         /// </summary>
         /// <value>The input path.</value>

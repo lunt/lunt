@@ -62,7 +62,7 @@ namespace Lunt
             // Read and fix the build configuration.
             var reader = _bootstrapper.GetBuildConfigurationReader();
             var configuration = reader.Read(buildConfigurationPath);
-            configuration.Incremental = false;
+            configuration.Incremental = settings.Incremental;
             configuration.InputDirectory = settings.InputPath;
             configuration.OutputDirectory = settings.OutputPath;
 
