@@ -13,8 +13,8 @@ namespace Lunt.Tests.Unit
             public void Should_Load_Previous_Existing_Manifest()
             {
                 // Given
-                var service = new BuildManifestProvider();
                 var fileSystem = new Mock<IFileSystem>();
+                var service = new BuildManifestProvider(fileSystem.Object);
 
                 var stream = new MemoryStream();
                 new BuildManifest().Save(stream);
@@ -29,7 +29,7 @@ namespace Lunt.Tests.Unit
                 fileSystem.Setup(x => x.GetFile(It.IsAny<FilePath>())).Returns(() => manifestFile.Object);
 
                 // When
-                var result = service.LoadManifest(fileSystem.Object, "/assets/build.config");
+                var result = service.LoadManifest("/assets/build.config");
 
                 // Then            
                 Assert.NotNull(result);
@@ -40,8 +40,8 @@ namespace Lunt.Tests.Unit
             public void Should_Return_Null_If_Manifest_File_Was_Not_Found()
             {
                 // Given
-                var service = new BuildManifestProvider();
                 var fileSystem = new Mock<IFileSystem>();
+                var service = new BuildManifestProvider(fileSystem.Object);
 
                 var manifestFile = new Mock<IFile>();
                 manifestFile.Setup(x => x.Exists).Returns(() => false);
@@ -49,7 +49,7 @@ namespace Lunt.Tests.Unit
                 fileSystem.Setup(x => x.GetFile(It.IsAny<FilePath>())).Returns(() => manifestFile.Object);
 
                 // When
-                var result = service.LoadManifest(fileSystem.Object, "/assets/build.config");
+                var result = service.LoadManifest("/assets/build.config");
 
                 // Then            
                 Assert.Null(result);
@@ -63,8 +63,8 @@ namespace Lunt.Tests.Unit
             public void Should_Save_The_Manifest()
             {
                 // Given
-                var service = new BuildManifestProvider();
                 var fileSystem = new Mock<IFileSystem>();
+                var service = new BuildManifestProvider(fileSystem.Object);
 
                 var manifestFile = new Mock<IFile>();
                 manifestFile.Setup(x => x.Open(FileMode.Create, FileAccess.Write, FileShare.None))
@@ -74,7 +74,7 @@ namespace Lunt.Tests.Unit
                 fileSystem.Setup(x => x.GetFile(It.IsAny<FilePath>())).Returns(() => manifestFile.Object);
 
                 // When
-                service.SaveManifest(fileSystem.Object, "/assets/build.config.manifest", new BuildManifest());
+                service.SaveManifest("/assets/build.config.manifest", new BuildManifest());
 
                 // Then            
                 manifestFile.Verify();

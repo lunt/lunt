@@ -43,7 +43,7 @@ namespace Lunt.Testing
             BuildConfigurationReader = reader;
 
             var manifestProvider = new Mock<IBuildManifestProvider>();
-            manifestProvider.Setup(x => x.LoadManifest(It.IsAny<IFileSystem>(), It.IsAny<FilePath>())).Returns((BuildManifest)null);
+            manifestProvider.Setup(x => x.LoadManifest(It.IsAny<FilePath>())).Returns((BuildManifest)null);
             BuildManifestProvider = manifestProvider;
 
             var kernel = new Mock<IBuildKernel>();

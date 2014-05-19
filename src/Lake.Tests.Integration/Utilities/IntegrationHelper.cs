@@ -10,8 +10,7 @@ namespace Lake.Tests.Integration
     using System.IO;
 
     public static class IntegrationHelper
-    {        
-
+    {
         public static LakeApplication CreateApplication()
         {
             var console = new ConsoleWriter();
@@ -32,8 +31,8 @@ namespace Lake.Tests.Integration
             {
                 return null;
             }
-            var reader = new BuildManifestProvider();
-            return reader.LoadManifest(new FileSystem(), new FilePath(manifestPath));
+            var reader = new BuildManifestProvider(new FileSystem());
+            return reader.LoadManifest(new FilePath(manifestPath));
         }
 
         public static LakeOptions CreateOptions(IntegrationContext context)
