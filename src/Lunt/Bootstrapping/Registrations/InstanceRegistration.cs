@@ -7,20 +7,7 @@ namespace Lunt.Bootstrapping
     /// </summary>
     public sealed class InstanceRegistration : ContainerRegistration
     {
-        private readonly Type _registrationType;
         private readonly object _instance;
-
-        /// <summary>
-        ///  Gets the registration type.
-        /// </summary>
-        /// <value>The registration type.</value>
-        public Type RegistrationType
-        {
-            get
-            {
-                return _registrationType;
-            }
-        }
 
         /// <summary>
         /// Gets the instance.
@@ -40,9 +27,8 @@ namespace Lunt.Bootstrapping
         /// <param name="registrationType">The registration type.</param>
         /// <param name="instance">The instance to register.</param>
         public InstanceRegistration(Type registrationType, object instance)
-            : base(Lifetime.Default)
+            : base(registrationType, Lifetime.Default)
         {
-            _registrationType = registrationType;
             _instance = instance;
         }
     }

@@ -54,7 +54,7 @@ namespace Lunt.Testing
             _configuration.InputDirectory = "/input";
             _configuration.OutputDirectory = "/output";
 
-            // Create the input directory.
+            // CreateCommand the input directory.
             _fileSystem.GetDirectory(_configuration.InputDirectory).Create();
 
             _environment = new FakeBuildEnvironment(_fileSystem);

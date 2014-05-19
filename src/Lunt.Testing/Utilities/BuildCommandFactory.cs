@@ -1,117 +1,55 @@
 ﻿using Lake;
 using Lake.Commands;
+using Lake.Commands.Building;
 using Lunt.Diagnostics;
 using Lunt.IO;
 using Lunt.Runtime;
 using Moq;
 
-namespace Lunt.Testing
+namespace Lunt.Testing.Utilities
 {
     internal sealed class BuildCommandFactory
     {
-        private readonly LakeOptions _options;
-        private readonly BuildManifest _manifest;
-        private readonly string _workingDirectory;
-        private readonly BuildConfiguration _configuration;
-        private readonly Mock<IBuildConfigurationReader> _configurationReader;
-        private readonly Mock<IBuildKernel> _kernel;
-        private readonly Mock<IBuildEnvironment> _environment;
-        private readonly Mock<IBuildManifestProvider> _manifestProvider;
-        private readonly Mock<IPipelineScannerFactory> _scannerFactory;
-        private readonly FakeConsole _console;
-
-        public LakeOptions Options
-        {
-            get { return _options; }
-        }
-
-        public BuildManifest Manifest
-        {
-            get { return _manifest; }
-        }
-
-        public string WorkingDirectory
-        {
-            get { return _workingDirectory; }
-        }
-
-        public BuildConfiguration Configuration
-        {
-            get { return _configuration; }
-        }
-
-        public Mock<IBuildConfigurationReader> ConfigurationReader
-        {
-            get { return _configurationReader; }
-        }
-
-        public Mock<IBuildKernel> Kernel
-        {
-            get { return _kernel; }
-        }
-
-        public FakeConsole Console
-        {
-            get { return _console; }
-        }
-
-        public Mock<IPipelineScannerFactory> ScannerFactory
-        {
-            get { return _scannerFactory; }
-        }
+        public LakeOptions Options { get; set; }
+        public BuildManifest Manifest { get; set; }
+        public string WorkingDirectory { get; set; }
+        public FakeConsole Console { get; set; }
+        public Mock<IPipelineScannerFactory> ScannerFactory { get; set; }
+        public Mock<IBuildEngineInvoker> BuildEngineInvoker { get; set; }
+        public FakeBuildEnvironment BuildEnvironment { get; set; }
 
         public BuildCommandFactory()
         {
-            _manifest = new BuildManifest();
-            _options = new LakeOptions();
-            _options.BuildConfiguration = "/build.config";
-            _options.InputDirectory = "/input";
-            _options.OutputDirectory = "/output";
-            _workingDirectory = "/working";
-            _configuration = new BuildConfiguration();
-            _configurationReader = new Mock<IBuildConfigurationReader>();
-            _kernel = new Mock<IBuildKernel>();
-            _environment = new Mock<IBuildEnvironment>();
-            _manifestProvider = new Mock<IBuildManifestProvider>();
-            _scannerFactory = new Mock<IPipelineScannerFactory>();
-            _console = new FakeConsole();
+            Manifest = new BuildManifest();
+            Options = new LakeOptions();
+            Options.BuildConfiguration = "/build.config";
+            Options.InputDirectory = "/input";
+            Options.OutputDirectory = "/output";
+            WorkingDirectory = "/working";
+            BuildEnvironment = new FakeBuildEnvironment();
+            Console = new FakeConsole();
         }
 
-        public BuildCommand Create(IBuildConfigurationReader reader = null, 
-            IBuildManifestProvider manifestProvider = null, 
-            IPipelineScannerFactory factory = null, IBuildKernel kernel = null)
+        public BuildCommand CreateCommand()
         {
             var log = new Mock<IBuildLog>().Object;
-            var hasher = new Mock<IHashComputer>().Object;
 
-            if (factory == null)
+            if (ScannerFactory == null)
             {
+                ScannerFactory = new Mock<IPipelineScannerFactory>();
                 ScannerFactory.Setup(x => x.Create(It.IsAny<DirectoryPath>()))
                     .Returns(new Mock<IPipelineScanner>().Object);
             }
 
-            if (reader == null)
+            if (BuildEngineInvoker == null)
             {
-                _configurationReader.Setup(x => x.Read(It.IsAny<FilePath>()))
-                    .Returns(_configuration);
+                BuildEngineInvoker = new Mock<IBuildEngineInvoker>();
+                BuildEngineInvoker.Setup(x => x.Build(It.IsAny<BuildEngine>(), It.IsAny<BuildEngineSettings>()))
+                    .Returns(Manifest ?? new BuildManifest());
             }
 
-            if (kernel == null)
-            {
-                _kernel.Setup(x => x.Build(It.IsAny<BuildConfiguration>(), It.IsAny<BuildManifest>()))
-                    .Returns(_manifest);
-            }
-
-            _environment.Setup(x => x.GetWorkingDirectory())
-                .Returns(() => _workingDirectory)
-                .Verifiable();
-
-            return new BuildCommand(kernel ?? _kernel.Object, 
-                log, _console, hasher, 
-                factory ?? ScannerFactory.Object,
-                _environment.Object, 
-                manifestProvider ?? _manifestProvider.Object, 
-                reader ?? _configurationReader.Object);
+            return new BuildCommand(log, Console, ScannerFactory.Object, BuildEnvironment, 
+                BuildEngineInvoker != null ? BuildEngineInvoker.Object : null);
         }
     }
 }

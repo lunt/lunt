@@ -51,7 +51,9 @@
     <Compile Include="Arguments\ArgumentParser.cs" />
     <Compile Include="Arguments\IArgumentParser.cs" />
     <Compile Include="Commands\BuildCommand.cs" />
+    <Compile Include="Commands\Building\BuildEngineInvoker.cs" />
     <Compile Include="Commands\CommandFactory.cs" />
+    <Compile Include="Commands\Building\IBuildEngineInvoker.cs" />
     <Compile Include="Commands\ICommandFactory.cs" />
     <Compile Include="Commands\ShowVersionCommand.cs" />
     <Compile Include="Commands\ICommand.cs" />
@@ -60,6 +62,7 @@
     <Compile Include="Diagnostics\ILakeBuildLog.cs" />
     <Compile Include="ExitCode.cs" />
     <Compile Include="LakeApplication.cs" />
+    <Compile Include="LakeInternalConfiguration.cs" />
     <Compile Include="LakeOptions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -5,6 +5,7 @@ using Lunt.Diagnostics;
 using Lunt.Runtime;
 using Lunt.IO;
 using Lunt.Testing;
+using Lunt.Testing.Utilities;
 using Moq;
 using Xunit;
 
@@ -104,193 +105,11 @@ namespace Lake.Tests.Unit.Commands
                 // Given
                 var factory = new BuildCommandFactory();
                 factory.Options.BuildConfiguration = null;
+                var command = factory.CreateCommand();
 
-                var command = factory.Create();
-
-                // When
-                var result = Record.Exception(() => command.Execute(factory.Options));
-
-                // Then
-                Assert.IsType<LuntException>(result);
-                Assert.Equal("Build configuration file path has not been set.", result.Message);
-            }
-
-            [Fact]
-            public void Should_Make_Configuration_File_Absolute_If_Relative()
-            {
-                // Given
-                var factory = new BuildCommandFactory(); 
-                factory.Options.BuildConfiguration = "build.config";
-
-                var command = factory.Create();
-
-                // When
-                command.Execute(factory.Options);
-
-                // Then
-                factory.ConfigurationReader.Verify(x => x.Read(
-                    It.Is<FilePath>(path => path.FullPath == "/working/build.config")));
-            }
-
-            [Fact]
-            public void Should_Default_Input_Directory_To_Working_Directory_If_Not_Set()
-            {
-                // Given
-                var factory = new BuildCommandFactory();
-                factory.Options.InputDirectory = null;
-
-                var command = factory.Create();
-
-                // When
-                command.Execute(factory.Options);
-
-                // Then
-                factory.Kernel.Verify(x => x.Build(
-                    It.Is<BuildConfiguration>(configuration => configuration.InputDirectory.FullPath == "/working"),
-                    It.IsAny<BuildManifest>()));
-            }
-
-            [Fact]
-            public void Should_Default_Output_Directory_To_Working_Directory_If_Not_Set()
-            {
-                // Given
-                var factory = new BuildCommandFactory();
-                factory.Options.OutputDirectory = null;
-
-                var command = factory.Create();
-
-                // When
-                command.Execute(factory.Options);
-
-                // Then
-                factory.Kernel.Verify(x => x.Build(
-                    It.Is<BuildConfiguration>(configuration => configuration.OutputDirectory.FullPath == "/working"),
-                    It.IsAny<BuildManifest>()));
-            }
-
-            [Fact]
-            public void Should_Make_Input_Directory_Absolute_If_Relative()
-            {
-                // Given
-                var factory = new BuildCommandFactory();
-                factory.Options.InputDirectory = "input";
-
-                var command = factory.Create();
-
-                // When
-                command.Execute(factory.Options);
-
-                // Then
-                factory.Kernel.Verify(x => x.Build(
-                    It.Is<BuildConfiguration>(configuration => configuration.InputDirectory.FullPath == "/working/input"),
-                    It.IsAny<BuildManifest>()));
-            }
-
-            [Fact]
-            public void Should_Make_Output_Directory_Absolute_If_Relative()
-            {
-                // Given
-                var factory = new BuildCommandFactory();
-                factory.Options.OutputDirectory = "output";
-
-                var command = factory.Create();
-
-                // When
-                command.Execute(factory.Options);
-
-                // Then
-                factory.Kernel.Verify(x => x.Build(
-                    It.Is<BuildConfiguration>(configuration => configuration.OutputDirectory.FullPath == "/working/output"),
-                    It.IsAny<BuildManifest>()));
-            }
-
-            [Fact]
-            public void Should_Read_Build_Configuration()
-            {
-                // Given
-                var factory = new BuildCommandFactory();
-
-                var reader = new Mock<IBuildConfigurationReader>();
-                reader.Setup(x => x.Read(It.IsAny<FilePath>()))
-                    .Returns(factory.Configuration)
-                    .Verifiable();
-
-                var command = factory.Create(reader.Object);
-
-                // When
-                command.Execute(factory.Options);
-
-                // Then
-                reader.Verify();
-            }
-
-            [Fact]
-            public void Should_Load_Previous_Manifest()
-            {
-                // Given
-                var factory = new BuildCommandFactory();
-
-                var manifestProvider = new Mock<IBuildManifestProvider>();
-                manifestProvider.Setup(x => x.LoadManifest(It.IsAny<IFileSystem>(), It.IsAny<FilePath>()))
-                    .Returns(() => null)
-                    .Verifiable();
-
-                var command = factory.Create(manifestProvider: manifestProvider.Object);
-
-                // When
-                command.Execute(factory.Options);
-
-                // Then
-                manifestProvider.Verify();
-            }
-
-            [Fact]
-            public void Should_Build_Assets_With_Provided_Configuration_And_Manifest()
-            {
-                // Given
-                var factory = new BuildCommandFactory();
-
-                var previousManifest = new BuildManifest();
-                var manifestProvider = new Mock<IBuildManifestProvider>();
-                manifestProvider.Setup(x => x.LoadManifest(It.IsAny<IFileSystem>(), It.IsAny<FilePath>()))
-                    .Returns(previousManifest);
-
-                var kernel = new Mock<IBuildKernel>();
-                kernel.Setup(x => x.Build(factory.Configuration, previousManifest))
-                    .Returns(new BuildManifest())
-                    .Verifiable();
-
-                var command = factory.Create(manifestProvider: manifestProvider.Object, kernel: kernel.Object);
-
-                // When
-                command.Execute(factory.Options);
-
-                // Then
-                kernel.Verify();
-            }
-
-            [Fact]
-            public void Should_Save_New_Manifest()
-            {
-                // Given
-                var factory = new BuildCommandFactory();
-
-                var manifest = new BuildManifest();
-                var manifestProvider = new Mock<IBuildManifestProvider>();
-                manifestProvider.Setup(x => x.SaveManifest(It.IsAny<IFileSystem>(), It.IsAny<FilePath>(), manifest))
-                    .Verifiable();
-
-                var kernel = new Mock<IBuildKernel>();
-                kernel.Setup(x => x.Build(It.IsAny<BuildConfiguration>(), It.IsAny<BuildManifest>()))
-                    .Returns(() => manifest);
-
-                var command = factory.Create(manifestProvider: manifestProvider.Object, kernel: kernel.Object);
-
-                // When
-                command.Execute(factory.Options);
-
-                // Then
-                manifestProvider.Verify();
+                // When, Then
+                Assert.Throws<LuntException>(() => command.Execute(factory.Options))
+                    .ShouldHaveMessage("Build configuration file path has not been set.");
             }
 
             [Fact]
@@ -298,7 +117,6 @@ namespace Lake.Tests.Unit.Commands
             {
                 // Given
                 var factory = new BuildCommandFactory();
-
                 factory.Manifest.Items.Add(new BuildManifestItem(new Asset("/assets/1.txt")) { Status = AssetBuildStatus.Skipped });
                 factory.Manifest.Items.Add(new BuildManifestItem(new Asset("/assets/2.txt")) { Status = AssetBuildStatus.Skipped });
                 factory.Manifest.Items.Add(new BuildManifestItem(new Asset("/assets/3.txt")) { Status = AssetBuildStatus.Skipped });
@@ -306,10 +124,8 @@ namespace Lake.Tests.Unit.Commands
                 factory.Manifest.Items.Add(new BuildManifestItem(new Asset("/assets/5.txt")) { Status = AssetBuildStatus.Success });
                 factory.Manifest.Items.Add(new BuildManifestItem(new Asset("/assets/6.txt")) { Status = AssetBuildStatus.Failure });
 
-                var command = factory.Create();
-
-                // When    
-                command.Execute(factory.Options);
+                // When
+                factory.CreateCommand().Execute(factory.Options);
 
                 // Then
                 const string expected = "\n========== Build: 2 succeeded, 1 failed, 3 skipped ==========";
@@ -317,33 +133,33 @@ namespace Lake.Tests.Unit.Commands
             }
 
             [Fact]
-            public void Should_Make_Probing_Directory_Absolute_If_Relative()
-            {
-                // Given
-                var factory = new BuildCommandFactory();
-                factory.Options.ProbingDirectory = "probing";
-                var command = factory.Create();
-
-                // When
-                command.Execute(factory.Options);
-
-                // Then
-                factory.ScannerFactory.Verify(x => x.Create(It.Is<DirectoryPath>(path => path.FullPath == "/working/probing")));
-            }
-
-            [Fact]
             public void Will_Use_Probing_Directory_For_Scanner_Factory_If_Set()
             {
                 // Given
                 var factory = new BuildCommandFactory();
-                factory.Options.ProbingDirectory = "/probing";
-                var command = factory.Create();
+                factory.Options.ProbingDirectory = "/Assemblies";
 
                 // When
-                command.Execute(factory.Options);
+                factory.CreateCommand().Execute(factory.Options);
 
                 // Then
-                factory.ScannerFactory.Verify(x => x.Create(It.Is<DirectoryPath>(path => path.FullPath=="/probing")));
+                factory.ScannerFactory.Verify(x => x.Create(
+                    It.Is<DirectoryPath>(p => p.FullPath == "/Assemblies")));
+            }
+
+            [Fact]
+            public void Should_Make_Probing_Directory_Absolute_If_Relative()
+            {
+                // Given
+                var factory = new BuildCommandFactory();
+                factory.Options.ProbingDirectory = "Relative";
+
+                // When
+                factory.CreateCommand().Execute(factory.Options);
+
+                // Then
+                factory.ScannerFactory.Verify(x => x.Create(
+                    It.Is<DirectoryPath>(p => p.FullPath == "/Working/Relative")));
             }
 
             [Fact]
@@ -351,13 +167,14 @@ namespace Lake.Tests.Unit.Commands
             {
                 // Given
                 var factory = new BuildCommandFactory();
-                var command = factory.Create();
+                factory.Options.ProbingDirectory = null;
 
                 // When
-                command.Execute(factory.Options);
+                factory.CreateCommand().Execute(factory.Options);
 
                 // Then
-                factory.ScannerFactory.Verify(x => x.Create(It.Is<DirectoryPath>(path => path.FullPath == "/working")));
+                factory.ScannerFactory.Verify(x => x.Create(
+                    It.Is<DirectoryPath>(p => p.FullPath == "/Working")));
             }
 
             [Fact]
@@ -365,11 +182,10 @@ namespace Lake.Tests.Unit.Commands
             {
                 // Given
                 var factory = new BuildCommandFactory();
-                factory.Manifest.Items.Add(new BuildManifestItem(new Asset("/assets/1.txt")) { Status = AssetBuildStatus.Success });
-                var command = factory.Create();
+                factory.Manifest.Items.Add(new BuildManifestItem(new Asset("/assets/4.txt")) { Status = AssetBuildStatus.Success });
 
-                // When    
-                var result = command.Execute(factory.Options);
+                // When
+                var result = factory.CreateCommand().Execute(factory.Options);
 
                 // Then
                 Assert.Equal((int)ExitCode.Success, result);
@@ -380,12 +196,12 @@ namespace Lake.Tests.Unit.Commands
             {
                 // Given
                 var factory = new BuildCommandFactory();
-                factory.Manifest.Items.Add(new BuildManifestItem(new Asset("/assets/1.txt")) { Status = AssetBuildStatus.Success });
-                factory.Manifest.Items.Add(new BuildManifestItem(new Asset("/assets/2.txt")) { Status = AssetBuildStatus.Skipped });
-                var command = factory.Create();
+                factory.Manifest.Items.Add(new BuildManifestItem(new Asset("/assets/3.txt")) { Status = AssetBuildStatus.Skipped });
+                factory.Manifest.Items.Add(new BuildManifestItem(new Asset("/assets/4.txt")) { Status = AssetBuildStatus.Success });
+                factory.Manifest.Items.Add(new BuildManifestItem(new Asset("/assets/5.txt")) { Status = AssetBuildStatus.Success });
 
-                // When    
-                var result = command.Execute(factory.Options);
+                // When
+                var result = factory.CreateCommand().Execute(factory.Options);
 
                 // Then
                 Assert.Equal((int)ExitCode.Success, result);
@@ -396,13 +212,15 @@ namespace Lake.Tests.Unit.Commands
             {
                 // Given
                 var factory = new BuildCommandFactory();
-                factory.Manifest.Items.Add(new BuildManifestItem(new Asset("/assets/1.txt")) { Status = AssetBuildStatus.Success });
+                factory.Manifest.Items.Add(new BuildManifestItem(new Asset("/assets/1.txt")) { Status = AssetBuildStatus.Skipped });
                 factory.Manifest.Items.Add(new BuildManifestItem(new Asset("/assets/2.txt")) { Status = AssetBuildStatus.Skipped });
-                factory.Manifest.Items.Add(new BuildManifestItem(new Asset("/assets/3.txt")) { Status = AssetBuildStatus.Failure });
-                var command = factory.Create();
+                factory.Manifest.Items.Add(new BuildManifestItem(new Asset("/assets/3.txt")) { Status = AssetBuildStatus.Skipped });
+                factory.Manifest.Items.Add(new BuildManifestItem(new Asset("/assets/4.txt")) { Status = AssetBuildStatus.Success });
+                factory.Manifest.Items.Add(new BuildManifestItem(new Asset("/assets/5.txt")) { Status = AssetBuildStatus.Success });
+                factory.Manifest.Items.Add(new BuildManifestItem(new Asset("/assets/6.txt")) { Status = AssetBuildStatus.Failure });
 
-                // When    
-                var result = command.Execute(factory.Options);
+                // When
+                var result = factory.CreateCommand().Execute(factory.Options);
 
                 // Then
                 Assert.Equal((int)ExitCode.BuildFailure, result);

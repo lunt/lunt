@@ -55,6 +55,7 @@
     <Compile Include="Commands\ShowVersionTests.cs" />
     <Compile Include="Diagnostics\LakeBuildLogTests.cs" />
     <Compile Include="LakeApplicationTests.cs" />
+    <Compile Include="LakeInternalConfigurationTests.cs" />
     <Compile Include="LakeOptionsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="..\SolutionInfo.cs">

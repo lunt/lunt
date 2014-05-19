@@ -33,8 +33,9 @@ namespace Lunt.Bootstrapping
                     // Create a new container.
                     _container = CreateContainer();
 
-                    // Get all registrations and add the build kernel registration.
+                    // Get all registrations.
                     var registrations = _configuration.GetRegistrations().ToList();
+                    InternalConfigurationValidator.Validate(registrations);
 
                     // Perform registrations.
                     RegisterTypeRegistrations(_container, registrations.OfType<TypeRegistration>());

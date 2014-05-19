@@ -66,6 +66,7 @@
     <Compile Include="AssetExtractor.cs" />
     <Compile Include="AssetDefinition.cs" />
     <Compile Include="Bootstrapping\Bootstrapper.cs" />
+    <Compile Include="Bootstrapping\InternalConfigurationValidator.cs" />
     <Compile Include="Bootstrapping\Registrations\FactoryRegistrationContext.cs" />
     <Compile Include="Bootstrapping\Registrations\ContainerRegistration.cs" />
     <Compile Include="Bootstrapping\DefaultBootstrapper.cs" />

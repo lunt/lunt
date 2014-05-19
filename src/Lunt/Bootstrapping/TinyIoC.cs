@@ -3882,13 +3882,7 @@ namespace Lunt.Bootstrapping.TinyIoc
 		#endregion
 	}
 
-}
-
-// reverse shim for WinRT SR changes...
-#if !NETFX_CORE
-namespace System.Reflection
-{
-	public static class ReverseTypeExtender
+    public static class ReverseTypeExtender
 	{
 		public static bool IsClass(this Type type)
 		{
@@ -3941,7 +3935,6 @@ namespace System.Reflection
 		}
 	}
 }
-#endif
 
 #pragma warning restore 1712
 #pragma warning restore 1711

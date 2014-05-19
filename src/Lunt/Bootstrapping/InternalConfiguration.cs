@@ -43,7 +43,7 @@ namespace Lunt.Bootstrapping
         /// The hash computer type to be used.
         /// </value>
         public Type HashComputer { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the build log type to be used.
         /// </summary>
@@ -57,16 +57,30 @@ namespace Lunt.Bootstrapping
         public Type BuildKernel { get; set; }
 
         /// <summary>
+        /// Gets or sets the build configuration reader type to be used.
+        /// </summary>
+        /// <value>The build configuration reader type to be used.</value>
+        public Type BuildConfigurationReader { get; set; }
+
+        /// <summary>
+        /// Gets or sets the build manifest provider type to be used.
+        /// </summary>
+        /// <value>The build manifest provider type to be used.</value>
+        public Type BuildManifestProvider { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="InternalConfiguration"/> class.
         /// </summary>
         public InternalConfiguration()
         {
-            BuildEnvironment = typeof (BuildEnvironment);
-            PipelineScanner = typeof (AppDomainScanner);
-            FileSystem = typeof (FileSystem);
-            HashComputer = typeof (HashComputer);
+            BuildEnvironment = typeof(BuildEnvironment);
+            PipelineScanner = typeof(AppDomainScanner);
+            FileSystem = typeof(FileSystem);
+            HashComputer = typeof(HashComputer);
             BuildLog = typeof(TraceBuildLog);
             BuildKernel = typeof(BuildKernel);
+            BuildConfigurationReader = typeof(BuildConfigurationReader);
+            BuildManifestProvider = typeof(BuildManifestProvider);
         }
 
         /// <summary>
@@ -77,13 +91,15 @@ namespace Lunt.Bootstrapping
         {
             return new List<ContainerRegistration>
             {
-                new TypeRegistration(typeof (IBuildEnvironment), BuildEnvironment, Lifetime.Singleton),
-                new TypeRegistration(typeof (IPipelineScanner), PipelineScanner, Lifetime.Singleton),
-                new TypeRegistration(typeof (IFileSystem), FileSystem, Lifetime.Singleton),
-                new TypeRegistration(typeof (IHashComputer), HashComputer, Lifetime.Singleton),
-                new TypeRegistration(typeof (IBuildLog), BuildLog, Lifetime.Singleton),
-                new TypeRegistration(typeof (IBuildKernel), BuildKernel, Lifetime.Singleton)
-
+                new TypeRegistration(typeof(IBuildEnvironment), BuildEnvironment, Lifetime.Singleton),
+                new TypeRegistration(typeof(IPipelineScanner), PipelineScanner, Lifetime.Singleton),
+                new TypeRegistration(typeof(IFileSystem), FileSystem, Lifetime.Singleton),
+                new TypeRegistration(typeof(IHashComputer), HashComputer, Lifetime.Singleton),
+                new TypeRegistration(typeof(IBuildLog), BuildLog, Lifetime.Singleton),
+                new TypeRegistration(typeof(IBuildKernel), BuildKernel, Lifetime.Singleton),
+                new TypeRegistration(typeof(IBuildKernel), BuildKernel, Lifetime.Singleton),
+                new TypeRegistration(typeof(IBuildConfigurationReader), BuildConfigurationReader, Lifetime.Singleton),
+                new TypeRegistration(typeof(IBuildManifestProvider), BuildManifestProvider, Lifetime.Singleton)
             };
         }
     }

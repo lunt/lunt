@@ -42,7 +42,7 @@ namespace Lunt
         /// </summary>
         /// <param name="settings">The settings.</param>
         /// <returns>The build manifest that is the result of the build.</returns>
-        public BuildManifest Run(BuildEngineSettings settings)
+        public BuildManifest Build(BuildEngineSettings settings)
         {
             if (settings == null)
             {
@@ -86,10 +86,20 @@ namespace Lunt
                 configuration.OutputDirectory = workingDirectory.Combine(configuration.OutputDirectory);
             }
 
+            // TODO: Load previous manifest.
+            var manifestProvider = _bootstrapper.GetService<IBuildManifestProvider>();
+            var manifestPath = buildConfigurationPath.ChangeExtension(".manifest");
+            var previousManifest = manifestProvider.LoadManifest(environment.FileSystem, manifestPath);
+
             // Build the configuration and return the result.
             using (var engine = _bootstrapper.GetService<IBuildKernel>())
             {
-                return engine.Build(configuration);
+                var manifest = engine.Build(configuration, previousManifest);
+
+                // TODO: Save manifest.
+                manifestProvider.SaveManifest(environment.FileSystem, manifestPath, manifest);
+
+                return manifest;
             }
         }
 

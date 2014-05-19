@@ -7,17 +7,7 @@ namespace Lunt.Bootstrapping
     /// </summary>
     public sealed class TypeRegistration : ContainerRegistration
     {
-        private readonly Type _registrationType;
         private readonly Type _implementationType;
-
-        /// <summary>
-        /// Gets the registration type.
-        /// </summary>
-        /// <value>The registration type.</value>
-        public Type RegistrationType
-        {
-            get { return _registrationType; }
-        }
 
         /// <summary>
         /// Gets the implementing type.
@@ -45,9 +35,14 @@ namespace Lunt.Bootstrapping
         /// <param name="implementationType">The implementation type.</param>
         /// <param name="lifetime">The lifetime.</param>
         public TypeRegistration(Type registrationType, Type implementationType, Lifetime lifetime)
-            : base(lifetime)
+            : base(registrationType, lifetime)
         {
-            _registrationType = registrationType;
+            if (!registrationType.IsAssignableFrom(implementationType))
+            {
+                const string format = "The type '{0}' is not assignable from '{1}'.";
+                throw new InvalidOperationException(string.Format(format, implementationType.FullName, registrationType.FullName));
+            }
+
             _implementationType = implementationType;
         }
     }

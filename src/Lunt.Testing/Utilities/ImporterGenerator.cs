@@ -17,11 +17,11 @@ namespace Lunt.Testing
             object[] arguments = {extensions, defaultProcessor};
             var builder = new CustomAttributeBuilder(ctor, arguments);
 
-            // Create the procy generatin options.
+            // CreateCommand the procy generatin options.
             var proxyOptions = new ProxyGenerationOptions();
             proxyOptions.AdditionalAttributes.Add(builder);
 
-            // Create the proxy generator and create the proxy.
+            // CreateCommand the proxy generator and create the proxy.
             var proxyGenerator = new ProxyGenerator();
             return (IImporter) proxyGenerator.CreateClassProxy(typeof (FakeImporter<T>), proxyOptions, new object[] {func});
         }
