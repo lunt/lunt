@@ -14,7 +14,7 @@ namespace Lake.Tests.Unit
     {
         public class TheRunCommand
         {
-            private LakeApplication CreateApplication(ICommandFactory factory, IArgumentParser parser = null)
+            private static LakeApplication CreateApplication(ICommandFactory factory, IArgumentParser parser = null)
             {
                 var console = Substitute.For<IConsoleWriter>();
                 var log = Substitute.For<ILakeBuildLog>();                
@@ -111,7 +111,7 @@ namespace Lake.Tests.Unit
                 factory.CreateVersionCommand(Arg.Any<LakeOptions>()).Returns(r => new FakeCommand(() => { throw new InvalidOperationException(); }));
 
                 // When
-                var result = CreateApplication(factory).Run(new string[] { "-version" });
+                var result = CreateApplication(factory).Run(new[] { "-version" });
 
                 // Then
                 factory.Received(1).CreateVersionCommand(Arg.Any<LakeOptions>());

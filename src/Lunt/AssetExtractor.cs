@@ -15,7 +15,7 @@ namespace Lunt
             _globber = new Globber(environment);
         }
 
-        public Asset[] Extract(BuildConfiguration configuration)
+        public IEnumerable<Asset> Extract(BuildConfiguration configuration)
         {
             var result = new List<Asset>();
             foreach (var definition in configuration.Assets)

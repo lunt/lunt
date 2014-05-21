@@ -108,11 +108,8 @@ namespace Lunt
             // Create an empty manifest.
             var manifest = new BuildManifest();
 
-            // Extract all assets.
-            var assets = _extractor.Extract(configuration);
-
             // Build all assets.
-            foreach (var asset in assets)
+            foreach (var asset in _extractor.Extract(configuration))
             {
                 if (previousManifest != null)
                 {

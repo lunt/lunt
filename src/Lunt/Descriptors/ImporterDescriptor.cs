@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Lunt.Descriptors
 {
@@ -13,7 +14,7 @@ namespace Lunt.Descriptors
             get { return _importer; }
         }
 
-        public string[] Extensions
+        public IEnumerable<string> Extensions
         {
             get { return _extensions; }
         }

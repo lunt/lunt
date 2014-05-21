@@ -35,12 +35,7 @@ namespace Lake.Tests.Integration
             return reader.LoadManifest(new FilePath(manifestPath));
         }
 
-        public static LakeOptions CreateOptions(IntegrationContext context)
-        {
-            return CreateOptions(context, null);
-        }
-
-        public static LakeOptions CreateOptions(IntegrationContext context, string configurationPath)
+        public static LakeOptions CreateOptions(IntegrationContext context, string configurationPath = null)
         {
             var options = new LakeOptions();
             options.InputDirectory = context.AssetsPath;

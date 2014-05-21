@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Collections.Generic;
+using System.Reflection;
 
 namespace Lake.Arguments
 {
@@ -10,7 +11,7 @@ namespace Lake.Arguments
         private readonly string _description;
         private readonly PropertyInfo _action;
 
-        public string[] Names
+        public IEnumerable<string> Names
         {
             get { return _names; }
         }

@@ -47,7 +47,7 @@ namespace Lunt.Testing.Utilities
                     .Returns(Manifest ?? new BuildManifest());
             }
 
-            return new BuildCommand(log, Console, ScannerFactory, BuildEnvironment, BuildEngineInvoker ?? null);
+            return new BuildCommand(log, Console, ScannerFactory, BuildEnvironment, BuildEngineInvoker);
         }
     }
 }

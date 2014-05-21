@@ -50,7 +50,7 @@ namespace Lunt
         /// Gets the keys.
         /// </summary>
         /// <returns>The keys.</returns>
-        public string[] GetKeys()
+        public IEnumerable<string> GetKeys()
         {
             return _dictionary.Keys.ToArray();
         }
