@@ -5,7 +5,7 @@ namespace Lunt.Tests.Unit.Diagnostics
 {
     public class LogExtensionsTests
     {
-        private sealed class TestLogger : IBuildLog
+        private sealed class TestingLogger : IBuildLog
         {
             private Verbosity _verbosity;
             private LogLevel _level;
@@ -60,7 +60,7 @@ namespace Lunt.Tests.Unit.Diagnostics
             public void Can_Write_Debug_Message_With_Default_Verbosity()
             {
                 // Given
-                var logger = new TestLogger();
+                var logger = new TestingLogger();
 
                 // When
                 logger.Debug("Hello World");
@@ -75,7 +75,7 @@ namespace Lunt.Tests.Unit.Diagnostics
             public void Can_Write_Debug_Message_With_Custom_Verbosity()
             {
                 // Given
-                var logger = new TestLogger();
+                var logger = new TestingLogger();
 
                 // When
                 logger.Debug(Verbosity.Quiet, "Hello World");
@@ -113,7 +113,7 @@ namespace Lunt.Tests.Unit.Diagnostics
             public void Can_Write_Verbose_Message_With_Default_Verbosity()
             {
                 // Given
-                var logger = new TestLogger();
+                var logger = new TestingLogger();
 
                 // When
                 logger.Verbose("Hello World");
@@ -128,7 +128,7 @@ namespace Lunt.Tests.Unit.Diagnostics
             public void Can_Write_Verbose_Message_With_Custom_Verbosity()
             {
                 // Given
-                var logger = new TestLogger();
+                var logger = new TestingLogger();
 
                 // When
                 logger.Verbose(Verbosity.Quiet, "Hello World");
@@ -166,7 +166,7 @@ namespace Lunt.Tests.Unit.Diagnostics
             public void Can_Write_Informative_Message_With_Default_Verbosity()
             {
                 // Given
-                var logger = new TestLogger();
+                var logger = new TestingLogger();
 
                 // When
                 logger.Information("Hello World");
@@ -181,7 +181,7 @@ namespace Lunt.Tests.Unit.Diagnostics
             public void Can_Write_Informative_Message_With_Custom_Verbosity()
             {
                 // Given
-                var logger = new TestLogger();
+                var logger = new TestingLogger();
 
                 // When
                 logger.Information(Verbosity.Quiet, "Hello World");
@@ -219,7 +219,7 @@ namespace Lunt.Tests.Unit.Diagnostics
             public void Can_Write_Warning_Message_With_Default_Verbosity()
             {
                 // Given
-                var logger = new TestLogger();
+                var logger = new TestingLogger();
 
                 // When
                 logger.Warning("Hello World");
@@ -234,7 +234,7 @@ namespace Lunt.Tests.Unit.Diagnostics
             public void Can_Write_Warning_Message_With_Custom_Verbosity()
             {
                 // Given
-                var logger = new TestLogger();
+                var logger = new TestingLogger();
 
                 // When
                 logger.Warning(Verbosity.Quiet, "Hello World");
@@ -272,7 +272,7 @@ namespace Lunt.Tests.Unit.Diagnostics
             public void Can_Write_Error_Message_With_Default_Verbosity()
             {
                 // Given
-                var logger = new TestLogger();
+                var logger = new TestingLogger();
 
                 // When
                 logger.Error("Hello World");
@@ -287,7 +287,7 @@ namespace Lunt.Tests.Unit.Diagnostics
             public void Can_Write_Error_Message_With_Custom_Verbosity()
             {
                 // Given
-                var logger = new TestLogger();
+                var logger = new TestingLogger();
 
                 // When
                 logger.Error(Verbosity.Diagnostic, "Hello World");

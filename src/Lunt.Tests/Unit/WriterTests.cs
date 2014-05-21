@@ -1,5 +1,5 @@
 ﻿using Lunt.IO;
-using Moq;
+using NSubstitute;
 using Xunit;
 
 namespace Lunt.Tests.Unit
@@ -10,15 +10,13 @@ namespace Lunt.Tests.Unit
         public void Will_Delegate_Import_Call_From_Explicit_Interface_Member_To_Typed_Implementation()
         {
             // Given
-            var result = false;
-            var mock = new Mock<Writer<string>>();
-            mock.Setup(x => x.Write(It.IsAny<Context>(), It.IsAny<IFile>(), It.IsAny<string>())).Callback(() => result = true);
+            var writer = Substitute.For<Writer<string>>();
 
             // When
-            ((IWriter) mock.Object).Write(null, null, null);
+            ((IWriter)writer).Write(null, null, null);
 
             // Then
-            Assert.True(result);
+            writer.Received(1).Write(Arg.Any<Context>(), Arg.Any<IFile>(), Arg.Any<string>());
         }
     }
 }

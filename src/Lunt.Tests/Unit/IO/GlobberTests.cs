@@ -2,7 +2,7 @@
 using Lunt.IO;
 using Lunt.Testing;
 using Lunt.Tests.Fixtures;
-using Moq;
+using NSubstitute;
 using Xunit;
 
 namespace Lunt.Tests.Unit.IO
@@ -26,7 +26,8 @@ namespace Lunt.Tests.Unit.IO
             public void Should_Throw_If_File_System_From_Environment_Is_Null()
             {
                 // Given
-                var environment = new Mock<IBuildEnvironment>().Object;
+                var environment = Substitute.For<IBuildEnvironment>();
+                environment.FileSystem.Returns((IFileSystem)null);
 
                 // When
                 var result = Record.Exception(() => new Globber(environment));

@@ -1,6 +1,6 @@
 ﻿using System;
 using Lunt.IO;
-using Moq;
+using NSubstitute;
 
 namespace Lunt.Testing
 {
@@ -41,22 +41,13 @@ namespace Lunt.Testing
             _action(context, target, value);
         }
 
-        public static IWriter Mock(Action<Context, IFile, T> action)
+        public static IWriter Create(Action<Context, IFile, T> action)
         {
-            var mock = new Mock<IWriter>();
-            mock.Setup(w => w.GetTargetType()).Returns(typeof (T));
-            mock.Setup(w => w.Write(It.IsAny<Context>(), It.IsAny<IFile>(), It.IsAny<object>()))
-                .Callback((Context context, IFile file, object obj) => action(context, file, (T) obj));
-            return mock.Object;
-        }
-
-        public static IWriter MockWithoutCallback(Type targetType)
-        {
-            var mock = new Mock<IWriter>();
-            mock.Setup(w => w.GetTargetType()).Returns(targetType ?? typeof (T));
-            mock.Setup(w => w.Write(It.IsAny<Context>(), It.IsAny<IFile>(), It.IsAny<object>()))
-                .Callback((Context context, IFile file, object obj) => { });
-            return mock.Object;
+            var writer = Substitute.For<IWriter>();
+            writer.GetTargetType().Returns(typeof(T));
+            writer.When(x => x.Write(Arg.Any<Context>(), Arg.Any<IFile>(), Arg.Any<object>()))
+                .Do(a => action(a.Arg<Context>(), a.Arg<IFile>(), (T)a.Arg<object>()));
+            return writer;
         }
     }
 }

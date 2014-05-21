@@ -2,7 +2,7 @@
 using Lunt.Diagnostics;
 using Lunt.IO;
 using Lunt.Testing;
-using Moq;
+using NSubstitute;
 using Xunit;
 
 namespace Lunt.Tests.Unit
@@ -15,9 +15,9 @@ namespace Lunt.Tests.Unit
             public void Should_Throw_If_File_System_Is_Null()
             {
                 // Given
-                var log = new Mock<IBuildLog>().Object;
+                var log = Substitute.For<IBuildLog>();
                 var configuration = new BuildConfiguration();
-                var hasher = new Mock<IHashComputer>().Object;
+                var hasher = Substitute.For<IHashComputer>();
                 var asset = new Asset("simple.asset");
 
                 // When
@@ -32,9 +32,9 @@ namespace Lunt.Tests.Unit
             public void Should_Throw_If_Hasher_Is_Null()
             {
                 // Given
-                var fileSystem = new Mock<IFileSystem>().Object;
+                var fileSystem = Substitute.For<IFileSystem>();
                 var configuration = new BuildConfiguration();
-                var log = new Mock<IBuildLog>().Object;
+                var log = Substitute.For<IBuildLog>();
                 var asset = new Asset("simple.asset");
 
                 // When
@@ -50,9 +50,9 @@ namespace Lunt.Tests.Unit
             public void Should_Throw_If_Build_Log_Is_Null()
             {
                 // Given
-                var fileSystem = new Mock<IFileSystem>().Object;
+                var fileSystem = Substitute.For<IFileSystem>();
                 var configuration = new BuildConfiguration();
-                var hasher = new Mock<IHashComputer>().Object;
+                var hasher = Substitute.For<IHashComputer>();
                 var asset = new Asset("simple.asset");
 
                 // When
@@ -67,10 +67,10 @@ namespace Lunt.Tests.Unit
             public void Should_Throw_If_Asset_Is_Null()
             {
                 // Given
-                var fileSystem = new Mock<IFileSystem>().Object;
+                var fileSystem = Substitute.For<IFileSystem>();
                 var configuration = new BuildConfiguration();
-                var hasher = new Mock<IHashComputer>().Object;
-                var log = new Mock<IBuildLog>().Object;
+                var hasher = Substitute.For<IHashComputer>();
+                var log = Substitute.For<IBuildLog>();
 
                 // When
                 var result = Record.Exception(() => new Context(fileSystem, configuration, hasher, log, null));
@@ -88,7 +88,7 @@ namespace Lunt.Tests.Unit
                 var hasher = new FakeHashComputer("ABCDEF");
                 var configuration = new BuildConfiguration();
                 configuration.InputDirectory = "/input";
-                var log = new Mock<IBuildLog>().Object;
+                var log = Substitute.For<IBuildLog>();
                 var asset = new Asset("simple.asset");
                 var context = new Context(filesystem, configuration, hasher, log, asset);
 
@@ -107,17 +107,17 @@ namespace Lunt.Tests.Unit
                 var hasher = new FakeHashComputer("ABCDEF");
                 var configuration = new BuildConfiguration();
                 configuration.InputDirectory = "/input";
-                var log = new Mock<IBuildLog>().Object;
+                var log = Substitute.For<IBuildLog>();
                 var asset = new Asset("simple.asset");
                 var context = new Context(filesystem, configuration, hasher, log, asset);
 
-                var file = new Mock<IFile>();
-                file.SetupGet(x => x.Exists).Returns(true);
-                file.SetupGet(x => x.Length).Returns(12);
-                file.SetupGet(x => x.Path).Returns("/input/other.asset");
+                var file = Substitute.For<IFile>();
+                file.Exists.Returns(true);
+                file.Length.Returns(12);
+                file.Path.Returns("/input/other.asset");
 
                 // When
-                context.AddDependency(file.Object);
+                context.AddDependency(file);
                 var result = context.GetDependencies();
 
                 // Then
@@ -135,18 +135,18 @@ namespace Lunt.Tests.Unit
                 var hasher = new FakeHashComputer("ABCDEF");
                 var configuration = new BuildConfiguration();
                 configuration.InputDirectory = "/input/";
-                var log = new Mock<IBuildLog>().Object;
+                var log = Substitute.For<IBuildLog>();
                 var asset = new Asset("simple.asset");
                 var context = new Context(filesystem, configuration, hasher, log, asset);
 
-                var file = new Mock<IFile>();
-                file.SetupGet(x => x.Exists).Returns(true);
-                file.SetupGet(x => x.Length).Returns(12);
-                file.SetupGet(x => x.Path).Returns("/input/other.asset");
+                var file = Substitute.For<IFile>();
+                file.Exists.Returns(true);
+                file.Length.Returns(12);
+                file.Path.Returns("/input/other.asset");
 
                 // When
-                context.AddDependency(file.Object);
-                context.AddDependency(file.Object);
+                context.AddDependency(file);
+                context.AddDependency(file);
                 var result = context.GetDependencies();
 
                 // Then
@@ -157,10 +157,10 @@ namespace Lunt.Tests.Unit
             public void Should_Throw_If_Dependency_Is_Null()
             {
                 // Given
-                var filesystem = new Mock<IFileSystem>().Object;
+                var filesystem = Substitute.For<IFileSystem>();
                 var hasher = new FakeHashComputer("ABCDEF");
                 var configuration = new BuildConfiguration();
-                var log = new Mock<IBuildLog>().Object;
+                var log = Substitute.For<IBuildLog>();
                 var asset = new Asset("simple.asset");
                 var context = new Context(filesystem, configuration, hasher, log, asset);
 
@@ -177,19 +177,20 @@ namespace Lunt.Tests.Unit
             public void Should_Throw_If_Adding_Dependency_That_Does_Not_Exist()
             {
                 // Given
-                var filesystem = new Mock<IFileSystem>().Object;
+                var filesystem = Substitute.For<IFileSystem>();
                 var hasher = new FakeHashComputer("ABCDEF");
                 var configuration = new BuildConfiguration();
-                var log = new Mock<IBuildLog>().Object;
+                var log = Substitute.For<IBuildLog>();
                 var asset = new Asset("simple.asset");
                 var context = new Context(filesystem, configuration, hasher, log, asset);
 
-                var file = new Mock<IFile>();
-                file.SetupGet(x => x.Path).Returns(new FilePath("other.asset"));
-                file.SetupGet(x => x.Exists).Returns(false);
+                var file = Substitute.For<IFile>();
+                file.Exists.Returns(false);
+                file.Length.Returns(12);
+                file.Path.Returns("other.asset");
 
                 // When
-                var result = Record.Exception(() => context.AddDependency(file.Object));
+                var result = Record.Exception(() => context.AddDependency(file));
 
                 // Then
                 Assert.IsType<LuntException>(result);
@@ -204,17 +205,17 @@ namespace Lunt.Tests.Unit
                 var hasher = new FakeHashComputer("ABCDEF");
                 var configuration = new BuildConfiguration();
                 configuration.InputDirectory = "/input/";
-                var log = new Mock<IBuildLog>().Object;
+                var log = Substitute.For<IBuildLog>();
                 var asset = new Asset("simple.asset");
                 var context = new Context(filesystem, configuration, hasher, log, asset);
 
-                var file = new Mock<IFile>();
-                file.SetupGet(x => x.Exists).Returns(true);
-                file.SetupGet(x => x.Length).Returns(12);
-                file.SetupGet(x => x.Path).Returns("other.asset");
+                var file = Substitute.For<IFile>();
+                file.Exists.Returns(true);
+                file.Length.Returns(12);
+                file.Path.Returns("other.asset");
 
                 // When
-                var result = Record.Exception(() => context.AddDependency(file.Object));
+                var result = Record.Exception(() => context.AddDependency(file));
 
                 // Then
                 Assert.IsType<LuntException>(result);

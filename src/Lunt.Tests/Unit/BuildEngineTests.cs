@@ -1,7 +1,7 @@
 ﻿using System;
 using Lunt.IO;
 using Lunt.Testing;
-using Moq;
+using NSubstitute;
 using Xunit;
 
 namespace Lunt.Tests.Unit
@@ -30,8 +30,8 @@ namespace Lunt.Tests.Unit
                 engine.Build(new BuildEngineSettings(file));
 
                 // Then
-                config.BuildConfigurationReader.Verify(x => x.Read(
-                    It.Is<FilePath>(p => p.FullPath == "/working/file.xml")));
+                config.BuildConfigurationReader.Received(1)
+                    .Read(Arg.Is<FilePath>(p => p.FullPath == "/working/file.xml"));
             }
 
             [Fact]
@@ -46,9 +46,9 @@ namespace Lunt.Tests.Unit
                 engine.Build(new BuildEngineSettings(file));
 
                 // Then
-                config.BuildKernel.Verify(x => x.Build(
-                    It.Is<BuildConfiguration>(c => c.InputDirectory.FullPath == "/root"),
-                    It.IsAny<BuildManifest>()));
+                config.BuildKernel.Received(1).Build(
+                    Arg.Is<BuildConfiguration>(c => c.InputDirectory.FullPath == "/root"),
+                    Arg.Any<BuildManifest>());
             }
 
             [Fact]
@@ -63,9 +63,9 @@ namespace Lunt.Tests.Unit
                 engine.Build(new BuildEngineSettings(file));
 
                 // Then
-                config.BuildKernel.Verify(x => x.Build(
-                    It.Is<BuildConfiguration>(c => c.OutputDirectory.FullPath == "/working/Output"),
-                    It.IsAny<BuildManifest>()));
+                config.BuildKernel.Received(1).Build(
+                    Arg.Is<BuildConfiguration>(c => c.OutputDirectory.FullPath == "/working/Output"),
+                    Arg.Any<BuildManifest>());
             }
 
             [Fact]
@@ -83,9 +83,9 @@ namespace Lunt.Tests.Unit
                 engine.Build(settings);
 
                 // Then
-                config.BuildKernel.Verify(x => x.Build(
-                    It.Is<BuildConfiguration>(c => c.InputDirectory.FullPath == "/Input"),
-                    It.IsAny<BuildManifest>()));
+                config.BuildKernel.Received(1).Build(
+                    Arg.Is<BuildConfiguration>(c => c.InputDirectory.FullPath == "/Input"),
+                    Arg.Any<BuildManifest>());
             }
 
             [Fact]
@@ -103,9 +103,9 @@ namespace Lunt.Tests.Unit
                 engine.Build(settings);
 
                 // Then
-                config.BuildKernel.Verify(x => x.Build(
-                    It.Is<BuildConfiguration>(c => c.InputDirectory.FullPath == "/working/Input"),
-                    It.IsAny<BuildManifest>()));
+                config.BuildKernel.Received(1).Build(
+                    Arg.Is<BuildConfiguration>(c => c.InputDirectory.FullPath == "/working/Input"),
+                    Arg.Any<BuildManifest>());
             }
 
             [Fact]
@@ -123,9 +123,9 @@ namespace Lunt.Tests.Unit
                 engine.Build(settings);
 
                 // Then
-                config.BuildKernel.Verify(x => x.Build(
-                    It.Is<BuildConfiguration>(c => c.OutputDirectory.FullPath == "/Output"),
-                    It.IsAny<BuildManifest>()));
+                config.BuildKernel.Received(1).Build(
+                    Arg.Is<BuildConfiguration>(c => c.OutputDirectory.FullPath == "/Output"),
+                    Arg.Any<BuildManifest>());
             }
 
             [Fact]
@@ -143,9 +143,9 @@ namespace Lunt.Tests.Unit
                 engine.Build(settings);
 
                 // Then
-                config.BuildKernel.Verify(x => x.Build(
-                    It.Is<BuildConfiguration>(c => c.OutputDirectory.FullPath == "/working/Output"),
-                    It.IsAny<BuildManifest>()));
+                config.BuildKernel.Received(1).Build(
+                    Arg.Is<BuildConfiguration>(c => c.OutputDirectory.FullPath == "/working/Output"),
+                    Arg.Any<BuildManifest>());
             }
         }
 

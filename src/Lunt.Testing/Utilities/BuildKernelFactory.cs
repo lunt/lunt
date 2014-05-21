@@ -82,7 +82,7 @@ namespace Lunt.Testing
 
             var processor = new FakeProcessor<string, string>((c, v) => v);
             var importer = FakeImporter<string>.Mock((c, f) => string.Empty, ".asset", processor.GetType());
-            var writer = FakeWriter<string>.Mock((c, f, v) => { });
+            var writer = FakeWriter<string>.Create((c, f, v) => { });
 
             facade.Configuration.Assets.Add(assetDefinition);
             facade.Components.Importers.Add(importer);

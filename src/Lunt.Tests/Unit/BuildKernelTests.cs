@@ -5,7 +5,7 @@ using Lunt.IO;
 using Lunt.Runtime;
 using Lunt.Testing;
 using Lunt.Tests.Fixtures;
-using Moq;
+using NSubstitute;
 using Xunit;
 
 namespace Lunt.Tests.Unit
@@ -18,9 +18,9 @@ namespace Lunt.Tests.Unit
             public void Should_Throw_If_Environment_Is_Null()
             {
                 // Given
-                var scanner = new Mock<IPipelineScanner>().Object;
-                var hashComputer = new Mock<IHashComputer>().Object;
-                var log = new Mock<IBuildLog>().Object;
+                var scanner = Substitute.For<IPipelineScanner>();
+                var hashComputer = Substitute.For<IHashComputer>();
+                var log = Substitute.For<IBuildLog>();
 
                 // When
                 var result = Record.Exception(() => new BuildKernel(null, scanner, hashComputer, log));
@@ -34,10 +34,12 @@ namespace Lunt.Tests.Unit
             public void Should_Throw_If_File_System_From_Environment_Is_Null()
             {
                 // Given
-                var environment = new Mock<IBuildEnvironment>().Object;
-                var scanner = new Mock<IPipelineScanner>().Object;
-                var hashComputer = new Mock<IHashComputer>().Object;
-                var log = new Mock<IBuildLog>().Object;
+                var environment = Substitute.For<IBuildEnvironment>();
+                environment.FileSystem.Returns((IFileSystem)null);
+
+                var scanner = Substitute.For<IPipelineScanner>();
+                var hashComputer = Substitute.For<IHashComputer>();
+                var log = Substitute.For<IBuildLog>();
 
                 // When
                 var result = Record.Exception(() => new BuildKernel(environment, scanner, hashComputer, log));
@@ -51,9 +53,9 @@ namespace Lunt.Tests.Unit
             public void Should_Throw_If_Scanner_Is_Null()
             {
                 // Given
-                var environment = new FakeBuildEnvironment();
-                var hashComputer = new Mock<IHashComputer>().Object;
-                var log = new Mock<IBuildLog>().Object;
+                var environment = Substitute.For<IBuildEnvironment>();
+                var hashComputer = Substitute.For<IHashComputer>();
+                var log = Substitute.For<IBuildLog>();
 
                 // When
                 var result = Record.Exception(() => new BuildKernel(environment, null, hashComputer, log));
@@ -68,8 +70,8 @@ namespace Lunt.Tests.Unit
             {
                 // Given
                 var environment = new FakeBuildEnvironment();
-                var scanner = new Mock<IPipelineScanner>().Object;
-                var hashComputer = new Mock<IHashComputer>().Object;
+                var scanner = Substitute.For<IPipelineScanner>();
+                var hashComputer = Substitute.For<IHashComputer>();
 
                 // When
                 var result = Record.Exception(() => new BuildKernel(environment, scanner, hashComputer, null));
@@ -213,7 +215,7 @@ namespace Lunt.Tests.Unit
                 // Given
                 var facade = new BuildKernelFactory();
                 facade.Components.Writers.Add(new FakeWriter<int>((c, f, v) => { }));
-                facade.Components.Writers.Add(FakeWriter<Int32>.Mock((c, f, v) => { }));
+                facade.Components.Writers.Add(FakeWriter<Int32>.Create((c, f, v) => { }));
 
                 // When
                 var result = Record.Exception(() => facade.CreateBuildKernel());
@@ -231,9 +233,9 @@ namespace Lunt.Tests.Unit
             {
                 // Given
                 var environment = new FakeBuildEnvironment();
-                var component = new Mock<IPipelineScanner>().Object;
-                var hashComputer = new Mock<IHashComputer>().Object;
-                var log = new Mock<IBuildLog>().Object;
+                var component = Substitute.For<IPipelineScanner>();
+                var hashComputer = Substitute.For<IHashComputer>();
+                var log = Substitute.For<IBuildLog>();
                 var kernel = new BuildKernel(environment, component, hashComputer, log);
 
                 // When
@@ -583,7 +585,7 @@ namespace Lunt.Tests.Unit
                 facade.FileSystem.GetCreatedFile("/input/assets/simple.asset");
                 facade.Configuration.Assets.Add(new AssetDefinition("assets/simple.asset"));
                 facade.Components.Importers.Add(FakeImporter<string>.Mock((c, f) => "Hello", ".asset"));
-                facade.Components.Writers.Add(FakeWriter<string>.Mock((c, f, v) => { }));
+                facade.Components.Writers.Add(FakeWriter<string>.Create((c, f, v) => { }));
 
                 facade.CreateBuildKernel();
 
@@ -604,7 +606,7 @@ namespace Lunt.Tests.Unit
                 facade.FileSystem.GetNonCreatableDirectory("/output/assets");
                 facade.Configuration.Assets.Add(new AssetDefinition("assets/simple.asset"));
                 facade.Components.Importers.Add(FakeImporter<string>.Mock((c, f) => "Hello", ".asset"));
-                facade.Components.Writers.Add(FakeWriter<string>.Mock((c, f, v) => { }));
+                facade.Components.Writers.Add(FakeWriter<string>.Create((c, f, v) => { }));
 
                 facade.CreateBuildKernel();
 
@@ -621,15 +623,14 @@ namespace Lunt.Tests.Unit
             public void Should_Dispose_Imported_Data_After_Write()
             {
                 // Given
-                var data = new Mock<IDisposable>();
-                data.Setup(d => d.Dispose()).Verifiable();
+                var data = Substitute.For<IDisposable>();
 
                 var facade = new BuildKernelFactory();
                 facade.FileSystem.GetCreatedFile("/input/assets/simple.asset");
                 facade.FileSystem.GetNonCreatableDirectory("/output/assets");
                 facade.Configuration.Assets.Add(new AssetDefinition("assets/simple.asset"));
-                facade.Components.Importers.Add(FakeImporter<IDisposable>.Mock((c, f) => data.Object, ".asset"));
-                facade.Components.Writers.Add(FakeWriter<IDisposable>.Mock((c, f, v) => { }));
+                facade.Components.Importers.Add(FakeImporter<IDisposable>.Mock((c, f) => data, ".asset"));
+                facade.Components.Writers.Add(FakeWriter<IDisposable>.Create((c, f, v) => { }));
 
                 facade.CreateBuildKernel();
 
@@ -637,7 +638,7 @@ namespace Lunt.Tests.Unit
                 facade.Kernel.Build(facade.Configuration);
 
                 // Then
-                data.VerifyAll();
+                data.Received(1).Dispose();
             }
 
             [Fact]
@@ -648,7 +649,7 @@ namespace Lunt.Tests.Unit
                 facade.FileSystem.GetCreatedFile("/input/assets/simple.asset");
                 facade.Configuration.Assets.Add(new AssetDefinition("assets/simple.asset"));
                 facade.Components.Importers.Add(FakeImporter<string>.Mock((c, f) => string.Empty, ".asset"));
-                facade.Components.Writers.Add(FakeWriter<string>.Mock((c, f, v) => f.Create().Close()));
+                facade.Components.Writers.Add(FakeWriter<string>.Create((c, f, v) => f.Create().Close()));
 
                 var target = facade.FileSystem.GetFile("/output/assets/simple.dat");
 
@@ -676,7 +677,7 @@ namespace Lunt.Tests.Unit
                     interceptedContext = c;
                     return string.Empty;
                 }, ".asset"));
-                facade.Components.Writers.Add(FakeWriter<string>.Mock((c, f, v) => { }));
+                facade.Components.Writers.Add(FakeWriter<string>.Create((c, f, v) => { }));
 
                 facade.CreateBuildKernel();
 
@@ -706,7 +707,7 @@ namespace Lunt.Tests.Unit
                 facade.Configuration.Assets.Add(asset);
                 facade.Components.Importers.Add(FakeImporter<string>.Mock((c, f) => string.Empty, ".asset", processor.GetType()));
                 facade.Components.Processors.Add(processor);
-                facade.Components.Writers.Add(FakeWriter<string>.Mock((c, f, v) => { }));
+                facade.Components.Writers.Add(FakeWriter<string>.Create((c, f, v) => { }));
 
                 facade.CreateBuildKernel();
 
@@ -731,7 +732,7 @@ namespace Lunt.Tests.Unit
                 facade.FileSystem.GetCreatedFile("/output/assets/simple.dat");
                 facade.Configuration.Assets.Add(asset);
                 facade.Components.Importers.Add(FakeImporter<string>.Mock((c, f) => string.Empty, ".asset"));
-                facade.Components.Writers.Add(FakeWriter<string>.Mock((c, f, v) => { interceptedContext = c; }));
+                facade.Components.Writers.Add(FakeWriter<string>.Create((c, f, v) => { interceptedContext = c; }));
 
                 facade.CreateBuildKernel();
 
@@ -756,7 +757,7 @@ namespace Lunt.Tests.Unit
 
                 var processor = new FakeProcessor<string, string>((c, v) => v);
                 var importer = FakeImporter<string>.Mock((c, f) => string.Empty, ".asset", processor.GetType());
-                var writer = FakeWriter<string>.Mock((c, f, v) => { });
+                var writer = FakeWriter<string>.Create((c, f, v) => { });
 
                 facade.Configuration.Assets.Add(asset);
                 facade.Components.Importers.Add(importer);
@@ -784,7 +785,7 @@ namespace Lunt.Tests.Unit
 
                 var processor = new FakeProcessor<string, string>((c, v) => v);
                 var importer = FakeImporter<string>.Mock((c, f) => string.Empty, ".asset", processor.GetType());
-                var writer = FakeWriter<string>.Mock((c, f, v) => { });
+                var writer = FakeWriter<string>.Create((c, f, v) => { });
 
                 facade.Configuration.Assets.Add(asset);
                 facade.Components.Importers.Add(importer);

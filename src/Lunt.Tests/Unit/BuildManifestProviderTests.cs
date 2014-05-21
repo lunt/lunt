@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using Lunt.IO;
-using Moq;
+using NSubstitute;
 using Xunit;
 
 namespace Lunt.Tests.Unit
@@ -13,47 +13,45 @@ namespace Lunt.Tests.Unit
             public void Should_Load_Previous_Existing_Manifest()
             {
                 // Given
-                var fileSystem = new Mock<IFileSystem>();
-                var service = new BuildManifestProvider(fileSystem.Object);
+                var fileSystem = Substitute.For<IFileSystem>();
+                var service = new BuildManifestProvider(fileSystem);
 
                 var stream = new MemoryStream();
                 new BuildManifest().Save(stream);
                 stream.Seek(0, SeekOrigin.Begin);
 
-                var manifestFile = new Mock<IFile>();
-                manifestFile.Setup(x => x.Exists).Returns(() => true).Verifiable();
-                manifestFile.Setup(x => x.Open(FileMode.Open, FileAccess.Read, FileShare.Read))
-                    .Returns(() => stream)
-                    .Verifiable();
+                var manifestFile = Substitute.For<IFile>();
+                manifestFile.Exists.Returns(true);
+                manifestFile.Open(FileMode.Open, FileAccess.Read, FileShare.Read).Returns(stream);
 
-                fileSystem.Setup(x => x.GetFile(It.IsAny<FilePath>())).Returns(() => manifestFile.Object);
+                fileSystem.GetFile(Arg.Any<FilePath>()).Returns(manifestFile);
 
                 // When
                 var result = service.LoadManifest("/assets/build.config");
 
                 // Then            
                 Assert.NotNull(result);
-                manifestFile.Verify();
+                manifestFile.Received(1).Open(FileMode.Open, FileAccess.Read, FileShare.Read);
             }
 
             [Fact]
             public void Should_Return_Null_If_Manifest_File_Was_Not_Found()
             {
                 // Given
-                var fileSystem = new Mock<IFileSystem>();
-                var service = new BuildManifestProvider(fileSystem.Object);
+                var fileSystem = Substitute.For<IFileSystem>();
+                var service = new BuildManifestProvider(fileSystem);
 
-                var manifestFile = new Mock<IFile>();
-                manifestFile.Setup(x => x.Exists).Returns(() => false);
+                var manifestFile = Substitute.For<IFile>();
+                manifestFile.Exists.Returns(false);
 
-                fileSystem.Setup(x => x.GetFile(It.IsAny<FilePath>())).Returns(() => manifestFile.Object);
+                fileSystem.GetFile(Arg.Any<FilePath>()).Returns(manifestFile);
 
                 // When
                 var result = service.LoadManifest("/assets/build.config");
 
                 // Then            
                 Assert.Null(result);
-                manifestFile.Verify(x => x.Open(FileMode.Open, FileAccess.Read, FileShare.Read), Times.Never);
+                manifestFile.DidNotReceive().Open(FileMode.Open, FileAccess.Read, FileShare.Read);
             }
         }
 
@@ -63,21 +61,20 @@ namespace Lunt.Tests.Unit
             public void Should_Save_The_Manifest()
             {
                 // Given
-                var fileSystem = new Mock<IFileSystem>();
-                var service = new BuildManifestProvider(fileSystem.Object);
+                var fileSystem = Substitute.For<IFileSystem>();
+                var service = new BuildManifestProvider(fileSystem);
 
-                var manifestFile = new Mock<IFile>();
-                manifestFile.Setup(x => x.Open(FileMode.Create, FileAccess.Write, FileShare.None))
-                    .Returns(() => new MemoryStream())
-                    .Verifiable();
+                var manifestFile = Substitute.For<IFile>();
+                manifestFile.Open(FileMode.Create, FileAccess.Write, FileShare.None)
+                    .Returns(r => new MemoryStream());
 
-                fileSystem.Setup(x => x.GetFile(It.IsAny<FilePath>())).Returns(() => manifestFile.Object);
+                fileSystem.GetFile(Arg.Any<FilePath>()).Returns(manifestFile);
 
                 // When
                 service.SaveManifest("/assets/build.config.manifest", new BuildManifest());
 
                 // Then            
-                manifestFile.Verify();
+                manifestFile.Received(1).Open(FileMode.Create, FileAccess.Write, FileShare.None);
             }
         }
     }

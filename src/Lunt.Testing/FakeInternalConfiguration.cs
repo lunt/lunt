@@ -5,64 +5,88 @@ using Lunt.Diagnostics;
 using Lunt.IO;
 using Lunt.Runtime;
 using Lunt.Tests.Framework;
-using Moq;
+using NSubstitute;
 
 namespace Lunt.Testing
 {
     public class FakeInternalConfiguration : IInternalConfiguration
     {
-        public Mock<IFileSystem> FileSystem { get; set; }
-        public Mock<IBuildEnvironment> Environment { get; set; }
-        public Mock<IBuildConfigurationReader> BuildConfigurationReader { get; set; }
-        public Mock<IBuildKernel> BuildKernel { get; set; }
-        public Mock<IBuildManifestProvider> BuildManifestProvider { get; set; }
+        public IFileSystem FileSystem { get; set; }
+        public IBuildEnvironment Environment { get; set; }
+        public IBuildConfigurationReader BuildConfigurationReader { get; set; }
+        public IBuildKernel BuildKernel { get; set; }
+        public IBuildManifestProvider BuildManifestProvider { get; set; }
 
         public FakeInternalConfiguration(FilePath path, IFile manifest = null)
         {
-            var fileSystem = new Mock<IFileSystem>();
-            var file = new Mock<IFile>();
-            file.Setup(x => x.Exists).Returns(true);
-            fileSystem.Setup(x => x.GetFile(path)).Returns(file.Object);
-
-            if (manifest == null)
-            {
-                var manifestMock = new Mock<IFile>();
-                manifestMock.SetupGet(x => x.Exists).Returns(false);
-                manifest = manifestMock.Object;
-            }
-            fileSystem.Setup(x => x.GetFile(It.Is<FilePath>(f => f.FullPath.EndsWith("manifest", StringComparison.Ordinal)))).Returns(manifest);
-            FileSystem = fileSystem;
-
-            var environment = new Mock<IBuildEnvironment>();
-            environment.Setup(x => x.GetWorkingDirectory()).Returns("/working");
-            environment.SetupGet(x => x.FileSystem).Returns(fileSystem.Object);
-            Environment = environment;
-
-            var reader = new Mock<IBuildConfigurationReader>();
-            reader.Setup(x => x.Read(It.IsAny<FilePath>())).Returns(new BuildConfiguration());
-            BuildConfigurationReader = reader;
-
-            var manifestProvider = new Mock<IBuildManifestProvider>();
-            manifestProvider.Setup(x => x.LoadManifest(It.IsAny<FilePath>())).Returns((BuildManifest)null);
-            BuildManifestProvider = manifestProvider;
-
-            var kernel = new Mock<IBuildKernel>();
-            kernel.Setup(x => x.Build(It.IsAny<BuildConfiguration>())).Returns(new BuildManifest());
-            kernel.Setup(x => x.Build(It.IsAny<BuildConfiguration>(), It.IsAny<BuildManifest>())).Returns(new BuildManifest());
-            BuildKernel = kernel;
+            FileSystem = CreateFileSystem(path, manifest);
+            Environment = CreateBuildEnvironment(FileSystem);
+            BuildConfigurationReader = CreateBuildConfigurationReader();
+            BuildManifestProvider = CreateManifestProvider();
+            BuildKernel = CreateBuildKernel();
         }
 
         public IEnumerable<ContainerRegistration> GetRegistrations()
         {
-            yield return new InstanceRegistration(typeof(IFileSystem), FileSystem.Object);
-            yield return new InstanceRegistration(typeof(IBuildEnvironment), Environment.Object);
-            yield return new InstanceRegistration(typeof(IBuildConfigurationReader), BuildConfigurationReader.Object);
-            yield return new InstanceRegistration(typeof(IBuildKernel), BuildKernel.Object);
-            yield return new InstanceRegistration(typeof(IBuildManifestProvider), BuildManifestProvider.Object);
+            yield return new InstanceRegistration(typeof(IFileSystem), FileSystem);
+            yield return new InstanceRegistration(typeof(IBuildEnvironment), Environment);
+            yield return new InstanceRegistration(typeof(IBuildConfigurationReader), BuildConfigurationReader);
+            yield return new InstanceRegistration(typeof(IBuildKernel), BuildKernel);
+            yield return new InstanceRegistration(typeof(IBuildManifestProvider), BuildManifestProvider);
 
             yield return new TypeRegistration(typeof(IBuildLog), typeof(TraceBuildLog), Lifetime.Singleton);
             yield return new TypeRegistration(typeof(IHashComputer), typeof(HashComputer), Lifetime.Singleton);
             yield return new TypeRegistration(typeof(IPipelineScanner), typeof(FakePipelineScanner), Lifetime.Singleton);
+        }
+
+        private static IBuildKernel CreateBuildKernel()
+        {
+            var kernel = Substitute.For<IBuildKernel>();
+            kernel.Build(Arg.Any<BuildConfiguration>()).Returns(new BuildManifest());
+            kernel.Build(Arg.Any<BuildConfiguration>(), Arg.Any<BuildManifest>()).Returns(new BuildManifest());
+            return kernel;
+        }
+
+        private static IBuildManifestProvider CreateManifestProvider()
+        {
+            var manifestProvider = Substitute.For<IBuildManifestProvider>();
+            manifestProvider.LoadManifest(Arg.Any<FilePath>()).Returns((BuildManifest)null);
+            return manifestProvider;
+        }
+
+        private static IBuildConfigurationReader CreateBuildConfigurationReader()
+        {
+            var reader = Substitute.For<IBuildConfigurationReader>();
+            reader.Read(Arg.Any<FilePath>()).Returns(new BuildConfiguration());
+            return reader;
+        }
+
+        private static IBuildEnvironment CreateBuildEnvironment(IFileSystem fileSystem)
+        {
+            var environment = Substitute.For<IBuildEnvironment>();
+            environment.GetWorkingDirectory().Returns("/working");
+            environment.FileSystem.Returns(fileSystem);
+            return environment;
+        }
+
+        private static IFileSystem CreateFileSystem(FilePath path, IFile manifest)
+        {
+            var fileSystem = Substitute.For<IFileSystem>();
+
+            var file = Substitute.For<IFile>();
+            file.Exists.Returns(true);
+            fileSystem.GetFile(path).Returns(file);
+
+            if (manifest == null)
+            {
+                manifest = Substitute.For<IFile>();
+                manifest.Exists.Returns(false);
+            }
+
+            fileSystem.GetFile(Arg.Is<FilePath>(f => f.FullPath.EndsWith("manifest", StringComparison.Ordinal)))
+                .Returns(manifest);
+
+            return fileSystem;
         }
     }
 }

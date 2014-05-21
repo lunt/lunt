@@ -4,7 +4,6 @@ using Lake.Commands.Building;
 using Lunt.Diagnostics;
 using Lunt.IO;
 using Lunt.Runtime;
-using Moq;
 using NSubstitute;
 
 namespace Lunt.Testing.Utilities
@@ -33,7 +32,7 @@ namespace Lunt.Testing.Utilities
 
         public BuildCommand CreateCommand()
         {
-            var log = new Mock<IBuildLog>().Object;
+            var log = Substitute.For<IBuildLog>();
 
             if (ScannerFactory == null)
             {
