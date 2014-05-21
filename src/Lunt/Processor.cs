@@ -23,7 +23,7 @@ namespace Lunt
         /// <param name="context">The context.</param>
         /// <param name="source">Existing content object being processed.</param>
         /// <returns>An object representing the processed input.</returns>
-        protected abstract TTarget Process(Context context, TSource source);
+        public abstract TTarget Process(Context context, TSource source);
 
         /// <summary>
         /// Gets the object type expected as the input parameter for processing.

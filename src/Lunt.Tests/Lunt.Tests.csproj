@@ -93,6 +93,7 @@
     <Compile Include="Unit\ImporterAttributeTests.cs" />
     <Compile Include="Unit\ImporterTests.cs" />
     <Compile Include="Unit\MessageTests.cs" />
+    <Compile Include="Unit\ProcessorTests.cs" />
     <Compile Include="Unit\WriterTests.cs" />
     <Compile Include="..\SolutionInfo.cs">
       <Link>Properties\SolutionInfo.cs</Link>

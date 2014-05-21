@@ -7,7 +7,7 @@ namespace Lake.Tests.Integration.Pipeline
     [DisplayName("Text Reverser")]
     public class TextReverser : Processor<string>
     {
-        protected override string Process(Context context, string value)
+        public override string Process(Context context, string value)
         {
             var charArray = value.ToCharArray();
             Array.Reverse(charArray);
