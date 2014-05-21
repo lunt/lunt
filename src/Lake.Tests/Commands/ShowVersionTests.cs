@@ -35,7 +35,8 @@ namespace Lake.Tests.Unit.Commands
 
                 // Then
                 Assert.Equal(0, result);
-                Assert.Equal(2, console.Content.Count);
+                Assert.True(console.Content[0].StartsWith(" - Lake.exe"));
+                Assert.True(console.Content[1].StartsWith(" - Lunt.dll"));
             }
         }
     }

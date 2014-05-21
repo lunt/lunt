@@ -23,6 +23,14 @@ namespace Lake.Commands
             {
                 throw new ArgumentNullException("console");
             }
+            if (environment == null)
+            {
+                throw new ArgumentNullException("environment");
+            }
+            if (factory == null)
+            {
+                throw new ArgumentNullException("factory");
+            }
             _log = log;
             _console = console;
             _environment = environment;

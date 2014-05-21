@@ -6,7 +6,7 @@ using Lunt.Runtime;
 using Lunt.IO;
 using Lunt.Testing;
 using Lunt.Testing.Utilities;
-using Moq;
+using NSubstitute;
 using Xunit;
 
 namespace Lake.Tests.Unit.Commands
@@ -19,9 +19,9 @@ namespace Lake.Tests.Unit.Commands
             public void Should_Throw_If_Build_Log_Is_Null()
             {
                 // Given
-                var console = new Mock<IConsoleWriter>().Object;
-                var scannerFactory = new Mock<IPipelineScannerFactory>().Object;
-                var environment = new Mock<IBuildEnvironment>().Object;
+                var console = Substitute.For<IConsoleWriter>();
+                var scannerFactory = Substitute.For<IPipelineScannerFactory>();
+                var environment = Substitute.For<IBuildEnvironment>();
 
                 // When
                 var result = Record.Exception(() => new BuildCommand(null, console, scannerFactory, environment));
@@ -35,9 +35,9 @@ namespace Lake.Tests.Unit.Commands
             public void Should_Throw_If_Console_Is_Null()
             {
                 // Given
-                var log = new Mock<IBuildLog>().Object;
-                var scannerFactory = new Mock<IPipelineScannerFactory>().Object;
-                var environment = new Mock<IBuildEnvironment>().Object;
+                var log = Substitute.For<IBuildLog>();
+                var scannerFactory = Substitute.For<IPipelineScannerFactory>();
+                var environment = Substitute.For<IBuildEnvironment>();
 
                 // When
                 var result = Record.Exception(() => new BuildCommand(log, null, scannerFactory, environment));
@@ -51,9 +51,9 @@ namespace Lake.Tests.Unit.Commands
             public void Should_Throw_If_Scanner_Is_Null()
             {
                 // Given
-                var log = new Mock<IBuildLog>().Object;
-                var console = new Mock<IConsoleWriter>().Object;
-                var environment = new Mock<IBuildEnvironment>().Object;
+                var log = Substitute.For<IBuildLog>();
+                var console = Substitute.For<IConsoleWriter>();
+                var environment = Substitute.For<IBuildEnvironment>();
 
                 // When
                 var result = Record.Exception(() => new BuildCommand(log, console, null, environment));
@@ -67,9 +67,9 @@ namespace Lake.Tests.Unit.Commands
             public void Should_Throw_If_Environment_Is_Null()
             {
                 // Given
-                var log = new Mock<IBuildLog>().Object;
-                var console = new Mock<IConsoleWriter>().Object;
-                var scannerFactory = new Mock<IPipelineScannerFactory>().Object;
+                var log = Substitute.For<IBuildLog>();
+                var console = Substitute.For<IConsoleWriter>();
+                var scannerFactory = Substitute.For<IPipelineScannerFactory>();
 
                 // When
                 var result = Record.Exception(() => new BuildCommand(log, console, scannerFactory, null));
@@ -83,10 +83,12 @@ namespace Lake.Tests.Unit.Commands
             public void Should_Throw_If_File_System_From_Environment_Is_Null()
             {
                 // Given
-                var log = new Mock<IBuildLog>().Object;
-                var console = new Mock<IConsoleWriter>().Object;
-                var scannerFactory = new Mock<IPipelineScannerFactory>().Object;
-                var environment = new Mock<IBuildEnvironment>().Object;
+                var log = Substitute.For<IBuildLog>();
+                var console = Substitute.For<IConsoleWriter>();
+                var scannerFactory = Substitute.For<IPipelineScannerFactory>();
+
+                var environment = Substitute.For<IBuildEnvironment>();
+                environment.FileSystem.Returns((IFileSystem)null);
 
                 // When
                 var result = Record.Exception(() => new BuildCommand(log, console, scannerFactory, environment));
@@ -143,8 +145,8 @@ namespace Lake.Tests.Unit.Commands
                 factory.CreateCommand().Execute(factory.Options);
 
                 // Then
-                factory.ScannerFactory.Verify(x => x.Create(
-                    It.Is<DirectoryPath>(p => p.FullPath == "/Assemblies")));
+                factory.ScannerFactory.Received(1).Create(
+                    Arg.Is<DirectoryPath>(p => p.FullPath == "/Assemblies"));
             }
 
             [Fact]
@@ -158,8 +160,8 @@ namespace Lake.Tests.Unit.Commands
                 factory.CreateCommand().Execute(factory.Options);
 
                 // Then
-                factory.ScannerFactory.Verify(x => x.Create(
-                    It.Is<DirectoryPath>(p => p.FullPath == "/Working/Relative")));
+                factory.ScannerFactory.Received(1).Create(
+                    Arg.Is<DirectoryPath>(p => p.FullPath == "/Working/Relative"));
             }
 
             [Fact]
@@ -173,8 +175,8 @@ namespace Lake.Tests.Unit.Commands
                 factory.CreateCommand().Execute(factory.Options);
 
                 // Then
-                factory.ScannerFactory.Verify(x => x.Create(
-                    It.Is<DirectoryPath>(p => p.FullPath == "/Working")));
+                factory.ScannerFactory.Received(1).Create(
+                    Arg.Is<DirectoryPath>(p => p.FullPath == "/Working"));
             }
 
             [Fact]

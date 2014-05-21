@@ -2,28 +2,35 @@
 using Lake.Commands;
 using Lunt;
 using Lunt.Diagnostics;
-using Lunt.IO;
 using Lunt.Runtime;
-using Lunt.Testing;
-using Moq;
+using NSubstitute;
 using Xunit;
 
 namespace Lake.Tests.Unit.Commands
 {
-    public class CommandFactoryTests
+    public sealed class CommandFactoryTests
     {
-        public class TheConstructor
+        internal static CommandFactory CreateFactory()
+        {
+            var log = Substitute.For<IBuildLog>();
+            var console = Substitute.For<IConsoleWriter>();
+            var environment = Substitute.For<IBuildEnvironment>();
+            var scannerFactory = Substitute.For<IPipelineScannerFactory>();
+            return new CommandFactory(log, console, environment, scannerFactory);
+        }
+
+        public sealed class TheConstructor
         {
             [Fact]
             public void Should_Throw_If_Build_Log_Is_Null()
             {
                 // Given
-                var console = new Mock<IConsoleWriter>().Object;
-                var environment = new Mock<IBuildEnvironment>().Object;
-                var scannerFactory = new Mock<IPipelineScannerFactory>().Object;
+                var console = Substitute.For<IConsoleWriter>();
+                var environment = Substitute.For<IBuildEnvironment>();
+                var factory = Substitute.For<IPipelineScannerFactory>();
 
                 // When
-                var result = Record.Exception(() => new CommandFactory(null, console, environment, scannerFactory));
+                var result = Record.Exception(() => new CommandFactory(null, console, environment, factory));
 
                 // Then
                 Assert.IsType<ArgumentNullException>(result);
@@ -34,31 +41,58 @@ namespace Lake.Tests.Unit.Commands
             public void Should_Throw_If_Console_Is_Null()
             {
                 // Given
-                var log = new Mock<IBuildLog>().Object;
-                var environment = new Mock<IBuildEnvironment>().Object;
-                var scannerFactory = new Mock<IPipelineScannerFactory>().Object;
+                var log = Substitute.For<IBuildLog>();
+                var environment = Substitute.For<IBuildEnvironment>();
+                var factory = Substitute.For<IPipelineScannerFactory>();
 
                 // When
-                var result = Record.Exception(() => new CommandFactory(log, null, environment, scannerFactory));
+                var result = Record.Exception(() => new CommandFactory(log, null, environment, factory));
 
                 // Then
                 Assert.IsType<ArgumentNullException>(result);
                 Assert.Equal("console", ((ArgumentNullException)result).ParamName);
             }
+
+            [Fact]
+            public void Should_Throw_If_Environment_Is_Null()
+            {
+                // Given
+                var log = Substitute.For<IBuildLog>();
+                var console = Substitute.For<IConsoleWriter>();
+                var factory = Substitute.For<IPipelineScannerFactory>();
+
+                // When
+                var result = Record.Exception(() => new CommandFactory(log, console, null, factory));
+
+                // Then
+                Assert.IsType<ArgumentNullException>(result);
+                Assert.Equal("environment", ((ArgumentNullException)result).ParamName);
+            }
+
+            [Fact]
+            public void Should_Throw_If_Scanner_Factory_Is_Null()
+            {
+                // Given
+                var log = Substitute.For<IBuildLog>();
+                var console = Substitute.For<IConsoleWriter>();
+                var environment = Substitute.For<IBuildEnvironment>();
+
+                // When
+                var result = Record.Exception(() => new CommandFactory(log, console, environment, null));
+
+                // Then
+                Assert.IsType<ArgumentNullException>(result);
+                Assert.Equal("factory", ((ArgumentNullException)result).ParamName);
+            }
         }
 
-        public class TheCreateHelpCommandMethod
+        public sealed class TheCreateHelpCommandMethod
         {
             [Fact]
             public void Will_Build_Help_Command()
             {
                 // Given
-                var log = new Mock<IBuildLog>().Object;
-                var console = new Mock<IConsoleWriter>().Object;
-                var environment = new Mock<IBuildEnvironment>().Object;
-                var scannerFactory = new Mock<IPipelineScannerFactory>().Object;
-
-                var factory = new CommandFactory(log, console, environment, scannerFactory);
+                var factory = CommandFactoryTests.CreateFactory();
 
                 // When
                 var result = factory.CreateHelpCommand(new LakeOptions());
@@ -68,18 +102,13 @@ namespace Lake.Tests.Unit.Commands
             }
         }
 
-        public class TheCreateVersionCommandMethod
+        public sealed class TheCreateVersionCommandMethod
         {
             [Fact]
             public void Will_Build_Help_Command()
             {
                 // Given
-                var log = new Mock<IBuildLog>().Object;
-                var console = new Mock<IConsoleWriter>().Object;
-                var environment = new Mock<IBuildEnvironment>().Object;
-                var scannerFactory = new Mock<IPipelineScannerFactory>().Object;
-
-                var factory = new CommandFactory(log, console, environment, scannerFactory);
+                var factory = CommandFactoryTests.CreateFactory();
 
                 // When
                 var result = factory.CreateVersionCommand(new LakeOptions());
@@ -89,22 +118,13 @@ namespace Lake.Tests.Unit.Commands
             }
         }
 
-        public class TheCreateBuildCommandMethod
+        public sealed class TheCreateBuildCommandMethod
         {
             [Fact]
             public void Will_Build_Help_Command()
             {
                 // Given
-                var log = new Mock<IBuildLog>().Object;
-                var console = new Mock<IConsoleWriter>().Object;
-                var environment = new Mock<IBuildEnvironment>();
-                var scannerFactory = new Mock<IPipelineScannerFactory>();
-
-                environment.Setup(x => x.GetWorkingDirectory()).Returns(new DirectoryPath("/temp"));
-                environment.Setup(x => x.FileSystem).Returns(new FakeFileSystem());
-                scannerFactory.Setup(x => x.Create(It.IsAny<DirectoryPath>())).Returns(new Mock<IPipelineScanner>().Object);
-
-                var factory = new CommandFactory(log, console, environment.Object, scannerFactory.Object);
+                var factory = CommandFactoryTests.CreateFactory();
 
                 // When
                 var result = factory.CreateBuildCommand(new LakeOptions());

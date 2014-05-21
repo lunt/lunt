@@ -4,7 +4,7 @@ using Lake.Commands;
 using Lake.Diagnostics;
 using Lunt;
 using Lunt.Testing;
-using Moq;
+using NSubstitute;
 using Xunit;
 using Xunit.Extensions;
 
@@ -14,6 +14,14 @@ namespace Lake.Tests.Unit
     {
         public class TheRunCommand
         {
+            private LakeApplication CreateApplication(ICommandFactory factory, IArgumentParser parser = null)
+            {
+                var console = Substitute.For<IConsoleWriter>();
+                var log = Substitute.For<ILakeBuildLog>();                
+                parser = parser ?? new ArgumentParser(log);
+                return new LakeApplication(console, log, parser, factory);
+            }
+
             [Theory]
             [InlineData("-help")]
             [InlineData("-?")]
@@ -21,20 +29,14 @@ namespace Lake.Tests.Unit
             public void Should_Show_Usage_Information(string command)
             {
                 // Given
-                var log = new Mock<ILakeBuildLog>().Object;
-                var console = new Mock<IConsoleWriter>().Object;
-                var parser = new ArgumentParser(log);
-                var factory = new Mock<ICommandFactory>();
-                factory.Setup(x => x.CreateHelpCommand(It.IsAny<LakeOptions>()))
-                    .Returns(() => new FakeCommand()).Verifiable();
-
-                var application = new LakeApplication(console, log, parser, factory.Object);
+                var factory = Substitute.For<ICommandFactory>();
+                factory.CreateHelpCommand(Arg.Any<LakeOptions>()).Returns(r => new FakeCommand());
 
                 // When
-                application.Run(new[] {command});
+                CreateApplication(factory).Run(new[] { command });
 
                 // Then
-                factory.Verify();
+                factory.Received(1).CreateHelpCommand(Arg.Any<LakeOptions>());
             }
 
             [Theory]
@@ -43,105 +45,77 @@ namespace Lake.Tests.Unit
             public void Should_Show_Version_Information(string command)
             {
                 // Given
-                var log = new Mock<ILakeBuildLog>().Object;
-                var console = new Mock<IConsoleWriter>().Object;
-                var parser = new ArgumentParser(log);
-                var factory = new Mock<ICommandFactory>();
-                factory.Setup(x => x.CreateVersionCommand(It.IsAny<LakeOptions>()))
-                    .Returns(() => new FakeCommand()).Verifiable();
-
-                var application = new LakeApplication(console, log, parser, factory.Object);
+                var factory = Substitute.For<ICommandFactory>();
+                factory.CreateVersionCommand(Arg.Any<LakeOptions>()).Returns(r => new FakeCommand());
 
                 // When
-                application.Run(new[] {command});
+                CreateApplication(factory).Run(new[] {command});
 
                 // Then
-                factory.Verify();
+                factory.Received(1).CreateVersionCommand(Arg.Any<LakeOptions>());
             }
 
             [Fact]
             public void Should_Build_If_Output_Directory_And_Build_Configuration_Is_Set()
             {
                 // Given
-                var log = new Mock<ILakeBuildLog>().Object;
-                var console = new Mock<IConsoleWriter>().Object;
-                var parser = new ArgumentParser(log);
-
-                var factory = new Mock<ICommandFactory>();
-                factory.Setup(x => x.CreateBuildCommand(It.IsAny<LakeOptions>()))
-                    .Returns(() => new FakeCommand()).Verifiable();
+                var factory = Substitute.For<ICommandFactory>();
+                factory.CreateBuildCommand(Arg.Any<LakeOptions>()).Returns(r => new FakeCommand());
 
                 // When
-                new LakeApplication(console, log, parser, factory.Object)
-                    .Run(new[] {"-input='/assets'", "-output='/output'", "build.config"});
+                CreateApplication(factory).Run(new[] {"-input='/assets'", "-output='/output'", "build.config"});
 
                 // Then
-                factory.Verify();
+                factory.Received(1).CreateBuildCommand(Arg.Any<LakeOptions>());
             }
 
             [Fact]
             public void Should_Show_Usage_Information_If_Options_Are_Null()
             {
                 // Given
-                var log = new Mock<ILakeBuildLog>().Object;
-                var console = new Mock<IConsoleWriter>().Object;
-                var parser = new Mock<IArgumentParser>();
-                parser.Setup(x => x.Parse(It.IsAny<string[]>()))
-                    .Returns(() => null);
+                var factory = Substitute.For<ICommandFactory>();
+                factory.CreateHelpCommand(Arg.Any<LakeOptions>()).Returns(r => new FakeCommand());
 
-                var factory = new Mock<ICommandFactory>();
-                factory.Setup(x => x.CreateHelpCommand(It.IsAny<LakeOptions>()))
-                    .Returns(() => new FakeCommand()).Verifiable();
+                var parser = Substitute.For<IArgumentParser>();
+                parser.Parse(Arg.Any<string[]>()).Returns((LakeOptions)null);
 
                 // When
-                new LakeApplication(console, log, parser.Object, factory.Object)
-                    .Run(new string[] {});
+                CreateApplication(factory, parser).Run(new string[] { });
 
                 // Then
-                factory.Verify();
+                factory.Received(1).CreateHelpCommand(Arg.Any<LakeOptions>());
             }
 
             [Fact]
             public void Should_Show_Usage_Information_If_No_Options_Are_Set()
             {
                 // Given
-                var log = new Mock<ILakeBuildLog>().Object;
-                var console = new Mock<IConsoleWriter>().Object;
-                var parser = new Mock<IArgumentParser>();
-                parser.Setup(x => x.Parse(It.IsAny<string[]>()))
-                    .Returns(() => new LakeOptions());
+                var factory = Substitute.For<ICommandFactory>();
+                factory.CreateHelpCommand(Arg.Any<LakeOptions>()).Returns(r => new FakeCommand());
 
-                var factory = new Mock<ICommandFactory>();
-                factory.Setup(x => x.CreateHelpCommand(It.IsAny<LakeOptions>()))
-                    .Returns(() => new FakeCommand()).Verifiable();
+                var parser = Substitute.For<IArgumentParser>();
+                parser.Parse(Arg.Any<string[]>()).Returns(new LakeOptions());
 
                 // When
-                new LakeApplication(console, log, parser.Object, factory.Object)
-                    .Run(new string[] {});
+                CreateApplication(factory, parser).Run(new string[] { });
 
                 // Then
-                factory.Verify();
+                factory.Received(1).CreateHelpCommand(Arg.Any<LakeOptions>());
             }
 
             [Fact]
             public void Should_Catch_Exceptions_In_Commands()
             {
                 // Given
-                var log = new Mock<ILakeBuildLog>().Object;
-                var console = new Mock<IConsoleWriter>().Object;
-                var parser = new ArgumentParser(log);
-                var factory = new Mock<ICommandFactory>();
-                factory.Setup(x => x.CreateVersionCommand(It.IsAny<LakeOptions>()))
-                    .Returns(() => new FakeCommand(() => { throw new InvalidOperationException(); }))
-                    .Verifiable();
+                var factory = Substitute.For<ICommandFactory>();
+                factory.CreateVersionCommand(Arg.Any<LakeOptions>()).Returns(r => new FakeCommand(() => { throw new InvalidOperationException(); }));
 
                 // When
-                var result = new LakeApplication(console, log, parser, factory.Object)
-                    .Run(new[] {"-version"});
+                var result = CreateApplication(factory).Run(new string[] { "-version" });
 
                 // Then
+                factory.Received(1).CreateVersionCommand(Arg.Any<LakeOptions>());
                 Assert.Equal((int)ExitCode.Exception, result);
-                factory.Verify();
             }
         }
     }

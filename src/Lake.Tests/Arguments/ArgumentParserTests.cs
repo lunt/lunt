@@ -2,8 +2,7 @@
 using Lake.Arguments;
 using Lunt.Diagnostics;
 using Lunt.Testing;
-
-using Moq;
+using NSubstitute;
 using Xunit;
 using Xunit.Extensions;
 
@@ -17,8 +16,8 @@ namespace Lake.Tests.Unit.Arguments
             public void Can_Parse_Empty_Parameters()
             {
                 // Given
-                var log = new Mock<IBuildLog>();
-                var parser = new ArgumentParser(log.Object);
+                var log = Substitute.For<IBuildLog>();
+                var parser = new ArgumentParser(log);
 
                 // When
                 var result = parser.Parse(new string[] {});
@@ -52,8 +51,8 @@ namespace Lake.Tests.Unit.Arguments
             public void Can_Parse_Input_Directory(string input, string value)
             {
                 // Given
-                var log = new Mock<IBuildLog>();
-                var parser = new ArgumentParser(log.Object);
+                var log = Substitute.For<IBuildLog>();
+                var parser = new ArgumentParser(log);
 
                 // When
                 var result = parser.Parse(new[] {input});
@@ -73,8 +72,8 @@ namespace Lake.Tests.Unit.Arguments
             public void Can_Parse_Output_Directory(string input, string value)
             {
                 // Given
-                var log = new Mock<IBuildLog>();
-                var parser = new ArgumentParser(log.Object);
+                var log = Substitute.For<IBuildLog>();
+                var parser = new ArgumentParser(log);
 
                 // When
                 var result = parser.Parse(new[] {input});
@@ -94,8 +93,8 @@ namespace Lake.Tests.Unit.Arguments
             public void Can_Parse_Probing_Directory(string input, string value)
             {
                 // Given
-                var log = new Mock<IBuildLog>();
-                var parser = new ArgumentParser(log.Object);
+                var log = Substitute.For<IBuildLog>();
+                var parser = new ArgumentParser(log);
 
                 // When
                 var result = parser.Parse(new[] { input });
@@ -130,8 +129,8 @@ namespace Lake.Tests.Unit.Arguments
             public void Can_Parse_Verbosity(string input, Verbosity value)
             {
                 // Given
-                var log = new Mock<IBuildLog>();
-                var parser = new ArgumentParser(log.Object);
+                var log = Substitute.For<IBuildLog>();
+                var parser = new ArgumentParser(log);
 
                 // When
                 var result = parser.Parse(new[] {input});
@@ -147,8 +146,8 @@ namespace Lake.Tests.Unit.Arguments
             public void Can_Parse_Help(string input)
             {
                 // Given
-                var log = new Mock<IBuildLog>();
-                var parser = new ArgumentParser(log.Object);
+                var log = Substitute.For<IBuildLog>();
+                var parser = new ArgumentParser(log);
 
                 // When
                 var result = parser.Parse(new[] {input});
@@ -163,8 +162,8 @@ namespace Lake.Tests.Unit.Arguments
             public void Can_Parse_Version(string input)
             {
                 // Given
-                var log = new Mock<IBuildLog>();
-                var parser = new ArgumentParser(log.Object);
+                var log = Substitute.For<IBuildLog>();
+                var parser = new ArgumentParser(log);
 
                 // When
                 var result = parser.Parse(new[] {input});
@@ -179,8 +178,8 @@ namespace Lake.Tests.Unit.Arguments
             public void Can_Parse_Rebuild(string input)
             {
                 // Given
-                var log = new Mock<IBuildLog>();
-                var parser = new ArgumentParser(log.Object);
+                var log = Substitute.For<IBuildLog>();
+                var parser = new ArgumentParser(log);
 
                 // When
                 var result = parser.Parse(new[] {input});
@@ -195,8 +194,8 @@ namespace Lake.Tests.Unit.Arguments
             public void Can_Parse_NoColors(string input)
             {
                 // Given
-                var log = new Mock<IBuildLog>();
-                var parser = new ArgumentParser(log.Object);
+                var log = Substitute.For<IBuildLog>();
+                var parser = new ArgumentParser(log);
 
                 // When
                 var result = parser.Parse(new[] { input });
@@ -211,8 +210,8 @@ namespace Lake.Tests.Unit.Arguments
             public void Can_Parse_Build_Configuration(string input)
             {
                 // Given
-                var log = new Mock<IBuildLog>();
-                var parser = new ArgumentParser(log.Object);
+                var log = Substitute.For<IBuildLog>();
+                var parser = new ArgumentParser(log);
                 var arguments = input.Split(new[] {' '}, StringSplitOptions.None);
 
                 // When
@@ -244,8 +243,8 @@ namespace Lake.Tests.Unit.Arguments
             public void Can_Parse_Build_Configuration_With_Unix_Path(string input)
             {
                 // Given
-                var log = new Mock<IBuildLog>();
-                var parser = new ArgumentParser(log.Object);
+                var log = Substitute.For<IBuildLog>();
+                var parser = new ArgumentParser(log);
                 var arguments = input.Split(new[] {' '}, StringSplitOptions.None);
 
                 // When

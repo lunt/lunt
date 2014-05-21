@@ -5,6 +5,7 @@ using Lunt.Diagnostics;
 using Lunt.IO;
 using Lunt.Runtime;
 using Moq;
+using NSubstitute;
 
 namespace Lunt.Testing.Utilities
 {
@@ -14,8 +15,8 @@ namespace Lunt.Testing.Utilities
         public BuildManifest Manifest { get; set; }
         public string WorkingDirectory { get; set; }
         public FakeConsole Console { get; set; }
-        public Mock<IPipelineScannerFactory> ScannerFactory { get; set; }
-        public Mock<IBuildEngineInvoker> BuildEngineInvoker { get; set; }
+        public IPipelineScannerFactory ScannerFactory { get; set; }
+        public IBuildEngineInvoker BuildEngineInvoker { get; set; }
         public FakeBuildEnvironment BuildEnvironment { get; set; }
 
         public BuildCommandFactory()
@@ -36,20 +37,18 @@ namespace Lunt.Testing.Utilities
 
             if (ScannerFactory == null)
             {
-                ScannerFactory = new Mock<IPipelineScannerFactory>();
-                ScannerFactory.Setup(x => x.Create(It.IsAny<DirectoryPath>()))
-                    .Returns(new Mock<IPipelineScanner>().Object);
+                ScannerFactory = Substitute.For<IPipelineScannerFactory>();
+                ScannerFactory.Create(Arg.Any<DirectoryPath>()).Returns(Substitute.For<IPipelineScanner>());
             }
 
             if (BuildEngineInvoker == null)
             {
-                BuildEngineInvoker = new Mock<IBuildEngineInvoker>();
-                BuildEngineInvoker.Setup(x => x.Build(It.IsAny<BuildEngine>(), It.IsAny<BuildEngineSettings>()))
+                BuildEngineInvoker = Substitute.For<IBuildEngineInvoker>();
+                BuildEngineInvoker.Build(Arg.Any<BuildEngine>(), Arg.Any<BuildEngineSettings>())
                     .Returns(Manifest ?? new BuildManifest());
             }
 
-            return new BuildCommand(log, Console, ScannerFactory.Object, BuildEnvironment, 
-                BuildEngineInvoker != null ? BuildEngineInvoker.Object : null);
+            return new BuildCommand(log, Console, ScannerFactory, BuildEnvironment, BuildEngineInvoker ?? null);
         }
     }
 }
