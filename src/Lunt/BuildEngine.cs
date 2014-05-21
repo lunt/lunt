@@ -86,17 +86,17 @@ namespace Lunt
                 configuration.OutputDirectory = workingDirectory.Combine(configuration.OutputDirectory);
             }
 
-            // TODO: Load previous manifest.
+            // Load previous manifest (if there is one).
             var manifestProvider = _bootstrapper.GetService<IBuildManifestProvider>();
             var manifestPath = buildConfigurationPath.ChangeExtension(".manifest");
             var previousManifest = manifestProvider.LoadManifest(manifestPath);
 
             // Build the configuration and return the result.
-            using (var engine = _bootstrapper.GetService<IBuildKernel>())
+            using (var engine = _bootstrapper.GetBuildKernel())
             {
                 var manifest = engine.Build(configuration, previousManifest);
 
-                // TODO: Save manifest.
+                // Save the manifest.
                 manifestProvider.SaveManifest(manifestPath, manifest);
 
                 return manifest;
